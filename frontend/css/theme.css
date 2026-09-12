@@ -343,7 +343,8 @@ html {
    ============================================================ */
 
 body {
-    background: var(--cn-gradient-dark);
+    background:
+        var(--cn-gradient-dark);
     color: var(--cn-text);
 }
 
