@@ -8,7 +8,6 @@
  * - Page navigation structure
  * - Side panel structure
  * - Main content structure
- * - Sections and containers
  * - Flexbox / Grid layout
  * - Footer structural alignment
  * - Structural curves and shapes
@@ -16,19 +15,20 @@
  * - Technology / tool grouping structure
  *
  * Does NOT own:
- * - Colors or visual theme tokens
- * - Typography definitions
+ * - Colors
+ * - Visual theme tokens
+ * - Typography
  * - Shared spacing tokens
  * - Responsive breakpoints
  * - Application behavior
+ * - Print styling
  */
 
 /* =========================================================
    STRUCTURAL TOKENS
-========================================================= */
+   ========================================================= */
 
 :root {
-    /* Application dimensions */
     --cn-header-height: 70px;
     --cn-header-min-height: 60px;
 
@@ -39,7 +39,6 @@
     --cn-content-max-width: 1440px;
     --cn-content-wide-width: 1680px;
 
-    /* Structural layers */
     --cn-layer-base: 1;
     --cn-layer-content: 10;
     --cn-layer-header: 100;
@@ -49,11 +48,12 @@
 
 /* =========================================================
    ROOT APPLICATION
-========================================================= */
+   ========================================================= */
 
 html {
     width: 100%;
     min-height: 100%;
+
     overflow-x: hidden;
 }
 
@@ -61,12 +61,16 @@ body {
     width: 100%;
     min-height: 100vh;
     min-height: 100dvh;
+
+    margin: 0;
+
     overflow-x: hidden;
 }
 
 #app,
 .app,
-.application {
+.application,
+.app-shell {
     position: relative;
 
     display: flex;
@@ -79,8 +83,8 @@ body {
 }
 
 /* =========================================================
-   GLOBAL PAGE STRUCTURE
-========================================================= */
+   GENERIC PAGE SHELL
+   ========================================================= */
 
 .page,
 .page-shell {
@@ -95,18 +99,59 @@ body {
     min-height: 100dvh;
 }
 
-.page-body,
-.page-layout {
+/* =========================================================
+   APPLICATION BODY
+   =========================================================
+
+   Canonical structure:
+
+   .app-shell
+       │
+       ├── .site-header
+       │
+       ├── .app-body
+       │      ├── .side-panel
+       │      └── .main-content
+       │
+       └── .site-footer
+
+   The side panel and main content MUST remain siblings.
+   This prevents the side panel from creating a vertical
+   gap between the header and main content.
+   ========================================================= */
+
+.app-body {
     position: relative;
 
     display: flex;
-
     flex: 1 1 auto;
+    flex-direction: row;
+    align-items: stretch;
 
     width: 100%;
     min-width: 0;
     min-height: 0;
 }
+
+/* Generic aliases */
+
+.page-body,
+.page-layout {
+    position: relative;
+
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: row;
+    align-items: stretch;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+/* =========================================================
+   GENERIC PAGE MAIN
+   ========================================================= */
 
 .page-main {
     position: relative;
@@ -115,7 +160,7 @@ body {
     flex: 1 1 auto;
     flex-direction: column;
 
-    width: 100%;
+    width: auto;
     min-width: 0;
     min-height: 0;
 }
@@ -132,7 +177,7 @@ body {
 
 /* =========================================================
    CONTENT CONTAINERS
-========================================================= */
+   ========================================================= */
 
 .container,
 .container-wide,
@@ -148,11 +193,13 @@ body {
 
 .container {
     max-width: var(--cn-content-max-width);
+
     margin-inline: auto;
 }
 
 .container-wide {
     max-width: var(--cn-content-wide-width);
+
     margin-inline: auto;
 }
 
@@ -162,33 +209,38 @@ body {
 
 .content-narrow {
     max-width: 960px;
+
     margin-inline: auto;
 }
 
 .content-readable {
     max-width: 780px;
+
     margin-inline: auto;
 }
 
 /* =========================================================
    HEADER / STICKER
-========================================================= */
+   ========================================================= */
 
 .site-header,
 .app-header,
 .cn-header {
     position: sticky;
     top: 0;
+
     z-index: var(--cn-layer-header);
 
     display: flex;
+    flex: 0 0 var(--cn-header-height);
     align-items: center;
 
     width: 100%;
     min-width: 0;
-    min-height: var(--cn-header-height);
 
-    flex: 0 0 var(--cn-header-height);
+    height: var(--cn-header-height);
+    min-height: var(--cn-header-height);
+    max-height: var(--cn-header-height);
 }
 
 .header-inner,
@@ -203,25 +255,18 @@ body {
     min-height: 0;
 }
 
-/*
- * The header remains sticky.
- *
- * Page content receives its structural offset through
- * the page-flow rules below so the first content area
- * does not sit underneath the Sticker.
- */
-
 /* =========================================================
    HEADER BRAND
-========================================================= */
+   ========================================================= */
 
 .header-brand,
 .app-brand,
-.cn-brand {
-    display: flex;
+.cn-brand,
+.brand {
+    display: inline-flex;
+    flex: 0 0 auto;
     align-items: center;
 
-    flex: 0 0 auto;
     min-width: 0;
 }
 
@@ -234,20 +279,11 @@ body {
     min-width: 0;
 }
 
-.brand {
-    display: inline-flex;
-    align-items: center;
-
-    flex: 0 0 auto;
-    min-width: 0;
-}
-
 .brand-mark {
     display: inline-flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-
-    flex: 0 0 auto;
 
     width: 42px;
     height: 42px;
@@ -263,16 +299,7 @@ body {
     min-width: 0;
 }
 
-.brand-name {
-    display: block;
-
-    min-width: 0;
-
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
+.brand-name,
 .brand-subtitle,
 .brand-description {
     display: block;
@@ -286,8 +313,7 @@ body {
 
 /* =========================================================
    HEADER STATUS
-   Exactly ONE global status structure.
-========================================================= */
+   ========================================================= */
 
 .status,
 .header-status,
@@ -295,18 +321,17 @@ body {
 .cn-status,
 .system-status {
     display: inline-flex;
+    flex: 0 0 auto;
     align-items: center;
 
-    flex: 0 0 auto;
     min-width: 0;
 }
 
 .status-indicator {
     display: inline-flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-
-    flex: 0 0 auto;
 
     width: 8px;
     height: 8px;
@@ -331,15 +356,14 @@ body {
 
 /* =========================================================
    PRIMARY PAGE NAVIGATION
-========================================================= */
+   ========================================================= */
 
 .header-nav,
 .primary-nav,
 .page-nav {
     display: flex;
-    align-items: center;
-
     flex: 1 1 auto;
+    align-items: center;
 
     width: 100%;
     min-width: 0;
@@ -349,6 +373,7 @@ body {
 .primary-nav-list,
 .page-nav-list {
     display: flex;
+    flex: 1 1 auto;
     align-items: stretch;
     justify-content: space-evenly;
 
@@ -365,8 +390,8 @@ body {
 .primary-nav-item,
 .page-nav-item {
     display: flex;
-
     flex: 1 1 0;
+
     min-width: 0;
 }
 
@@ -385,36 +410,35 @@ body {
     white-space: nowrap;
 }
 
-/*
- * Current-page appearance is visual only.
- *
- * Navigation remains clickable and keyboard-focusable.
- * aria-current="page" identifies the current page.
- * JavaScript may prevent unnecessary same-page navigation.
- */
+/* =========================================================
+   HEADER CONTROLS
+   ========================================================= */
+
+.side-panel-toggle {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+}
 
 /* =========================================================
-   PAGE BODY
-========================================================= */
+   SCROLL STRUCTURE
+   ========================================================= */
 
-.page-layout {
-    align-items: stretch;
-
-    /*
-     * Keep the page content below the sticky Sticker.
-     * This prevents the top of the page from being hidden
-     * behind the global header.
-     */
+.app-body,
+.page-layout,
+.page-content,
+.page-main,
+.main-area,
+.content-area,
+.main-content {
     scroll-padding-top: var(--cn-header-height);
 }
 
-/*
- * Anchor scrolling must also account for the sticky header.
- * This prevents section headings from stopping underneath
- * the Sticker when using #section links.
- */
+.app-body [id],
 .page-layout [id],
 .page-content [id],
+.page-main [id],
 .main-area [id],
 .content-area [id],
 .main-content [id],
@@ -424,11 +448,12 @@ body {
 
 /* =========================================================
    SIDE PANEL
-========================================================= */
+   ========================================================= */
 
 .side-panel {
     position: sticky;
     top: var(--cn-header-height);
+
     z-index: var(--cn-layer-side-panel);
 
     display: flex;
@@ -437,11 +462,14 @@ body {
 
     width: var(--cn-side-panel-width);
     min-width: var(--cn-side-panel-width);
+    max-width: var(--cn-side-panel-width);
 
     height: calc(100vh - var(--cn-header-height));
     height: calc(100dvh - var(--cn-header-height));
 
     min-height: 0;
+
+    align-self: flex-start;
 
     overflow: hidden;
 }
@@ -458,10 +486,9 @@ body {
 
 .side-panel-header {
     display: flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: space-between;
-
-    flex: 0 0 auto;
 
     width: 100%;
     min-width: 0;
@@ -480,17 +507,16 @@ body {
 
 .side-panel-footer {
     display: flex;
-    align-items: center;
-
     flex: 0 0 auto;
+    align-items: center;
 
     width: 100%;
     min-width: 0;
 }
 
 /* =========================================================
-   SIDE PANEL NAVIGATION
-========================================================= */
+   SIDE NAVIGATION
+   ========================================================= */
 
 .side-nav {
     display: flex;
@@ -531,10 +557,9 @@ body {
 .side-nav-index,
 .side-nav-icon {
     display: inline-flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
-
-    flex: 0 0 auto;
 }
 
 .side-nav-label {
@@ -547,7 +572,7 @@ body {
 
 /* =========================================================
    SIDE PANEL STATES
-========================================================= */
+   ========================================================= */
 
 .side-panel.is-collapsed,
 .side-panel.collapsed {
@@ -555,6 +580,7 @@ body {
 
     width: var(--cn-side-panel-collapsed-width);
     min-width: var(--cn-side-panel-collapsed-width);
+    max-width: var(--cn-side-panel-collapsed-width);
 }
 
 .side-panel.is-collapsed .side-panel-header,
@@ -587,8 +613,8 @@ body {
 }
 
 /* =========================================================
-   MAIN CONTENT AREA
-========================================================= */
+   MAIN CONTENT
+   ========================================================= */
 
 .main-area,
 .content-area,
@@ -599,32 +625,30 @@ body {
     flex: 1 1 auto;
     flex-direction: column;
 
-    width: 100%;
+    width: auto;
     min-width: 0;
     min-height: 0;
 
-    overflow-x: hidden;
+    margin: 0;
+    padding-block-start: 0;
 
-    /*
-     * Creates a safe top boundary for page content while
-     * preserving the sticky Sticker in the normal layout.
-     */
-    scroll-padding-top: var(--cn-header-height);
+    overflow-x: hidden;
 }
 
 .main-inner {
     position: relative;
 
+    display: block;
+    flex: 1 1 auto;
+
     width: 100%;
     min-width: 0;
     min-height: 0;
-
-    flex: 1 1 auto;
 }
 
 /* =========================================================
    SECTIONS
-========================================================= */
+   ========================================================= */
 
 .section {
     position: relative;
@@ -670,9 +694,8 @@ body {
 
 .section-actions {
     display: flex;
-    align-items: center;
-
     flex: 0 0 auto;
+    align-items: center;
 }
 
 .section-content {
@@ -691,7 +714,7 @@ body {
 
 /* =========================================================
    HERO
-========================================================= */
+   ========================================================= */
 
 .hero {
     position: relative;
@@ -703,17 +726,15 @@ body {
     width: 100%;
     min-width: 0;
 
-    min-height:
-        min(
-            760px,
-            calc(100vh - var(--cn-header-height))
-        );
+    min-height: min(
+        760px,
+        calc(100vh - var(--cn-header-height))
+    );
 
-    min-height:
-        min(
-            760px,
-            calc(100dvh - var(--cn-header-height))
-        );
+    min-height: min(
+        760px,
+        calc(100dvh - var(--cn-header-height))
+    );
 
     overflow: hidden;
 
@@ -749,7 +770,7 @@ body {
 
 /* =========================================================
    GENERAL GRIDS
-========================================================= */
+   ========================================================= */
 
 .grid {
     display: grid;
@@ -799,7 +820,7 @@ body {
 
 /* =========================================================
    TECHNOLOGY / TOOL GROUPING
-========================================================= */
+   ========================================================= */
 
 .technology-grid,
 .tech-grid,
@@ -850,6 +871,7 @@ body {
 .tool-group-header > div,
 .stack-group-header > div {
     flex: 1 1 auto;
+
     min-width: 0;
 }
 
@@ -892,7 +914,7 @@ body {
 
 /* =========================================================
    CARDS
-========================================================= */
+   ========================================================= */
 
 .card-grid {
     display: grid;
@@ -938,8 +960,29 @@ body {
 }
 
 /* =========================================================
-   FLEX STRUCTURE
-========================================================= */
+   SPLIT LAYOUT
+   ========================================================= */
+
+.split-layout {
+    display: grid;
+
+    width: 100%;
+    min-width: 0;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(280px, 380px);
+}
+
+.split-layout.reverse {
+    grid-template-columns:
+        minmax(280px, 380px)
+        minmax(0, 1fr);
+}
+
+/* =========================================================
+   FLEX UTILITIES
+   ========================================================= */
 
 .flex {
     display: flex;
@@ -1022,29 +1065,8 @@ body {
 }
 
 /* =========================================================
-   TWO-COLUMN CONTENT
-========================================================= */
-
-.split-layout {
-    display: grid;
-
-    width: 100%;
-    min-width: 0;
-
-    grid-template-columns:
-        minmax(0, 1fr)
-        minmax(280px, 380px);
-}
-
-.split-layout.reverse {
-    grid-template-columns:
-        minmax(280px, 380px)
-        minmax(0, 1fr);
-}
-
-/* =========================================================
    FORMS
-========================================================= */
+   ========================================================= */
 
 .form {
     display: flex;
@@ -1081,7 +1103,7 @@ body {
 
 /* =========================================================
    TABLES
-========================================================= */
+   ========================================================= */
 
 .table-wrapper {
     width: 100%;
@@ -1105,31 +1127,57 @@ body {
 
 /* =========================================================
    FOOTER
-========================================================= */
+   =========================================================
+
+   Desktop footer structure:
+
+   ┌──────────────────────────────────────────────────────┐
+   │ BRAND        │ META / ENGINEER       │ LINKS         │
+   └──────────────────────────────────────────────────────┘
+
+   Each region gets equal structural space.
+
+   Visual spacing and colors remain owned by:
+   - spacing.css
+   - style.css
+   ========================================================= */
 
 .site-footer,
 .app-footer,
 .cn-footer {
     position: relative;
 
+    flex: 0 0 auto;
+
     width: 100%;
     min-width: 0;
 }
 
 .footer-inner {
-    display: flex;
+    display: grid;
     align-items: center;
 
     width: 100%;
     min-width: 0;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr)
+        minmax(0, 1fr);
 }
 
 .footer-brand {
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
 
-    flex: 1 1 0;
     min-width: 0;
+}
+
+.footer-brand > * {
+    min-width: 0;
+    max-width: 100%;
 }
 
 .footer-meta {
@@ -1137,50 +1185,52 @@ body {
     align-items: center;
     justify-content: center;
 
-    flex: 1 1 0;
     min-width: 0;
 
     text-align: center;
 }
 
+.footer-meta > * {
+    min-width: 0;
+    max-width: 100%;
+}
+
 .footer-nav {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
 
-    flex: 1 1 0;
     min-width: 0;
-
-    flex-wrap: wrap;
 }
 
 .footer-links {
     display: flex;
-    align-items: stretch;
-
-    flex: 1 1 auto;
+    align-items: center;
+    justify-content: flex-end;
 
     width: 100%;
     min-width: 0;
 
     margin: 0;
     padding: 0;
+
+    list-style: none;
 }
 
 .footer-links > a {
-    display: flex;
+    display: inline-flex;
+    flex: 0 0 auto;
     align-items: center;
     justify-content: center;
 
-    flex: 1 1 0;
     min-width: 0;
 
-    text-align: center;
     white-space: nowrap;
 }
 
 /* =========================================================
-   STRUCTURAL DECORATIVE SHAPES
-========================================================= */
+   DECORATIVE STRUCTURAL LAYERS
+   ========================================================= */
 
 .shape-layer {
     position: absolute;
@@ -1247,7 +1297,7 @@ body {
 
 /* =========================================================
    STRUCTURAL CURVES
-========================================================= */
+   ========================================================= */
 
 .curve-top {
     border-radius: 0 0 48px 48px;
@@ -1272,8 +1322,8 @@ body {
 }
 
 /* =========================================================
-   OVERLAY / DRAWER STRUCTURE
-========================================================= */
+   OVERLAY / DRAWER
+   ========================================================= */
 
 .overlay {
     position: fixed;
@@ -1323,12 +1373,13 @@ body {
     max-height: min(840px, 90vh);
     max-height: min(840px, 90dvh);
 
+    overflow-x: hidden;
     overflow-y: auto;
 }
 
 /* =========================================================
    STRUCTURAL VISIBILITY
-========================================================= */
+   ========================================================= */
 
 .is-hidden {
     display: none !important;
@@ -1348,52 +1399,4 @@ body {
 
 [hidden] {
     display: none !important;
-}
-
-/* =========================================================
-   PRINT STRUCTURE
-========================================================= */
-
-@media print {
-    .site-header,
-    .app-header,
-    .cn-header,
-    .side-panel,
-    .header-nav,
-    .primary-nav,
-    .page-nav,
-    .site-footer,
-    .app-footer,
-    .cn-footer {
-        display: none !important;
-    }
-
-    .page,
-    .page-shell,
-    .page-body,
-    .page-layout,
-    .page-main,
-    .main-area,
-    .content-area,
-    .main-content,
-    .page-content {
-        display: block;
-
-        width: 100%;
-        min-width: 0;
-        min-height: auto;
-    }
-
-    .container,
-    .container-wide,
-    .content-narrow,
-    .content-readable {
-        width: 100%;
-        max-width: none;
-    }
-
-    .shape-layer,
-    .shape {
-        display: none !important;
-    }
 }
