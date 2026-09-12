@@ -1,0 +1,1401 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<meta
+    name="description"
+    content="CyberNexus IT Portfolio Platform — a professional IT portfolio by CyberNexus PH featuring software systems, security projects, technical skills, experience, academic project contributions, and technical archive work."
+>
+
+<meta
+    name="author"
+    content="Mark C. Pangilinan"
+>
+
+<meta
+    name="theme-color"
+    content="#03070b"
+>
+
+<title>Portfolio | CyberNexus IT Portfolio Platform</title>
+
+<!-- CyberNexus CSS Architecture
+     theme → typography → spacing → layout → style → responsive
+-->
+
+<link rel="stylesheet" href="css/theme.css">
+<link rel="stylesheet" href="css/typography.css">
+<link rel="stylesheet" href="css/spacing.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/responsive.css">
+
+</head><body
+    class="app-shell"
+    data-page="portfolio"
+    data-section="overview"
+><!-- ========================================================
+     STICKER / HEADER
+     ======================================================== -->
+
+<header
+    class="site-header sticker"
+    data-header
+>
+
+    <div class="header-inner">
+
+        <a
+            class="brand"
+            href="portfolio.html"
+            aria-label="CyberNexus Portfolio"
+        >
+
+            <span
+                class="brand-mark"
+                aria-hidden="true"
+            >
+                CN
+            </span>
+
+            <span class="brand-text">
+
+                <span class="brand-name">
+                    CyberNexus
+                </span>
+
+                <span class="brand-subtitle">
+                    IT Portfolio Platform
+                </span>
+
+            </span>
+
+        </a>
+
+
+        <!-- Exactly one system status -->
+
+        <div
+            class="status status-online"
+            data-status
+            data-status-value="online"
+            aria-label="System status: Online"
+        >
+
+            <span
+                class="status-indicator"
+                aria-hidden="true"
+            ></span>
+
+            <span class="status-label">
+                Online
+            </span>
+
+        </div>
+
+
+        <!-- Main page navigation -->
+
+        <nav
+            class="page-nav"
+            aria-label="Main navigation"
+        >
+
+            <ul class="page-nav-list">
+
+                <li class="page-nav-item">
+                    <a
+                        class="page-nav-link is-current"
+                        href="portfolio.html"
+                        data-page="portfolio"
+                        aria-current="page"
+                    >
+                        Portfolio
+                    </a>
+                </li>
+
+                <li class="page-nav-item">
+                    <a
+                        class="page-nav-link"
+                        href="projects.html"
+                        data-page="projects"
+                    >
+                        Projects
+                    </a>
+                </li>
+
+                <li class="page-nav-item">
+                    <a
+                        class="page-nav-link"
+                        href="skills.html"
+                        data-page="skills"
+                    >
+                        Skills
+                    </a>
+                </li>
+
+                <li class="page-nav-item">
+                    <a
+                        class="page-nav-link"
+                        href="experience.html"
+                        data-page="experience"
+                    >
+                        Experience
+                    </a>
+                </li>
+
+                <li class="page-nav-item">
+                    <a
+                        class="page-nav-link"
+                        href="contact.html"
+                        data-page="contact"
+                    >
+                        Contact
+                    </a>
+                </li>
+
+                <li class="page-nav-item">
+                    <a
+                        class="page-nav-link"
+                        href="privacy.html"
+                        data-page="privacy"
+                    >
+                        Privacy
+                    </a>
+                </li>
+
+                <li class="page-nav-item">
+                    <a
+                        class="page-nav-link"
+                        href="terms.html"
+                        data-page="terms"
+                    >
+                        Terms
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+
+        <!-- Side panel controller -->
+
+        <button
+            class="button button-icon side-panel-toggle"
+            type="button"
+            data-side-panel-toggle
+            aria-label="Toggle section panel"
+            aria-controls="portfolio-side-panel"
+            aria-expanded="true"
+        >
+            <span aria-hidden="true">
+                ☰
+            </span>
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- ========================================================
+     APPLICATION BODY
+     ======================================================== -->
+
+<div class="app-body">
+
+    <!-- ====================================================
+         SIDE PANEL
+         ==================================================== -->
+
+    <aside
+        class="side-panel"
+        id="portfolio-side-panel"
+        data-side-panel
+        data-open="true"
+        aria-label="Portfolio sections"
+    >
+
+        <div class="side-panel-header">
+
+            <div>
+
+                <span class="eyebrow">
+                    Portfolio
+                </span>
+
+                <h2 class="side-panel-title">
+                    Sections
+                </h2>
+
+            </div>
+
+            <button
+                class="button button-icon"
+                type="button"
+                data-side-panel-toggle
+                aria-label="Hide section panel"
+                aria-controls="portfolio-side-panel"
+                aria-expanded="true"
+            >
+                <span aria-hidden="true">
+                    ×
+                </span>
+            </button>
+
+        </div>
+
+
+        <nav
+            class="side-nav"
+            aria-label="Portfolio section navigation"
+        >
+
+            <ul class="side-nav-list">
+
+                <li class="side-nav-item">
+
+                    <a
+                        class="side-nav-link is-current"
+                        href="#overview"
+                        data-section-link="overview"
+                        aria-current="location"
+                    >
+
+                        <span class="side-nav-index">
+                            01
+                        </span>
+
+                        <span>
+                            Overview
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="side-nav-item">
+
+                    <a
+                        class="side-nav-link"
+                        href="#about"
+                        data-section-link="about"
+                    >
+
+                        <span class="side-nav-index">
+                            02
+                        </span>
+
+                        <span>
+                            About
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="side-nav-item">
+
+                    <a
+                        class="side-nav-link"
+                        href="#capabilities"
+                        data-section-link="capabilities"
+                    >
+
+                        <span class="side-nav-index">
+                            03
+                        </span>
+
+                        <span>
+                            Capabilities
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="side-nav-item">
+
+                    <a
+                        class="side-nav-link"
+                        href="#featured-projects"
+                        data-section-link="featured-projects"
+                    >
+
+                        <span class="side-nav-index">
+                            04
+                        </span>
+
+                        <span>
+                            Projects
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="side-nav-item">
+
+                    <a
+                        class="side-nav-link"
+                        href="#technology"
+                        data-section-link="technology"
+                    >
+
+                        <span class="side-nav-index">
+                            05
+                        </span>
+
+                        <span>
+                            Technology
+                        </span>
+
+                    </a>
+
+                </li>
+
+                <li class="side-nav-item">
+
+                    <a
+                        class="side-nav-link"
+                        href="#contact-cta"
+                        data-section-link="contact-cta"
+                    >
+
+                        <span class="side-nav-index">
+                            06
+                        </span>
+
+                        <span>
+                            Connect
+                        </span>
+
+                    </a>
+
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </aside>
+
+
+    <!-- ====================================================
+         MAIN CONTENT
+         ==================================================== -->
+
+    <main class="main-content">
+
+        <!-- ==================================================
+             OVERVIEW / HERO
+             ================================================== -->
+
+        <section
+            class="hero section section-xl"
+            id="overview"
+            data-section="overview"
+        >
+
+            <div class="hero-content">
+
+                <span class="eyebrow">
+                    CyberNexus PH
+                </span>
+
+                <h1 class="hero-title">
+
+                    IT Portfolio
+
+                    <span class="cn-gradient-text">
+                        Platform
+                    </span>
+
+                </h1>
+
+                <p class="hero-subtitle">
+                    A simple technical portfolio for presenting
+                    information technology projects, systems,
+                    capabilities, experience, and technical
+                    development work.
+                </p>
+
+                <div class="hero-actions">
+
+                    <a
+                        class="button button-primary"
+                        href="projects.html"
+                    >
+                        View Projects
+                    </a>
+
+                    <a
+                        class="button button-secondary"
+                        href="contact.html"
+                    >
+                        Contact
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- Hero decorative presentation -->
+
+            <div
+                class="hero-visual"
+                aria-hidden="true"
+            >
+
+                <div class="hero-orb hero-orb-green"></div>
+
+                <div class="hero-orb hero-orb-cyan"></div>
+
+                <div class="hero-orb hero-orb-purple"></div>
+
+                <div class="hero-grid"></div>
+
+                <div class="hero-terminal">
+
+                    <div class="terminal-header">
+
+                        <span></span>
+                        <span></span>
+                        <span></span>
+
+                    </div>
+
+                    <div class="terminal-body">
+
+                        <span class="terminal-line">
+
+                            <span class="cn-text-green">
+                                $
+                            </span>
+
+                            cybernexus portfolio
+
+                        </span>
+
+                        <span class="terminal-line">
+
+                            <span class="cn-text-cyan">
+                                system:
+                            </span>
+
+                            IT Portfolio
+
+                        </span>
+
+                        <span class="terminal-line">
+
+                            <span class="cn-text-purple">
+                                focus:
+                            </span>
+
+                            IT / Security / DevSecOps
+
+                        </span>
+
+                        <span class="terminal-line">
+
+                            <span class="cn-text-green">
+                                status:
+                            </span>
+
+                            ready
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             ABOUT
+             ================================================== -->
+
+        <section
+            class="section section-lg"
+            id="about"
+            data-section="about"
+        >
+
+            <div class="section-header">
+
+                <span class="eyebrow">
+                    About
+                </span>
+
+                <h2 class="section-title">
+                    Building Practical IT Systems
+                </h2>
+
+                <p class="section-subtitle">
+                    CyberNexus focuses on practical software,
+                    infrastructure, automation, security, and
+                    technology engineering.
+                </p>
+
+            </div>
+
+            <div class="grid-2">
+
+                <article class="card">
+
+                    <span class="card-label">
+                        System
+                    </span>
+
+                    <h3 class="card-title">
+                        CyberNexus IT Portfolio Platform
+                    </h3>
+
+                    <p class="card-text">
+                        A responsive portfolio platform designed
+                        to organize professional information,
+                        technical projects, technologies,
+                        experience, and contact information
+                        in one place.
+                    </p>
+
+                </article>
+
+
+                <article class="card">
+
+                    <span class="card-label">
+                        Development
+                    </span>
+
+                    <h3 class="card-title">
+                        ADSTOM Development
+                    </h3>
+
+                    <p class="card-text">
+                        Development follows the ADSTOM workflow:
+                        Analyze, Develop, Secure, Test, Operate,
+                        and Maintain.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             CAPABILITIES
+             ================================================== -->
+
+        <section
+            class="section section-lg"
+            id="capabilities"
+            data-section="capabilities"
+        >
+
+            <div class="section-header">
+
+                <span class="eyebrow">
+                    Capabilities
+                </span>
+
+                <h2 class="section-title">
+                    Technical Focus
+                </h2>
+
+                <p class="section-subtitle">
+                    Core areas represented by the portfolio.
+                </p>
+
+            </div>
+
+            <div class="grid-3">
+
+                <article class="feature-card">
+
+                    <span class="feature-icon">
+                        01
+                    </span>
+
+                    <h3 class="feature-title">
+                        Software Development
+                    </h3>
+
+                    <p class="feature-text">
+                        Web applications, application
+                        architecture, APIs, backend services,
+                        databases, and automation.
+                    </p>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <span class="feature-icon">
+                        02
+                    </span>
+
+                    <h3 class="feature-title">
+                        Information Security
+                    </h3>
+
+                    <p class="feature-text">
+                        Security testing, secure development,
+                        vulnerability assessment, security
+                        tooling, and defensive engineering.
+                    </p>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <span class="feature-icon">
+                        03
+                    </span>
+
+                    <h3 class="feature-title">
+                        DevSecOps
+                    </h3>
+
+                    <p class="feature-text">
+                        Development, security, testing,
+                        deployment, monitoring, maintenance,
+                        and continuous improvement workflows.
+                    </p>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <span class="feature-icon">
+                        04
+                    </span>
+
+                    <h3 class="feature-title">
+                        Infrastructure
+                    </h3>
+
+                    <p class="feature-text">
+                        Linux environments, servers, networking,
+                        containers, infrastructure automation,
+                        and deployment.
+                    </p>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <span class="feature-icon">
+                        05
+                    </span>
+
+                    <h3 class="feature-title">
+                        Automation
+                    </h3>
+
+                    <p class="feature-text">
+                        Scripts and workflows for setup,
+                        development, testing, security checks,
+                        deployment, and maintenance.
+                    </p>
+
+                </article>
+
+
+                <article class="feature-card">
+
+                    <span class="feature-icon">
+                        06
+                    </span>
+
+                    <h3 class="feature-title">
+                        Technical Operations
+                    </h3>
+
+                    <p class="feature-text">
+                        Monitoring, troubleshooting, system
+                        maintenance, reliability, and
+                        continuous improvement.
+                    </p>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             FEATURED PROJECTS
+             ================================================== -->
+
+        <section
+            class="section section-lg"
+            id="featured-projects"
+            data-section="featured-projects"
+        >
+
+            <div class="section-header">
+
+                <span class="eyebrow">
+                    Projects
+                </span>
+
+                <h2 class="section-title">
+                    Featured Systems & Technical Work
+                </h2>
+
+                <p class="section-subtitle">
+                    Selected software systems, security
+                    development, academic project contribution,
+                    and technical archive work.
+                </p>
+
+            </div>
+
+            <div class="grid-2">
+
+                <!-- Project 01 -->
+
+                <article class="project-card">
+
+                    <div class="project-card-header">
+
+                        <span class="project-status">
+                            Active Development
+                        </span>
+
+                        <span class="project-index">
+                            01
+                        </span>
+
+                    </div>
+
+                    <h3 class="project-title">
+                        CyberNexus IT Portfolio Platform
+                    </h3>
+
+                    <p class="project-text">
+                        Responsive IT portfolio platform for
+                        presenting projects, skills, experience,
+                        technologies, and professional contact
+                        information.
+                    </p>
+
+                    <div class="tag-list">
+
+                        <span class="tag">
+                            HTML
+                        </span>
+
+                        <span class="tag">
+                            CSS
+                        </span>
+
+                        <span class="tag">
+                            JavaScript
+                        </span>
+
+                        <span class="tag">
+                            Python
+                        </span>
+
+                        <span class="tag">
+                            SQLite
+                        </span>
+
+                    </div>
+
+                    <a
+                        class="button button-ghost"
+                        href="projects.html"
+                    >
+                        Project Details
+                    </a>
+
+                </article>
+
+
+                <!-- Project 02 -->
+
+                <article class="project-card">
+
+                    <div class="project-card-header">
+
+                        <span class="project-status">
+                            Active Development
+                        </span>
+
+                        <span class="project-index">
+                            02
+                        </span>
+
+                    </div>
+
+                    <h3 class="project-title">
+                        CyberNexus Arsenal
+                    </h3>
+
+                    <p class="project-text">
+                        Information Security Testing AI System
+                        and platform concept focused on automated
+                        and interactive security testing.
+                    </p>
+
+                    <div class="tag-list">
+
+                        <span class="tag">
+                            Security
+                        </span>
+
+                        <span class="tag">
+                            AI
+                        </span>
+
+                        <span class="tag">
+                            Python
+                        </span>
+
+                        <span class="tag">
+                            SQLite
+                        </span>
+
+                        <span class="tag">
+                            DevSecOps
+                        </span>
+
+                    </div>
+
+                    <a
+                        class="button button-ghost"
+                        href="projects.html"
+                    >
+                        Project Details
+                    </a>
+
+                </article>
+
+
+                <!-- Project 03 -->
+
+                <article class="project-card">
+
+                    <div class="project-card-header">
+
+                        <span class="project-status">
+                            Completed Contribution
+                        </span>
+
+                        <span class="project-index">
+                            03
+                        </span>
+
+                    </div>
+
+                    <h3 class="project-title">
+                        Veraville I Web Community Management System
+                    </h3>
+
+                    <p class="project-text">
+                        A thesis and capstone web system developed
+                        as part of a collaborative academic project.
+                        I assisted the group with implementation and
+                        developed most of the project's source code.
+                    </p>
+
+                    <div class="tag-list">
+
+                        <span class="tag">
+                            Web System
+                        </span>
+
+                        <span class="tag">
+                            Community Management
+                        </span>
+
+                        <span class="tag">
+                            Thesis
+                        </span>
+
+                        <span class="tag">
+                            Capstone
+                        </span>
+
+                        <span class="tag">
+                            Best in Thesis
+                        </span>
+
+                    </div>
+
+                    <a
+                        class="button button-ghost"
+                        href="projects.html"
+                    >
+                        Project Details
+                    </a>
+
+                </article>
+
+
+                <!-- Project 04 -->
+
+                <article class="project-card">
+
+                    <div class="project-card-header">
+
+                        <span class="project-status">
+                            External Archive
+                        </span>
+
+                        <span class="project-index">
+                            04
+                        </span>
+
+                    </div>
+
+                    <h3 class="project-title">
+                        YouTube Project & Technical Archive
+                    </h3>
+
+                    <p class="project-text">
+                        A small technical and academic video
+                        archive containing Physics videos, a
+                        VB.NET and Microsoft Access project,
+                        and a VMware operating-system
+                        installation video.
+                    </p>
+
+                    <div class="tag-list">
+
+                        <span class="tag">
+                            Physics
+                        </span>
+
+                        <span class="tag">
+                            VB.NET
+                        </span>
+
+                        <span class="tag">
+                            MS Access
+                        </span>
+
+                        <span class="tag">
+                            VMware
+                        </span>
+
+                        <span class="tag">
+                            Technical Archive
+                        </span>
+
+                    </div>
+
+                    <a
+                        class="button button-ghost"
+                        href="https://youtube.com/@cyber-phys.sec.engineer?si=LbhvQvdXzTLgIwU6"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="View YouTube technical and academic archive"
+                    >
+                        View YouTube Archive
+                    </a>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             TECHNOLOGY
+             ================================================== -->
+
+        <section
+            class="section section-lg"
+            id="technology"
+            data-section="technology"
+        >
+
+            <div class="section-header">
+
+                <span class="eyebrow">
+                    Technology
+                </span>
+
+                <h2 class="section-title">
+                    Technology Stack
+                </h2>
+
+                <p class="section-subtitle">
+                    Open-source and professional technologies
+                    represented across development, security,
+                    infrastructure, and operations.
+                </p>
+
+            </div>
+
+
+            <!-- Technology groups -->
+
+            <div class="technology-grid">
+
+                <!-- Development -->
+
+                <article class="card technology-group">
+
+                    <div class="technology-group-header">
+
+                        <span
+                            class="feature-icon"
+                            aria-hidden="true"
+                        >
+                            01
+                        </span>
+
+                        <div>
+
+                            <span class="card-label">
+                                Development
+                            </span>
+
+                            <h3 class="card-title">
+                                Application Development
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tag-list tag-list-large">
+
+                        <span class="tag">HTML</span>
+                        <span class="tag">CSS</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">TypeScript</span>
+                        <span class="tag">Python</span>
+                        <span class="tag">C</span>
+                        <span class="tag">React</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">npm</span>
+                        <span class="tag">SQLite</span>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Security -->
+
+                <article class="card technology-group">
+
+                    <div class="technology-group-header">
+
+                        <span
+                            class="feature-icon"
+                            aria-hidden="true"
+                        >
+                            02
+                        </span>
+
+                        <div>
+
+                            <span class="card-label">
+                                Security
+                            </span>
+
+                            <h3 class="card-title">
+                                Application Security
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tag-list tag-list-large">
+
+                        <span class="tag">Semgrep</span>
+                        <span class="tag">ESLint</span>
+                        <span class="tag">Gitleaks</span>
+                        <span class="tag">Trivy</span>
+                        <span class="tag">Nmap</span>
+                        <span class="tag">OWASP ZAP</span>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Infrastructure -->
+
+                <article class="card technology-group">
+
+                    <div class="technology-group-header">
+
+                        <span
+                            class="feature-icon"
+                            aria-hidden="true"
+                        >
+                            03
+                        </span>
+
+                        <div>
+
+                            <span class="card-label">
+                                Infrastructure
+                            </span>
+
+                            <h3 class="card-title">
+                                Deployment Infrastructure
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tag-list tag-list-large">
+
+                        <span class="tag">Ubuntu</span>
+                        <span class="tag">Termux</span>
+                        <span class="tag">proot-distro</span>
+                        <span class="tag">Caddy</span>
+                        <span class="tag">OpenTofu</span>
+                        <span class="tag">K3s</span>
+                        <span class="tag">Cloudflare</span>
+                        <span class="tag">Render</span>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Operations -->
+
+                <article class="card technology-group">
+
+                    <div class="technology-group-header">
+
+                        <span
+                            class="feature-icon"
+                            aria-hidden="true"
+                        >
+                            04
+                        </span>
+
+                        <div>
+
+                            <span class="card-label">
+                                Operations
+                            </span>
+
+                            <h3 class="card-title">
+                                Technical Operations
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tag-list tag-list-large">
+
+                        <span class="tag">OpenSSH</span>
+                        <span class="tag">cURL</span>
+                        <span class="tag">Firefox</span>
+                        <span class="tag">Uptime Kuma</span>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Tooling -->
+
+                <article class="card technology-group">
+
+                    <div class="technology-group-header">
+
+                        <span
+                            class="feature-icon"
+                            aria-hidden="true"
+                        >
+                            05
+                        </span>
+
+                        <div>
+
+                            <span class="card-label">
+                                Tooling
+                            </span>
+
+                            <h3 class="card-title">
+                                Development Tooling
+                            </h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="tag-list tag-list-large">
+
+                        <span class="tag">Neovim</span>
+                        <span class="tag">Git</span>
+                        <span class="tag">GitHub</span>
+                        <span class="tag">Bash</span>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+        </section>
+
+
+        <!-- ==================================================
+             CONNECT
+             ================================================== -->
+
+        <section
+            class="section section-xl"
+            id="contact-cta"
+            data-section="contact-cta"
+        >
+
+            <div class="curved-panel">
+
+                <div class="section-header">
+
+                    <span class="eyebrow">
+                        Connect
+                    </span>
+
+                    <h2 class="section-title">
+                        Explore the Portfolio
+                    </h2>
+
+                    <p class="section-subtitle">
+                        Review projects, technical skills,
+                        experience, and available contact options.
+                    </p>
+
+                </div>
+
+                <div class="hero-actions">
+
+                    <a
+                        class="button button-primary"
+                        href="projects.html"
+                    >
+                        Explore Projects
+                    </a>
+
+                    <a
+                        class="button button-secondary"
+                        href="contact.html"
+                    >
+                        Get in Touch
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ========================================================
+     FOOTER
+     ======================================================== -->
+
+<footer class="site-footer">
+
+    <div class="footer-inner">
+
+        <div class="footer-brand">
+
+            <strong>
+                CyberNexus PH
+            </strong>
+
+            <span>
+                CyberNexus IT Portfolio Platform
+            </span>
+
+        </div>
+
+        <div class="footer-meta">
+
+            <span>
+                DevSecOps Engineer: Mark C. Pangilinan
+            </span>
+
+        </div>
+
+        <div class="footer-links">
+
+            <a href="privacy.html">
+                Privacy
+            </a>
+
+            <a href="terms.html">
+                Terms
+            </a>
+
+            <a href="contact.html">
+                Contact
+            </a>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- ========================================================
+     CYBERNEXUS JAVASCRIPT ARCHITECTURE
+
+     state
+       ↓
+     HTTP
+       ↓
+     API
+       ↓
+     Auth
+       ↓
+     Account
+       ↓
+     Web App
+       ↓
+     Chat / Voice
+     ======================================================== -->
+
+<script src="js/state.js" defer></script>
+<script src="js/http-user.js" defer></script>
+<script src="js/api-user.js" defer></script>
+<script src="js/auth-user.js" defer></script>
+<script src="js/account-user.js" defer></script>
+<script src="js/web-app.js" defer></script>
+<script src="js/chat.js" defer></script>
+<script src="js/voice.js" defer></script>
+
+</body></html>
