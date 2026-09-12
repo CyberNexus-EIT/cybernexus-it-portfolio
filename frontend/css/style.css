@@ -48,6 +48,49 @@
 
 
 /* =========================================================
+   COMPONENT OVERFLOW SAFETY
+   ========================================================= */
+
+.app-shell *,
+.application-shell * {
+    box-sizing: border-box;
+}
+
+.main-content > *,
+.main-area > *,
+.content-area > *,
+.page-content > *,
+.page-main > * {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.container,
+.container-wide,
+.container-fluid,
+.content,
+.content-narrow,
+.content-readable {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.card,
+.panel,
+.feature-card,
+.project-card,
+.status-card,
+.chat-panel,
+.curved-panel,
+.terminal,
+.code-block,
+.technical-block {
+    min-width: 0;
+    max-width: 100%;
+}
+
+
+/* =========================================================
    HEADER / STICKER
    ========================================================= */
 
@@ -99,6 +142,9 @@
 .app-header-inner,
 .cn-header-inner {
     gap: var(--cn-space-4);
+
+    min-width: 0;
+    max-width: 100%;
 }
 
 
@@ -111,6 +157,9 @@
 .cn-brand,
 .brand {
     gap: var(--cn-space-3);
+
+    min-width: 0;
+    max-width: 100%;
 }
 
 .header-brand a,
@@ -126,6 +175,8 @@
 
     overflow: hidden;
     isolation: isolate;
+
+    flex: 0 0 auto;
 
     background:
         linear-gradient(
@@ -183,7 +234,19 @@
 
 .brand-text,
 .brand-content {
+    min-width: 0;
+    max-width: 100%;
+
     gap: 2px;
+}
+
+.brand-name,
+.brand-subtitle,
+.brand-description {
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
 }
 
 .brand-name {
@@ -205,7 +268,11 @@
 .header-status,
 .app-status,
 .cn-status {
+    flex: 0 0 auto;
+
     gap: var(--cn-space-2);
+
+    min-width: 0;
 
     padding: 0.35rem 0.7rem;
 
@@ -227,6 +294,8 @@
 }
 
 .status-indicator {
+    flex: 0 0 auto;
+
     background: var(--cn-status-online);
 
     box-shadow:
@@ -235,14 +304,21 @@
 }
 
 .status-content {
+    min-width: 0;
+
     gap: var(--cn-space-1);
 }
 
 .status-label {
+    min-width: 0;
+    max-width: 100%;
+
     color: var(--cn-text-soft);
 
     font-family: var(--cn-font-mono);
     font-weight: var(--cn-weight-semibold);
+
+    overflow-wrap: anywhere;
 }
 
 
@@ -267,7 +343,8 @@
         0 0 12px rgba(85, 217, 255, 0.45),
         0 0 0 3px rgba(85, 217, 255, 0.045);
 
-    animation: cn-status-pulse 1.4s ease-in-out infinite;
+    animation:
+        cn-status-pulse 1.4s ease-in-out infinite;
 }
 
 [data-status="offline"] .status-indicator,
@@ -298,6 +375,7 @@
 .page-nav-link {
     position: relative;
 
+    min-width: 0;
     min-height: 40px;
 
     padding: 0.55rem 0.75rem;
@@ -310,6 +388,8 @@
     background: transparent;
 
     text-decoration: none;
+
+    overflow-wrap: anywhere;
 
     transition:
         color var(--cn-transition-fast),
@@ -325,7 +405,6 @@
     content: "";
 
     position: absolute;
-
     right: 20%;
     bottom: 4px;
     left: 20%;
@@ -406,18 +485,6 @@
         0 0 18px rgba(53, 229, 139, 0.035);
 }
 
-.header-nav-link[aria-disabled="true"],
-.primary-nav-link[aria-disabled="true"],
-.page-nav-link[aria-disabled="true"] {
-    cursor: default;
-}
-
-.header-nav-link[aria-disabled="true"]:hover,
-.primary-nav-link[aria-disabled="true"]:hover,
-.page-nav-link[aria-disabled="true"]:hover {
-    transform: none;
-}
-
 
 /* =========================================================
    SIDE PANEL
@@ -439,19 +506,30 @@
 }
 
 .side-panel-inner {
+    min-width: 0;
     background: transparent;
 }
 
 .side-panel-header {
+    min-width: 0;
     border-bottom-color: var(--cn-border);
 }
 
 .side-panel-content {
+    min-width: 0;
     scrollbar-width: thin;
 }
 
 .side-panel-footer {
+    min-width: 0;
     border-top-color: var(--cn-border);
+}
+
+.side-panel-title,
+.side-panel-description {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
 }
 
 .side-panel-title {
@@ -536,6 +614,7 @@
 .side-nav-link {
     gap: var(--cn-space-3);
 
+    min-width: 0;
     min-height: 42px;
 
     padding: 0.65rem 0.75rem;
@@ -546,6 +625,8 @@
     color: var(--cn-text-muted);
 
     text-decoration: none;
+
+    overflow-wrap: anywhere;
 
     transition:
         color var(--cn-transition-fast),
@@ -574,6 +655,7 @@
 }
 
 .side-nav-link[aria-current="page"],
+.side-nav-link[aria-current="location"],
 .side-nav-link.is-current,
 .side-nav-link.is-active,
 .side-nav-link.active {
@@ -594,6 +676,8 @@
 }
 
 .side-nav-index {
+    flex: 0 0 auto;
+
     color: inherit;
 
     font-family: var(--cn-font-mono);
@@ -601,6 +685,12 @@
 }
 
 .side-nav-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
     width: 22px;
     height: 22px;
 
@@ -640,6 +730,13 @@
         );
 }
 
+.main-area > *,
+.content-area > *,
+.main-content > * {
+    min-width: 0;
+    max-width: 100%;
+}
+
 
 /* =========================================================
    SECTIONS
@@ -647,10 +744,22 @@
 
 .section-header {
     gap: var(--cn-space-2);
+
+    min-width: 0;
 }
 
 .section-heading {
     gap: var(--cn-space-5);
+
+    min-width: 0;
+}
+
+.section-title,
+.section-subtitle {
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
 }
 
 .section-title {
@@ -663,6 +772,8 @@
 
 .section-actions {
     gap: var(--cn-space-2);
+
+    min-width: 0;
 }
 
 
@@ -729,11 +840,27 @@
 }
 
 .hero-content {
-    animation: cn-content-enter 650ms ease both;
+    position: relative;
+    z-index: 1;
+
+    min-width: 0;
+    max-width: 100%;
+
+    animation:
+        cn-content-enter 650ms ease both;
+}
+
+.hero-content > *,
+.hero-copy,
+.hero-copy > * {
+    min-width: 0;
+    max-width: 100%;
 }
 
 .hero-actions {
     gap: var(--cn-space-3);
+
+    min-width: 0;
 }
 
 
@@ -745,9 +872,15 @@ button,
 .button,
 .btn,
 [role="button"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
     gap: var(--cn-space-2);
 
+    min-width: 0;
     min-height: 42px;
+    max-width: 100%;
 
     padding: 0.65rem 1rem;
 
@@ -758,6 +891,8 @@ button,
     user-select: none;
 
     text-decoration: none;
+
+    overflow-wrap: anywhere;
 
     transition:
         color var(--cn-transition-fast),
@@ -926,10 +1061,17 @@ button:disabled,
 .icon-button,
 .btn-icon,
 .button-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
     width: 42px;
     min-width: 42px;
 
     height: 42px;
+    min-height: 42px;
 
     padding: 0;
 
@@ -941,6 +1083,8 @@ button:disabled,
 .button-icon svg {
     width: 18px;
     height: 18px;
+
+    flex: 0 0 auto;
 }
 
 
@@ -950,6 +1094,9 @@ button:disabled,
 
 .card {
     position: relative;
+
+    min-width: 0;
+    max-width: 100%;
 
     overflow: hidden;
 
@@ -961,7 +1108,6 @@ button:disabled,
         );
 
     border-color: var(--cn-border);
-
     border-radius: var(--cn-radius-lg);
 
     box-shadow:
@@ -978,7 +1124,6 @@ button:disabled,
     content: "";
 
     position: absolute;
-
     top: 0;
     right: 20%;
     left: 20%;
@@ -1004,10 +1149,15 @@ button:disabled,
 
 .card-header {
     gap: var(--cn-space-4);
+
+    min-width: 0;
+
     padding: var(--cn-space-5);
 }
 
 .card-body {
+    min-width: 0;
+
     padding:
         0
         var(--cn-space-5)
@@ -1016,6 +1166,8 @@ button:disabled,
 
 .card-footer {
     gap: var(--cn-space-3);
+
+    min-width: 0;
 
     padding:
         var(--cn-space-4)
@@ -1032,13 +1184,15 @@ button:disabled,
 .feature-card {
     isolation: isolate;
     overflow: hidden;
+
+    min-width: 0;
+    max-width: 100%;
 }
 
 .feature-card::after {
     content: "";
 
     position: absolute;
-
     right: -80px;
     bottom: -80px;
 
@@ -1057,14 +1211,14 @@ button:disabled,
 
 
 /* =========================================================
-   PROJECT CARD
+   PROJECT CARDS
    ========================================================= */
 
 .project-card {
-    overflow: hidden;
-
     min-width: 0;
     max-width: 100%;
+
+    overflow: hidden;
 }
 
 .project-card > *,
@@ -1073,7 +1227,12 @@ button:disabled,
 .project-card .card-footer,
 .project-card .project-content,
 .project-card .project-info,
-.project-card .project-details {
+.project-card .project-details,
+.project-card .project-actions,
+.project-card .project-links,
+.project-card .project-footer,
+.project-card .links,
+.project-card .actions {
     min-width: 0;
     max-width: 100%;
 }
@@ -1099,7 +1258,6 @@ button:disabled,
 .project-card a {
     display: inline-flex;
 
-    min-width: 0;
     max-width: 100%;
 
     white-space: normal;
@@ -1109,9 +1267,6 @@ button:disabled,
 .project-card .project-url,
 .project-card .project-title,
 .project-card .project-name {
-    min-width: 0;
-    max-width: 100%;
-
     overflow-wrap: anywhere;
     word-break: break-word;
 
@@ -1123,9 +1278,6 @@ button:disabled,
 .project-card .project-footer,
 .project-card .links,
 .project-card .actions {
-    min-width: 0;
-    max-width: 100%;
-
     overflow-wrap: anywhere;
     word-break: break-word;
 }
@@ -1144,13 +1296,10 @@ button:disabled,
 .project-card .project-footer a,
 .project-card .links a,
 .project-card .actions a {
-    min-width: 0;
-    max-width: 100%;
+    white-space: normal;
 
     overflow-wrap: anywhere;
     word-break: break-word;
-
-    white-space: normal;
 }
 
 .project-card .project-actions .button,
@@ -1163,6 +1312,7 @@ button:disabled,
     max-width: 100%;
 
     white-space: normal;
+
     overflow-wrap: anywhere;
     word-break: break-word;
 }
@@ -1202,76 +1352,12 @@ button:disabled,
 }
 
 .project-index {
+    flex: 0 0 auto;
+
     color: var(--cn-text-dim);
 
     font-family: var(--cn-font-mono);
     font-weight: var(--cn-weight-semibold);
-
-    flex: 0 0 auto;
-}
-
-
-/* =========================================================
-   PROJECT LINKS
-   ========================================================= */
-
-.project-link,
-.project-url,
-.project-card a[href] {
-    display: inline-flex;
-
-    min-width: 0;
-    max-width: 100%;
-
-    overflow-wrap: anywhere;
-    word-break: break-word;
-
-    white-space: normal;
-}
-
-.project-links,
-.project-actions,
-.project-card .links,
-.project-card .actions {
-    min-width: 0;
-    max-width: 100%;
-
-    overflow-wrap: anywhere;
-    word-break: break-word;
-}
-
-.project-links a,
-.project-actions a,
-.project-card .links a,
-.project-card .actions a {
-    display: inline-flex;
-
-    min-width: 0;
-    max-width: 100%;
-
-    overflow-wrap: anywhere;
-    word-break: break-word;
-
-    white-space: normal;
-}
-
-.project-links > *,
-.project-actions > *,
-.project-card .links > *,
-.project-card .actions > * {
-    min-width: 0;
-    max-width: 100%;
-}
-
-.project-card .button,
-.project-card .btn,
-.project-card [role="button"] {
-    min-width: 0;
-    max-width: 100%;
-
-    white-space: normal;
-    overflow-wrap: anywhere;
-    word-break: break-word;
 }
 
 
@@ -1282,9 +1368,14 @@ button:disabled,
 .badge,
 .tag,
 .chip {
+    display: inline-flex;
+    align-items: center;
+
     gap: var(--cn-space-1);
 
+    min-width: 0;
     min-height: 28px;
+    max-width: 100%;
 
     padding: 0.3rem 0.65rem;
 
@@ -1354,6 +1445,8 @@ button:disabled,
 
 .form-group {
     gap: var(--cn-space-2);
+
+    min-width: 0;
 }
 
 .form-label {
@@ -1363,6 +1456,9 @@ button:disabled,
 input,
 textarea,
 select {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
     min-height: 44px;
 
     padding: 0.7rem 0.85rem;
@@ -1417,6 +1513,8 @@ textarea::placeholder {
 
 .form-actions {
     gap: var(--cn-space-3);
+
+    min-width: 0;
 }
 
 
@@ -1426,6 +1524,8 @@ textarea::placeholder {
 
 input[type="checkbox"],
 input[type="radio"] {
+    flex: 0 0 auto;
+
     width: 18px;
     min-width: 18px;
 
@@ -1445,6 +1545,9 @@ input[type="radio"] {
 .alert {
     gap: var(--cn-space-3);
 
+    min-width: 0;
+    max-width: 100%;
+
     padding: var(--cn-space-4);
 
     border: 1px solid var(--cn-border);
@@ -1456,6 +1559,8 @@ input[type="radio"] {
             rgba(255, 255, 255, 0.025),
             rgba(255, 255, 255, 0.01)
         );
+
+    overflow-wrap: anywhere;
 }
 
 .alert-success {
@@ -1486,6 +1591,9 @@ input[type="radio"] {
 .status-card {
     gap: var(--cn-space-3);
 
+    min-width: 0;
+    max-width: 100%;
+
     padding: var(--cn-space-4);
 
     border: 1px solid var(--cn-border);
@@ -1514,6 +1622,15 @@ input[type="radio"] {
 
 .metric {
     gap: var(--cn-space-1);
+
+    min-width: 0;
+}
+
+.metric-value,
+.metric-label {
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
 }
 
 .metric-value {
@@ -1535,6 +1652,9 @@ input[type="radio"] {
    ========================================================= */
 
 .progress {
+    width: 100%;
+    min-width: 0;
+
     height: 8px;
 
     overflow: hidden;
@@ -1550,6 +1670,8 @@ input[type="radio"] {
 .progress-bar {
     width: var(--progress, 0%);
     height: 100%;
+
+    min-width: 0;
 
     border-radius: inherit;
 
@@ -1568,12 +1690,14 @@ input[type="radio"] {
    ========================================================= */
 
 .divider {
+    width: 100%;
     height: 1px;
 
     background: var(--cn-border);
 }
 
 .divider-gradient {
+    width: 100%;
     height: 1px;
 
     background: var(--cn-gradient-brand);
@@ -1590,6 +1714,9 @@ input[type="radio"] {
 .terminal,
 .technical-block {
     position: relative;
+
+    min-width: 0;
+    max-width: 100%;
 
     overflow: auto;
 
@@ -1610,13 +1737,21 @@ input[type="radio"] {
         0 0 20px rgba(53, 229, 139, 0.02);
 }
 
+.code-block pre,
+.terminal pre,
+.technical-block pre,
+.code-block code,
+.terminal code,
+.technical-block code {
+    max-width: 100%;
+}
+
 .code-block::before,
 .terminal::before,
 .technical-block::before {
     content: "";
 
     position: absolute;
-
     top: 0;
     right: 0;
     left: 0;
@@ -1639,6 +1774,9 @@ input[type="radio"] {
 .terminal {
     position: relative;
 
+    min-width: 0;
+    max-width: 100%;
+
     overflow: hidden;
 
     border: 1px solid var(--cn-border-strong);
@@ -1657,15 +1795,19 @@ input[type="radio"] {
 }
 
 .terminal-header {
+    min-width: 0;
+
     border-bottom-color: var(--cn-border);
 }
 
-.terminal-body {
-    color: var(--cn-text-soft);
-}
-
+.terminal-body,
 .terminal-line {
+    min-width: 0;
+    max-width: 100%;
+
     color: var(--cn-text-soft);
+
+    overflow-wrap: anywhere;
 }
 
 
@@ -1675,7 +1817,6 @@ input[type="radio"] {
 
 .decorative-grid {
     position: absolute;
-
     inset: 0;
 
     pointer-events: none;
@@ -1743,7 +1884,6 @@ input[type="radio"] {
     content: "";
 
     position: absolute;
-
     inset: 15%;
 
     border: 1px solid rgba(85, 217, 255, 0.1);
@@ -1813,7 +1953,6 @@ input[type="radio"] {
     content: "";
 
     position: absolute;
-
     top: -2px;
     left: 20%;
 
@@ -1837,10 +1976,12 @@ input[type="radio"] {
 .curved-panel {
     position: relative;
 
+    min-width: 0;
+    max-width: 100%;
+
     overflow: hidden;
 
     border: 1px solid var(--cn-border);
-
     border-radius: 32px;
 
     background:
@@ -1858,7 +1999,6 @@ input[type="radio"] {
     content: "";
 
     position: absolute;
-
     top: -100px;
     right: -100px;
 
@@ -1896,7 +2036,6 @@ input[type="radio"] {
     content: "";
 
     position: absolute;
-
     top: 0;
     right: 12%;
     left: 12%;
@@ -1912,6 +2051,17 @@ input[type="radio"] {
 
 .footer-inner {
     gap: var(--cn-space-6);
+
+    min-width: 0;
+    max-width: 100%;
+}
+
+.footer-brand,
+.footer-meta,
+.footer-nav,
+.footer-links {
+    min-width: 0;
+    max-width: 100%;
 }
 
 .footer-brand {
@@ -1931,10 +2081,22 @@ input[type="radio"] {
 
 .footer-meta {
     color: var(--cn-text-muted);
+
+    overflow-wrap: anywhere;
+}
+
+.footer-links {
+    min-width: 0;
+
+    gap: var(--cn-space-2);
 }
 
 .footer-links > a {
+    flex: 0 1 auto;
+
+    min-width: 0;
     min-height: 40px;
+    max-width: 100%;
 
     padding: 0.55rem 0.75rem;
 
@@ -1944,6 +2106,8 @@ input[type="radio"] {
     color: var(--cn-text-muted);
 
     text-decoration: none;
+
+    white-space: nowrap;
 
     transition:
         color var(--cn-transition-fast),
@@ -1987,7 +2151,6 @@ input[type="radio"] {
     content: attr(data-tooltip);
 
     position: absolute;
-
     left: 50%;
     bottom: calc(100% + 8px);
 
@@ -2049,7 +2212,6 @@ input[type="radio"] {
     content: "";
 
     position: absolute;
-
     top: 50%;
     left: 50%;
 
@@ -2075,6 +2237,9 @@ input[type="radio"] {
 .skeleton {
     position: relative;
 
+    min-width: 0;
+    max-width: 100%;
+
     overflow: hidden;
 
     min-height: 1rem;
@@ -2089,7 +2254,6 @@ input[type="radio"] {
     content: "";
 
     position: absolute;
-
     inset: 0;
 
     background:
@@ -2112,6 +2276,9 @@ input[type="radio"] {
    ========================================================= */
 
 .chat-panel {
+    min-width: 0;
+    max-width: 100%;
+
     overflow: hidden;
 
     border: 1px solid var(--cn-border);
@@ -2129,6 +2296,7 @@ input[type="radio"] {
 }
 
 .chat-messages {
+    min-width: 0;
     min-height: 240px;
     max-height: 560px;
 
@@ -2140,6 +2308,7 @@ input[type="radio"] {
     display: flex;
 
     min-width: 0;
+    max-width: 100%;
 }
 
 .chat-message.user {
@@ -2159,13 +2328,13 @@ input[type="radio"] {
         var(--cn-space-4);
 
     border: 1px solid var(--cn-border);
-
     border-radius: 18px;
 
     background:
         var(--cn-surface-raised);
 
     overflow-wrap: anywhere;
+    word-break: break-word;
 
     box-shadow:
         0 4px 14px rgba(0, 0, 0, 0.08);
@@ -2189,6 +2358,8 @@ input[type="radio"] {
 
 .chat-input {
     gap: var(--cn-space-2);
+
+    min-width: 0;
 
     padding: var(--cn-space-3);
 
@@ -2217,7 +2388,6 @@ input[type="radio"] {
     content: "";
 
     position: absolute;
-
     inset: -5px;
 
     border: 1px solid var(--cn-green);
