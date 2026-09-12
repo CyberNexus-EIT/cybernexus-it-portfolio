@@ -1,0 +1,628 @@
+/*
+ * CyberNexus IT Portfolio
+ * Project: IT Portfolio
+ * Brand: CyberNexus PH
+ * Engineer: Mark C. Pangilinan
+ *
+ * File: typography.css
+ * Purpose:
+ * Centralized typography system for the entire CyberNexus
+ * IT Portfolio.
+ *
+ * Responsibility:
+ * - Font families
+ * - Font weights
+ * - Font sizes
+ * - Line heights
+ * - Letter spacing
+ * - Text hierarchy
+ * - Heading hierarchy
+ * - Navigation text
+ * - Labels
+ * - Form text
+ * - Code/technical text
+ *
+ * Do not place:
+ * - Colors
+ * - Margins
+ * - Padding
+ * - Layout rules
+ * - Breakpoints
+ * - Component positioning
+ */
+
+/* ============================================================
+   1. FONT FAMILY SYSTEM
+   ============================================================ */
+
+:root {
+
+    /* Primary Interface Font */
+    --cn-font-sans:
+        "Inter",
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+
+    /* Technical / Monospace Font */
+    --cn-font-mono:
+        "JetBrains Mono",
+        "Fira Code",
+        "Cascadia Code",
+        "SFMono-Regular",
+        Consolas,
+        "Liberation Mono",
+        monospace;
+
+    /* Display Font */
+    --cn-font-display:
+        var(--cn-font-sans);
+
+    /* Font Weight System */
+    --cn-weight-regular: 400;
+    --cn-weight-medium: 500;
+    --cn-weight-semibold: 600;
+    --cn-weight-bold: 700;
+    --cn-weight-extrabold: 800;
+
+    /* Base Font System */
+    --cn-font-size-root: 16px;
+    --cn-font-size-base: 1rem;
+
+    --cn-line-height-tight: 1.15;
+    --cn-line-height-heading: 1.2;
+    --cn-line-height-normal: 1.5;
+    --cn-line-height-relaxed: 1.7;
+
+    /* Letter Spacing */
+    --cn-letter-tight: -0.025em;
+    --cn-letter-normal: 0;
+    --cn-letter-wide: 0.025em;
+    --cn-letter-wider: 0.06em;
+    --cn-letter-caps: 0.08em;
+
+    /* Text Scale */
+    --cn-text-xs: 0.75rem;
+    --cn-text-sm: 0.875rem;
+    --cn-text-md: 1rem;
+    --cn-text-lg: 1.125rem;
+    --cn-text-xl: 1.25rem;
+    --cn-text-2xl: 1.5rem;
+    --cn-text-3xl: 1.875rem;
+    --cn-text-4xl: 2.25rem;
+    --cn-text-5xl: 3rem;
+    --cn-text-6xl: 3.75rem;
+
+    /* Heading Scale */
+    --cn-heading-1: 3rem;
+    --cn-heading-2: 2.25rem;
+    --cn-heading-3: 1.875rem;
+    --cn-heading-4: 1.5rem;
+    --cn-heading-5: 1.25rem;
+    --cn-heading-6: 1.125rem;
+
+    /* Navigation Typography */
+    --cn-nav-size: 0.9rem;
+    --cn-nav-weight: var(--cn-weight-semibold);
+    --cn-nav-spacing: 0.025em;
+
+    /* Label Typography */
+    --cn-label-size: 0.75rem;
+    --cn-label-weight: var(--cn-weight-semibold);
+    --cn-label-spacing: var(--cn-letter-wide);
+
+    /* Caption / System Typography */
+    --cn-caption-size: 0.75rem;
+    --cn-caption-line-height: 1.4;
+
+    /* Code Typography */
+    --cn-code-size: 0.875rem;
+    --cn-code-line-height: 1.6;
+}
+
+
+/* ============================================================
+   2. DOCUMENT TYPOGRAPHY
+   ============================================================ */
+
+html {
+    font-family: var(--cn-font-sans);
+    font-size: var(--cn-font-size-root);
+    font-weight: var(--cn-weight-regular);
+    line-height: var(--cn-line-height-normal);
+
+    text-rendering: optimizeLegibility;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* ============================================================
+   3. BODY TYPOGRAPHY
+   ============================================================ */
+
+body {
+    font-size: var(--cn-text-md);
+    font-weight: var(--cn-weight-regular);
+    line-height: var(--cn-line-height-normal);
+    letter-spacing: var(--cn-letter-normal);
+}
+
+
+/* ============================================================
+   4. HEADINGS
+   ============================================================ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--cn-font-display);
+    font-weight: var(--cn-weight-bold);
+    line-height: var(--cn-line-height-heading);
+    letter-spacing: var(--cn-letter-tight);
+    text-wrap: balance;
+}
+
+h1 {
+    font-size: var(--cn-heading-1);
+    font-weight: var(--cn-weight-extrabold);
+}
+
+h2 {
+    font-size: var(--cn-heading-2);
+}
+
+h3 {
+    font-size: var(--cn-heading-3);
+}
+
+h4 {
+    font-size: var(--cn-heading-4);
+    font-weight: var(--cn-weight-semibold);
+}
+
+h5 {
+    font-size: var(--cn-heading-5);
+    font-weight: var(--cn-weight-semibold);
+}
+
+h6 {
+    font-size: var(--cn-heading-6);
+    font-weight: var(--cn-weight-semibold);
+}
+
+
+/* ============================================================
+   5. PARAGRAPHS
+   ============================================================ */
+
+p {
+    font-size: var(--cn-text-md);
+    font-weight: var(--cn-weight-regular);
+    line-height: var(--cn-line-height-relaxed);
+}
+
+
+/* ============================================================
+   6. LINKS
+   ============================================================ */
+
+a {
+    font-size: inherit;
+    font-weight: inherit;
+    line-height: inherit;
+
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.2em;
+}
+
+
+/* ============================================================
+   7. NAVIGATION TYPOGRAPHY
+   ============================================================ */
+
+nav,
+.nav,
+.navigation {
+    font-size: var(--cn-nav-size);
+    font-weight: var(--cn-nav-weight);
+    letter-spacing: var(--cn-nav-spacing);
+}
+
+nav a,
+.nav a,
+.navigation a {
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+}
+
+
+/* ============================================================
+   8. BUTTON TYPOGRAPHY
+   ============================================================ */
+
+button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"] {
+    font-family: var(--cn-font-sans);
+    font-size: var(--cn-text-sm);
+    font-weight: var(--cn-weight-semibold);
+    line-height: 1.2;
+    letter-spacing: var(--cn-letter-normal);
+}
+
+
+/* ============================================================
+   9. FORM TYPOGRAPHY
+   ============================================================ */
+
+input,
+textarea,
+select {
+    font-family: var(--cn-font-sans);
+    font-size: var(--cn-text-md);
+    font-weight: var(--cn-weight-regular);
+    line-height: var(--cn-line-height-normal);
+}
+
+label {
+    font-family: var(--cn-font-sans);
+    font-size: var(--cn-label-size);
+    font-weight: var(--cn-label-weight);
+    line-height: 1.4;
+    letter-spacing: var(--cn-label-spacing);
+}
+
+::placeholder {
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: var(--cn-weight-regular);
+    letter-spacing: normal;
+}
+
+
+/* ============================================================
+   10. STATUS TYPOGRAPHY
+   ============================================================ */
+
+.status,
+.status-label,
+.badge,
+.sticker-status {
+    font-family: var(--cn-font-sans);
+    font-size: var(--cn-text-xs);
+    font-weight: var(--cn-weight-semibold);
+    line-height: 1.2;
+    letter-spacing: var(--cn-letter-wide);
+}
+
+
+/* ============================================================
+   11. BRAND TYPOGRAPHY
+   ============================================================ */
+
+.brand,
+.brand-name,
+.logo-text {
+    font-family: var(--cn-font-display);
+    font-weight: var(--cn-weight-extrabold);
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.brand-mark,
+.logo-mark {
+    font-family: var(--cn-font-mono);
+    font-weight: var(--cn-weight-bold);
+    line-height: 1;
+    letter-spacing: -0.04em;
+}
+
+
+/* ============================================================
+   12. SECTION TYPOGRAPHY
+   ============================================================ */
+
+.section-title {
+    font-family: var(--cn-font-display);
+    font-size: var(--cn-heading-2);
+    font-weight: var(--cn-weight-bold);
+    line-height: var(--cn-line-height-heading);
+    letter-spacing: var(--cn-letter-tight);
+}
+
+.section-subtitle {
+    font-family: var(--cn-font-sans);
+    font-size: var(--cn-text-lg);
+    font-weight: var(--cn-weight-regular);
+    line-height: var(--cn-line-height-relaxed);
+}
+
+
+/* ============================================================
+   13. EYEBROW / OVERLINE TYPOGRAPHY
+   ============================================================ */
+
+.eyebrow,
+.overline {
+    font-family: var(--cn-font-sans);
+    font-size: var(--cn-text-xs);
+    font-weight: var(--cn-weight-bold);
+    line-height: 1.3;
+    letter-spacing: var(--cn-letter-caps);
+    text-transform: uppercase;
+}
+
+
+/* ============================================================
+   14. CAPTION TYPOGRAPHY
+   ============================================================ */
+
+.caption,
+.helper-text,
+.meta-text {
+    font-family: var(--cn-font-sans);
+    font-size: var(--cn-caption-size);
+    font-weight: var(--cn-weight-regular);
+    line-height: var(--cn-caption-line-height);
+}
+
+
+/* ============================================================
+   15. CODE / TECHNICAL TYPOGRAPHY
+   ============================================================ */
+
+code,
+kbd,
+pre,
+samp {
+    font-family: var(--cn-font-mono);
+    font-size: var(--cn-code-size);
+    line-height: var(--cn-code-line-height);
+}
+
+code,
+kbd {
+    font-weight: var(--cn-weight-medium);
+}
+
+pre {
+    font-weight: var(--cn-weight-regular);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+
+/* ============================================================
+   16. TECHNICAL IDENTIFIERS
+   ============================================================ */
+
+.technical,
+.system-text,
+.command-text,
+.identifier,
+.file-name,
+.file-path,
+.version,
+.ip-address,
+.endpoint {
+    font-family: var(--cn-font-mono);
+    font-size: var(--cn-code-size);
+    line-height: var(--cn-code-line-height);
+}
+
+
+/* ============================================================
+   17. TABLE TYPOGRAPHY
+   ============================================================ */
+
+table {
+    font-family: var(--cn-font-sans);
+    font-size: var(--cn-text-sm);
+    line-height: var(--cn-line-height-normal);
+}
+
+th {
+    font-weight: var(--cn-weight-semibold);
+    letter-spacing: var(--cn-letter-wide);
+}
+
+td {
+    font-weight: var(--cn-weight-regular);
+}
+
+
+/* ============================================================
+   18. LIST TYPOGRAPHY
+   ============================================================ */
+
+ul,
+ol {
+    font-size: var(--cn-text-md);
+    line-height: var(--cn-line-height-relaxed);
+}
+
+
+/* ============================================================
+   19. QUOTATION TYPOGRAPHY
+   ============================================================ */
+
+blockquote {
+    font-size: var(--cn-text-lg);
+    font-weight: var(--cn-weight-medium);
+    line-height: var(--cn-line-height-relaxed);
+    letter-spacing: var(--cn-letter-normal);
+}
+
+
+/* ============================================================
+   20. STRONG / EMPHASIS
+   ============================================================ */
+
+strong,
+b {
+    font-weight: var(--cn-weight-bold);
+}
+
+em,
+i {
+    font-style: italic;
+}
+
+
+/* ============================================================
+   21. SMALL TEXT
+   ============================================================ */
+
+small {
+    font-size: var(--cn-text-sm);
+    line-height: 1.4;
+}
+
+
+/* ============================================================
+   22. TEXT SIZE UTILITIES
+   ============================================================ */
+
+.text-xs {
+    font-size: var(--cn-text-xs);
+}
+
+.text-sm {
+    font-size: var(--cn-text-sm);
+}
+
+.text-md {
+    font-size: var(--cn-text-md);
+}
+
+.text-lg {
+    font-size: var(--cn-text-lg);
+}
+
+.text-xl {
+    font-size: var(--cn-text-xl);
+}
+
+.text-2xl {
+    font-size: var(--cn-text-2xl);
+}
+
+.text-3xl {
+    font-size: var(--cn-text-3xl);
+}
+
+.text-4xl {
+    font-size: var(--cn-text-4xl);
+}
+
+.text-5xl {
+    font-size: var(--cn-text-5xl);
+}
+
+.text-6xl {
+    font-size: var(--cn-text-6xl);
+}
+
+
+/* ============================================================
+   23. FONT WEIGHT UTILITIES
+   ============================================================ */
+
+.font-regular {
+    font-weight: var(--cn-weight-regular);
+}
+
+.font-medium {
+    font-weight: var(--cn-weight-medium);
+}
+
+.font-semibold {
+    font-weight: var(--cn-weight-semibold);
+}
+
+.font-bold {
+    font-weight: var(--cn-weight-bold);
+}
+
+.font-extrabold {
+    font-weight: var(--cn-weight-extrabold);
+}
+
+
+/* ============================================================
+   24. FONT FAMILY UTILITIES
+   ============================================================ */
+
+.font-sans {
+    font-family: var(--cn-font-sans);
+}
+
+.font-mono {
+    font-family: var(--cn-font-mono);
+}
+
+.font-display {
+    font-family: var(--cn-font-display);
+}
+
+
+/* ============================================================
+   25. TEXT STYLE UTILITIES
+   ============================================================ */
+
+.text-uppercase {
+    text-transform: uppercase;
+}
+
+.text-lowercase {
+    text-transform: lowercase;
+}
+
+.text-capitalize {
+    text-transform: capitalize;
+}
+
+.text-nowrap {
+    white-space: nowrap;
+}
+
+.text-balance {
+    text-wrap: balance;
+}
+
+.text-pretty {
+    text-wrap: pretty;
+}
+
+
+/* ============================================================
+   26. ACCESSIBILITY TEXT
+   ============================================================ */
+
+.visually-hidden {
+    position: absolute;
+
+    width: 1px;
+    height: 1px;
+
+    padding: 0;
+    margin: -1px;
+
+    overflow: hidden;
+
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+
+    white-space: nowrap;
+
+    border: 0;
+}
