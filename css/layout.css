@@ -1,0 +1,1399 @@
+/*
+ * CyberNexus IT Portfolio Platform
+ * File: frontend/css/layout.css
+ *
+ * Responsibility:
+ * - Full-screen application structure
+ * - Header / Sticker structure
+ * - Page navigation structure
+ * - Side panel structure
+ * - Main content structure
+ * - Sections and containers
+ * - Flexbox / Grid layout
+ * - Footer structural alignment
+ * - Structural curves and shapes
+ * - Overlay / drawer / modal structure
+ * - Technology / tool grouping structure
+ *
+ * Does NOT own:
+ * - Colors or visual theme tokens
+ * - Typography definitions
+ * - Shared spacing tokens
+ * - Responsive breakpoints
+ * - Application behavior
+ */
+
+/* =========================================================
+   STRUCTURAL TOKENS
+========================================================= */
+
+:root {
+    /* Application dimensions */
+    --cn-header-height: 70px;
+    --cn-header-min-height: 60px;
+
+    --cn-side-panel-width: 280px;
+    --cn-side-panel-min-width: 240px;
+    --cn-side-panel-collapsed-width: 72px;
+
+    --cn-content-max-width: 1440px;
+    --cn-content-wide-width: 1680px;
+
+    /* Structural layers */
+    --cn-layer-base: 1;
+    --cn-layer-content: 10;
+    --cn-layer-header: 100;
+    --cn-layer-side-panel: 110;
+    --cn-layer-overlay: 200;
+}
+
+/* =========================================================
+   ROOT APPLICATION
+========================================================= */
+
+html {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+}
+
+#app,
+.app,
+.application {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+/* =========================================================
+   GLOBAL PAGE STRUCTURE
+========================================================= */
+
+.page,
+.page-shell {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+.page-body,
+.page-layout {
+    position: relative;
+
+    display: flex;
+
+    flex: 1 1 auto;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+.page-main {
+    position: relative;
+
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+.page-content {
+    position: relative;
+
+    flex: 1 1 auto;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+/* =========================================================
+   CONTENT CONTAINERS
+========================================================= */
+
+.container,
+.container-wide,
+.container-fluid,
+.content,
+.content-narrow,
+.content-readable {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.container {
+    max-width: var(--cn-content-max-width);
+    margin-inline: auto;
+}
+
+.container-wide {
+    max-width: var(--cn-content-wide-width);
+    margin-inline: auto;
+}
+
+.container-fluid {
+    max-width: none;
+}
+
+.content-narrow {
+    max-width: 960px;
+    margin-inline: auto;
+}
+
+.content-readable {
+    max-width: 780px;
+    margin-inline: auto;
+}
+
+/* =========================================================
+   HEADER / STICKER
+========================================================= */
+
+.site-header,
+.app-header,
+.cn-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--cn-layer-header);
+
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-width: 0;
+    min-height: var(--cn-header-height);
+
+    flex: 0 0 var(--cn-header-height);
+}
+
+.header-inner,
+.site-header-inner,
+.app-header-inner,
+.cn-header-inner {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+/*
+ * The header remains sticky.
+ *
+ * Page content receives its structural offset through
+ * the page-flow rules below so the first content area
+ * does not sit underneath the Sticker.
+ */
+
+/* =========================================================
+   HEADER BRAND
+========================================================= */
+
+.header-brand,
+.app-brand,
+.cn-brand {
+    display: flex;
+    align-items: center;
+
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+.header-brand a,
+.app-brand a,
+.cn-brand a {
+    display: inline-flex;
+    align-items: center;
+
+    min-width: 0;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+.brand-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    width: 42px;
+    height: 42px;
+
+    border-radius: 12px;
+}
+
+.brand-text,
+.brand-content {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+.brand-name {
+    display: block;
+
+    min-width: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.brand-subtitle,
+.brand-description {
+    display: block;
+
+    min-width: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   HEADER STATUS
+   Exactly ONE global status structure.
+========================================================= */
+
+.status,
+.header-status,
+.app-status,
+.cn-status,
+.system-status {
+    display: inline-flex;
+    align-items: center;
+
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+}
+
+.status-content {
+    display: inline-flex;
+    align-items: center;
+
+    min-width: 0;
+}
+
+.status-label {
+    min-width: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   PRIMARY PAGE NAVIGATION
+========================================================= */
+
+.header-nav,
+.primary-nav,
+.page-nav {
+    display: flex;
+    align-items: center;
+
+    flex: 1 1 auto;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.header-nav-list,
+.primary-nav-list,
+.page-nav-list {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-evenly;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.header-nav-item,
+.primary-nav-item,
+.page-nav-item {
+    display: flex;
+
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.header-nav-link,
+.primary-nav-link,
+.page-nav-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+
+    text-align: center;
+    white-space: nowrap;
+}
+
+/*
+ * Current-page appearance is visual only.
+ *
+ * Navigation remains clickable and keyboard-focusable.
+ * aria-current="page" identifies the current page.
+ * JavaScript may prevent unnecessary same-page navigation.
+ */
+
+/* =========================================================
+   PAGE BODY
+========================================================= */
+
+.page-layout {
+    align-items: stretch;
+
+    /*
+     * Keep the page content below the sticky Sticker.
+     * This prevents the top of the page from being hidden
+     * behind the global header.
+     */
+    scroll-padding-top: var(--cn-header-height);
+}
+
+/*
+ * Anchor scrolling must also account for the sticky header.
+ * This prevents section headings from stopping underneath
+ * the Sticker when using #section links.
+ */
+.page-layout [id],
+.page-content [id],
+.main-area [id],
+.content-area [id],
+.main-content [id],
+.section[id] {
+    scroll-margin-top: var(--cn-header-height);
+}
+
+/* =========================================================
+   SIDE PANEL
+========================================================= */
+
+.side-panel {
+    position: sticky;
+    top: var(--cn-header-height);
+    z-index: var(--cn-layer-side-panel);
+
+    display: flex;
+    flex: 0 0 var(--cn-side-panel-width);
+    flex-direction: column;
+
+    width: var(--cn-side-panel-width);
+    min-width: var(--cn-side-panel-width);
+
+    height: calc(100vh - var(--cn-header-height));
+    height: calc(100dvh - var(--cn-header-height));
+
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+.side-panel-inner {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+.side-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    flex: 0 0 auto;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.side-panel-content {
+    flex: 1 1 auto;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.side-panel-footer {
+    display: flex;
+    align-items: center;
+
+    flex: 0 0 auto;
+
+    width: 100%;
+    min-width: 0;
+}
+
+/* =========================================================
+   SIDE PANEL NAVIGATION
+========================================================= */
+
+.side-nav {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.side-nav-list {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+}
+
+.side-nav-item {
+    display: flex;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.side-nav-link {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.side-nav-index,
+.side-nav-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+}
+
+.side-nav-label {
+    min-width: 0;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   SIDE PANEL STATES
+========================================================= */
+
+.side-panel.is-collapsed,
+.side-panel.collapsed {
+    flex-basis: var(--cn-side-panel-collapsed-width);
+
+    width: var(--cn-side-panel-collapsed-width);
+    min-width: var(--cn-side-panel-collapsed-width);
+}
+
+.side-panel.is-collapsed .side-panel-header,
+.side-panel.collapsed .side-panel-header {
+    justify-content: center;
+}
+
+.side-panel.is-collapsed .side-nav-link,
+.side-panel.collapsed .side-nav-link {
+    justify-content: center;
+}
+
+.side-panel.is-collapsed .side-nav-label,
+.side-panel.is-collapsed .side-panel-title,
+.side-panel.is-collapsed .side-panel-description,
+.side-panel.collapsed .side-nav-label,
+.side-panel.collapsed .side-panel-title,
+.side-panel.collapsed .side-panel-description {
+    display: none;
+}
+
+.side-panel.is-open,
+.side-panel.open {
+    visibility: visible;
+}
+
+.side-panel.is-closed,
+.side-panel.closed {
+    visibility: hidden;
+}
+
+/* =========================================================
+   MAIN CONTENT AREA
+========================================================= */
+
+.main-area,
+.content-area,
+.main-content {
+    position: relative;
+
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    overflow-x: hidden;
+
+    /*
+     * Creates a safe top boundary for page content while
+     * preserving the sticky Sticker in the normal layout.
+     */
+    scroll-padding-top: var(--cn-header-height);
+}
+
+.main-inner {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+
+    flex: 1 1 auto;
+}
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.section {
+    position: relative;
+
+    display: block;
+
+    width: 100%;
+    min-width: 0;
+
+    scroll-margin-top: var(--cn-header-height);
+}
+
+.section-inner {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+
+    margin-inline: auto;
+}
+
+.section-header {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.section-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.section-title,
+.section-subtitle {
+    min-width: 0;
+}
+
+.section-actions {
+    display: flex;
+    align-items: center;
+
+    flex: 0 0 auto;
+}
+
+.section-content {
+    width: 100%;
+    min-width: 0;
+}
+
+.section-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    min-width: 0;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    width: 100%;
+    min-width: 0;
+
+    min-height:
+        min(
+            760px,
+            calc(100vh - var(--cn-header-height))
+        );
+
+    min-height:
+        min(
+            760px,
+            calc(100dvh - var(--cn-header-height))
+        );
+
+    overflow: hidden;
+
+    scroll-margin-top: var(--cn-header-height);
+}
+
+.hero-inner {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+
+    z-index: var(--cn-layer-content);
+}
+
+.hero-content {
+    position: relative;
+
+    width: 100%;
+    max-width: 980px;
+    min-width: 0;
+}
+
+.hero-actions {
+    display: flex;
+    align-items: center;
+
+    flex-wrap: wrap;
+}
+
+/* =========================================================
+   GENERAL GRIDS
+========================================================= */
+
+.grid {
+    display: grid;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.grid-2 {
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+}
+
+.grid-3 {
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+}
+
+.grid-4 {
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+}
+
+.grid-auto {
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(240px, 1fr)
+        );
+}
+
+.grid-auto-sm {
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(180px, 1fr)
+        );
+}
+
+.grid-auto-lg {
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(320px, 1fr)
+        );
+}
+
+/* =========================================================
+   TECHNOLOGY / TOOL GROUPING
+========================================================= */
+
+.technology-grid,
+.tech-grid,
+.tool-grid,
+.stack-grid {
+    display: grid;
+
+    width: 100%;
+    min-width: 0;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+}
+
+.technology-group,
+.tech-group,
+.tool-group,
+.stack-group {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.technology-group-header,
+.tech-group-header,
+.tool-group-header,
+.stack-group-header {
+    display: flex;
+    align-items: flex-start;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.technology-group-header > *,
+.tech-group-header > *,
+.tool-group-header > *,
+.stack-group-header > * {
+    min-width: 0;
+}
+
+.technology-group-header > div,
+.tech-group-header > div,
+.tool-group-header > div,
+.stack-group-header > div {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.technology-group-content,
+.tech-group-content,
+.tool-group-content,
+.stack-group-content {
+    width: 100%;
+    min-width: 0;
+}
+
+.technology-group .tag-list,
+.tech-group .tag-list,
+.tool-group .tag-list,
+.stack-group .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.technology-group .tag,
+.technology-group .chip,
+.technology-group .badge,
+.tech-group .tag,
+.tech-group .chip,
+.tech-group .badge,
+.tool-group .tag,
+.tool-group .chip,
+.tool-group .badge,
+.stack-group .tag,
+.stack-group .chip,
+.stack-group .badge {
+    min-width: 0;
+    max-width: 100%;
+
+    overflow-wrap: anywhere;
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card-grid {
+    display: grid;
+
+    width: 100%;
+    min-width: 0;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(260px, 1fr)
+        );
+}
+
+.card {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.card-body {
+    width: 100%;
+    min-width: 0;
+}
+
+.card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    width: 100%;
+    min-width: 0;
+}
+
+/* =========================================================
+   FLEX STRUCTURE
+========================================================= */
+
+.flex {
+    display: flex;
+}
+
+.inline-flex {
+    display: inline-flex;
+}
+
+.flex-row {
+    flex-direction: row;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.flex-nowrap {
+    flex-wrap: nowrap;
+}
+
+.align-start {
+    align-items: flex-start;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.align-end {
+    align-items: flex-end;
+}
+
+.justify-start {
+    justify-content: flex-start;
+}
+
+.justify-center {
+    justify-content: center;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-around {
+    justify-content: space-around;
+}
+
+.justify-evenly {
+    justify-content: space-evenly;
+}
+
+.flex-1 {
+    flex: 1 1 auto;
+}
+
+.flex-none {
+    flex: none;
+}
+
+.min-width-0 {
+    min-width: 0;
+}
+
+.width-full {
+    width: 100%;
+}
+
+.height-full {
+    height: 100%;
+}
+
+/* =========================================================
+   TWO-COLUMN CONTENT
+========================================================= */
+
+.split-layout {
+    display: grid;
+
+    width: 100%;
+    min-width: 0;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(280px, 380px);
+}
+
+.split-layout.reverse {
+    grid-template-columns:
+        minmax(280px, 380px)
+        minmax(0, 1fr);
+}
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.form {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.form-row {
+    display: grid;
+
+    width: 100%;
+    min-width: 0;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+
+    min-width: 0;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    flex-wrap: wrap;
+}
+
+/* =========================================================
+   TABLES
+========================================================= */
+
+.table-wrapper {
+    width: 100%;
+    min-width: 0;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.table {
+    width: 100%;
+    min-width: 640px;
+
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+}
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.site-footer,
+.app-footer,
+.cn-footer {
+    position: relative;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.footer-inner {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    min-width: 0;
+}
+
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+.footer-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 1 1 0;
+    min-width: 0;
+
+    text-align: center;
+}
+
+.footer-nav {
+    display: flex;
+    align-items: center;
+
+    flex: 1 1 0;
+    min-width: 0;
+
+    flex-wrap: wrap;
+}
+
+.footer-links {
+    display: flex;
+    align-items: stretch;
+
+    flex: 1 1 auto;
+
+    width: 100%;
+    min-width: 0;
+
+    margin: 0;
+    padding: 0;
+}
+
+.footer-links > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 1 1 0;
+    min-width: 0;
+
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* =========================================================
+   STRUCTURAL DECORATIVE SHAPES
+========================================================= */
+
+.shape-layer {
+    position: absolute;
+    inset: 0;
+
+    z-index: 0;
+
+    overflow: hidden;
+
+    pointer-events: none;
+}
+
+.shape {
+    position: absolute;
+
+    pointer-events: none;
+}
+
+.shape-circle {
+    width: 280px;
+    height: 280px;
+
+    border-radius: 50%;
+}
+
+.shape-square {
+    width: 240px;
+    height: 240px;
+
+    border-radius: 28px;
+}
+
+.shape-line {
+    width: 100%;
+    height: 1px;
+}
+
+.shape-orb {
+    width: 180px;
+    height: 180px;
+
+    border-radius: 50%;
+}
+
+.shape-top-right {
+    top: 0;
+    right: 0;
+}
+
+.shape-top-left {
+    top: 0;
+    left: 0;
+}
+
+.shape-bottom-right {
+    right: 0;
+    bottom: 0;
+}
+
+.shape-bottom-left {
+    bottom: 0;
+    left: 0;
+}
+
+/* =========================================================
+   STRUCTURAL CURVES
+========================================================= */
+
+.curve-top {
+    border-radius: 0 0 48px 48px;
+}
+
+.curve-bottom {
+    border-radius: 48px 48px 0 0;
+}
+
+.curve-all {
+    border-radius: 48px;
+}
+
+.curve-soft {
+    border-radius: 28px;
+}
+
+.clip-curve {
+    overflow: hidden;
+
+    border-radius: 48px;
+}
+
+/* =========================================================
+   OVERLAY / DRAWER STRUCTURE
+========================================================= */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+
+    z-index: var(--cn-layer-overlay);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+}
+
+.drawer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+
+    z-index: var(--cn-layer-overlay);
+
+    display: flex;
+    flex-direction: column;
+
+    width: min(420px, 92vw);
+    height: 100%;
+
+    min-width: 0;
+
+    overflow: hidden;
+}
+
+.drawer-left {
+    left: 0;
+}
+
+.drawer-right {
+    right: 0;
+}
+
+.modal {
+    position: relative;
+
+    width: min(640px, 92vw);
+
+    max-height: min(840px, 90vh);
+    max-height: min(840px, 90dvh);
+
+    overflow-y: auto;
+}
+
+/* =========================================================
+   STRUCTURAL VISIBILITY
+========================================================= */
+
+.is-hidden {
+    display: none !important;
+}
+
+.is-visible {
+    display: block !important;
+}
+
+.is-flex {
+    display: flex !important;
+}
+
+.is-grid {
+    display: grid !important;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+/* =========================================================
+   PRINT STRUCTURE
+========================================================= */
+
+@media print {
+    .site-header,
+    .app-header,
+    .cn-header,
+    .side-panel,
+    .header-nav,
+    .primary-nav,
+    .page-nav,
+    .site-footer,
+    .app-footer,
+    .cn-footer {
+        display: none !important;
+    }
+
+    .page,
+    .page-shell,
+    .page-body,
+    .page-layout,
+    .page-main,
+    .main-area,
+    .content-area,
+    .main-content,
+    .page-content {
+        display: block;
+
+        width: 100%;
+        min-width: 0;
+        min-height: auto;
+    }
+
+    .container,
+    .container-wide,
+    .content-narrow,
+    .content-readable {
+        width: 100%;
+        max-width: none;
+    }
+
+    .shape-layer,
+    .shape {
+        display: none !important;
+    }
+}
