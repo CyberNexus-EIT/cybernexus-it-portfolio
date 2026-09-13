@@ -1,0 +1,55 @@
+# Git
+.git/
+.gitignore
+.github/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Backups
+*.bak
+*.save
+*~
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary / generated files
+.cache/
+.tmp/
+temp/
+dist/
+build/
+coverage/
+
+# Local output
+output/generated/
+output/reports/

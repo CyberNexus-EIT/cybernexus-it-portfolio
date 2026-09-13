@@ -1,0 +1,9 @@
+services:
+  cybernexus-it-portfolio:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    container_name: cybernexus-it-portfolio
+    restart: unless-stopped
+    ports:
+      - "8000:8000"

@@ -1,0 +1,14 @@
+{
+  "name": "cybernexus-it-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CyberNexus IT Portfolio Platform by CyberNexus PH.",
+  "scripts": {
+    "start": "python3 backend/backend.py",
+    "dev": "python3 backend/backend.py",
+    "check": "echo \"CyberNexus IT Portfolio check complete.\""
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
