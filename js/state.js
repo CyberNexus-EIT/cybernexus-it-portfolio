@@ -11,6 +11,7 @@
  * - Global UI state
  * - State subscriptions
  * - Safe state persistence
+ * - State validation and normalization
  *
  * Does NOT own:
  * - HTTP requests
@@ -30,7 +31,8 @@
     ======================================================= */
 
     const CyberNexus =
-        (window.CyberNexus = window.CyberNexus || {});
+        (window.CyberNexus =
+            window.CyberNexus || {});
 
     /* =======================================================
        CONSTANTS
@@ -40,6 +42,8 @@
         "cybernexus-it-portfolio-state";
 
     const STATE_VERSION = 1;
+
+    const PERSISTENCE_DELAY = 50;
 
     const PAGES = Object.freeze([
         "portfolio",
@@ -64,6 +68,19 @@
         offline: "Offline",
         maintenance: "Maintenance"
     });
+
+    const NOTIFICATION_TYPES = Object.freeze([
+        "info",
+        "success",
+        "warning",
+        "error"
+    ]);
+
+    const DEFAULT_NOTIFICATION_DURATION = 4000;
+
+    /* =======================================================
+       DEFAULT STATE
+    ======================================================= */
 
     const DEFAULT_STATE = Object.freeze({
         version: STATE_VERSION,
@@ -110,7 +127,7 @@
 
     let persistenceTimer = null;
 
-    const PERSISTENCE_DELAY = 50;
+    let storageAvailable = null;
 
     /* =======================================================
        BASIC UTILITIES
@@ -138,82 +155,201 @@
         );
     }
 
+    function isPlainObject(value) {
+        if (!isObject(value)) {
+            return false;
+        }
+
+        const prototype =
+            Object.getPrototypeOf(value);
+
+        return (
+            prototype === Object.prototype ||
+            prototype === null
+        );
+    }
+
     function mergeObjects(base, update) {
         const result =
-            isObject(base)
+            isPlainObject(base)
                 ? clone(base)
                 : {};
 
-        if (!isObject(update)) {
+        if (!isPlainObject(update)) {
             return result;
         }
 
-        Object.keys(update).forEach(function (key) {
-            const incoming = update[key];
+        Object.keys(update).forEach(
+            function (key) {
+                const incoming =
+                    update[key];
 
-            if (
-                isObject(result[key]) &&
-                isObject(incoming)
-            ) {
-                result[key] =
-                    mergeObjects(
-                        result[key],
+                if (
+                    isPlainObject(
+                        result[key]
+                    ) &&
+                    isPlainObject(
                         incoming
-                    );
-            } else {
-                result[key] = clone(incoming);
+                    )
+                ) {
+                    result[key] =
+                        mergeObjects(
+                            result[key],
+                            incoming
+                        );
+                } else {
+                    result[key] =
+                        clone(incoming);
+                }
             }
-        });
+        );
 
         return result;
     }
 
+    function valuesEqual(
+        first,
+        second
+    ) {
+        if (
+            first === second
+        ) {
+            return true;
+        }
+
+        try {
+            return (
+                JSON.stringify(first) ===
+                JSON.stringify(second)
+            );
+        } catch (error) {
+            return false;
+        }
+    }
+
+    function normalizeString(value) {
+        if (
+            value === null ||
+            value === undefined
+        ) {
+            return "";
+        }
+
+        return String(value).trim();
+    }
+
+    /* =======================================================
+       PAGE NORMALIZATION
+    ======================================================= */
+
     function normalizePage(page) {
-        if (typeof page !== "string") {
-            return DEFAULT_STATE.navigation.page;
+        if (
+            typeof page !==
+            "string"
+        ) {
+            return (
+                DEFAULT_STATE
+                    .navigation
+                    .page
+            );
         }
 
         const normalized =
             page
                 .trim()
                 .toLowerCase()
-                .replace(/\.html$/i, "");
+                .replace(
+                    /^\/+/,
+                    ""
+                )
+                .replace(
+                    /\.html$/i,
+                    ""
+                )
+                .replace(
+                    /\/+$/,
+                    ""
+                );
 
-        return PAGES.includes(normalized)
+        return PAGES.includes(
+            normalized
+        )
             ? normalized
-            : DEFAULT_STATE.navigation.page;
+            : DEFAULT_STATE
+                  .navigation
+                  .page;
     }
 
     function normalizeSection(section) {
-        if (typeof section !== "string") {
+        if (
+            typeof section !==
+            "string"
+        ) {
             return "";
         }
 
-        return section.trim();
+        return section
+            .trim()
+            .replace(
+                /^#+/,
+                ""
+            );
     }
+
+    /* =======================================================
+       CONNECTION NORMALIZATION
+    ======================================================= */
 
     function normalizeConnectionState(
         connectionState
     ) {
-        return CONNECTION_STATES.includes(
+        if (
+            typeof connectionState !==
+            "string"
+        ) {
+            return (
+                DEFAULT_STATE
+                    .connection
+                    .state
+            );
+        }
+
+        const normalized =
             connectionState
+                .trim()
+                .toLowerCase();
+
+        return CONNECTION_STATES.includes(
+            normalized
         )
-            ? connectionState
-            : DEFAULT_STATE.connection.state;
+            ? normalized
+            : DEFAULT_STATE
+                  .connection
+                  .state;
     }
 
-    function normalizeLatency(latency) {
+    function normalizeLatency(
+        latency
+    ) {
         if (
-            typeof latency !== "number" ||
-            !Number.isFinite(latency)
+            typeof latency !==
+                "number" ||
+            !Number.isFinite(
+                latency
+            )
         ) {
             return null;
         }
 
-        return Math.max(0, latency);
+        return Math.max(
+            0,
+            latency
+        );
     }
 
-    function normalizeTimestamp(timestamp) {
+    function normalizeTimestamp(
+        timestamp
+    ) {
         if (
             timestamp === null ||
             timestamp === undefined ||
@@ -222,21 +358,86 @@
             return null;
         }
 
-        if (typeof timestamp !== "string") {
+        if (
+            timestamp instanceof Date
+        ) {
+            if (
+                Number.isNaN(
+                    timestamp.getTime()
+                )
+            ) {
+                return null;
+            }
+
+            return timestamp.toISOString();
+        }
+
+        if (
+            typeof timestamp !==
+            "string"
+        ) {
             return null;
         }
 
-        const value = timestamp.trim();
+        const value =
+            timestamp.trim();
 
         if (!value) {
             return null;
         }
 
-        const parsed = Date.parse(value);
+        const parsed =
+            Date.parse(value);
 
-        return Number.isNaN(parsed)
-            ? null
-            : new Date(parsed).toISOString();
+        if (
+            Number.isNaN(parsed)
+        ) {
+            return null;
+        }
+
+        return new Date(
+            parsed
+        ).toISOString();
+    }
+
+    function normalizeEndpoint(
+        endpoint
+    ) {
+        if (
+            typeof endpoint !==
+            "string"
+        ) {
+            return "";
+        }
+
+        return endpoint.trim();
+    }
+
+    /* =======================================================
+       UI NORMALIZATION
+    ======================================================= */
+
+    function normalizeModal(
+        modal
+    ) {
+        if (
+            modal === null ||
+            modal === undefined
+        ) {
+            return null;
+        }
+
+        if (
+            typeof modal !==
+            "string"
+        ) {
+            return null;
+        }
+
+        const value =
+            modal.trim();
+
+        return value || null;
     }
 
     function normalizeNotification(
@@ -249,57 +450,248 @@
             return null;
         }
 
-        if (!isObject(notification)) {
+        if (
+            !isPlainObject(
+                notification
+            )
+        ) {
             return null;
         }
 
+        const requestedType =
+            normalizeString(
+                notification.type
+            ).toLowerCase();
+
+        const type =
+            NOTIFICATION_TYPES.includes(
+                requestedType
+            )
+                ? requestedType
+                : "info";
+
+        const message =
+            typeof notification.message ===
+            "string"
+                ? notification.message.trim()
+                : "";
+
+        if (!message) {
+            return null;
+        }
+
+        const duration =
+            typeof notification.duration ===
+                "number" &&
+            Number.isFinite(
+                notification.duration
+            )
+                ? Math.max(
+                      0,
+                      notification.duration
+                  )
+                : DEFAULT_NOTIFICATION_DURATION;
+
         return {
-            type:
-                typeof notification.type === "string"
-                    ? notification.type.trim() || "info"
-                    : "info",
-
-            message:
-                typeof notification.message === "string"
-                    ? notification.message
-                    : "",
-
-            duration:
-                typeof notification.duration === "number" &&
-                Number.isFinite(notification.duration)
-                    ? Math.max(
-                          0,
-                          notification.duration
-                      )
-                    : 4000
+            type,
+            message,
+            duration
         };
     }
 
-    function notificationsEqual(
-        first,
-        second
+    /* =======================================================
+       STATE NORMALIZATION
+    ======================================================= */
+
+    function normalizeState(
+        candidate
     ) {
-        return (
-            JSON.stringify(first) ===
-            JSON.stringify(second)
-        );
+        const source =
+            isPlainObject(candidate)
+                ? candidate
+                : {};
+
+        const navigation =
+            isPlainObject(
+                source.navigation
+            )
+                ? source.navigation
+                : {};
+
+        const sidePanel =
+            isPlainObject(
+                source.sidePanel
+            )
+                ? source.sidePanel
+                : {};
+
+        const connection =
+            isPlainObject(
+                source.connection
+            )
+                ? source.connection
+                : {};
+
+        const app =
+            isPlainObject(
+                source.app
+            )
+                ? source.app
+                : {};
+
+        const ui =
+            isPlainObject(
+                source.ui
+            )
+                ? source.ui
+                : {};
+
+        const page =
+            normalizePage(
+                navigation.page
+            );
+
+        const section =
+            normalizeSection(
+                navigation.section
+            );
+
+        const previousPage =
+            navigation.previousPage
+                ? normalizePage(
+                      navigation.previousPage
+                  )
+                : "";
+
+        const previousSection =
+            normalizeSection(
+                navigation.previousSection
+            );
+
+        const collapsed =
+            Boolean(
+                sidePanel.collapsed
+            );
+
+        /*
+         * A collapsed panel is never
+         * considered open.
+         */
+        const open =
+            collapsed
+                ? false
+                : typeof sidePanel.open ===
+                      "boolean"
+                    ? sidePanel.open
+                    : DEFAULT_STATE
+                          .sidePanel
+                          .open;
+
+        const connectionState =
+            normalizeConnectionState(
+                connection.state
+            );
+
+        const endpoint =
+            normalizeEndpoint(
+                connection.endpoint
+            );
+
+        const lastChecked =
+            normalizeTimestamp(
+                connection.lastChecked
+            );
+
+        const latency =
+            normalizeLatency(
+                connection.latency
+            );
+
+        const notification =
+            normalizeNotification(
+                ui.notification
+            );
+
+        return {
+            version: STATE_VERSION,
+
+            app: {
+                initialized:
+                    Boolean(
+                        app.initialized
+                    ),
+
+                ready:
+                    Boolean(
+                        app.ready
+                    )
+            },
+
+            navigation: {
+                page,
+                section,
+                previousPage,
+                previousSection
+            },
+
+            sidePanel: {
+                open,
+                collapsed
+            },
+
+            connection: {
+                state:
+                    connectionState,
+                endpoint,
+                lastChecked,
+                latency
+            },
+
+            ui: {
+                loading:
+                    Boolean(
+                        ui.loading
+                    ),
+
+                busy:
+                    Boolean(
+                        ui.busy
+                    ),
+
+                modal:
+                    normalizeModal(
+                        ui.modal
+                    ),
+
+                notification
+            }
+        };
     }
 
     /* =======================================================
-       PERSISTENCE
+       STORAGE
     ======================================================= */
 
     function canUseStorage() {
+        if (
+            storageAvailable !==
+            null
+        ) {
+            return storageAvailable;
+        }
+
         try {
             if (
-                typeof window.localStorage ===
-                "undefined"
+                !window.localStorage
             ) {
+                storageAvailable =
+                    false;
+
                 return false;
             }
 
             const testKey =
-                "__cybernexus_storage_test__";
+                "__cybernexus_state_test__";
 
             window.localStorage.setItem(
                 testKey,
@@ -310,25 +702,72 @@
                 testKey
             );
 
+            storageAvailable =
+                true;
+
             return true;
         } catch (error) {
+            storageAvailable =
+                false;
+
             return false;
         }
     }
 
+    function invalidateStorageAvailability() {
+        storageAvailable =
+            null;
+    }
+
+    /* =======================================================
+       PERSISTED STATE
+    ======================================================= */
+
     function getPersistedState() {
+        /*
+         * Only intentionally safe,
+         * non-sensitive configuration
+         * is persisted.
+         *
+         * Do NOT persist:
+         * - authentication tokens
+         * - passwords
+         * - account data
+         * - session data
+         * - API responses
+         * - notifications
+         * - modal state
+         * - loading/busy state
+         * - runtime connection status
+         * - latency
+         */
         return {
-            version: STATE_VERSION,
+            version:
+                STATE_VERSION,
 
-            navigation:
-                clone(
+            navigation: {
+                page:
+                    state.navigation.page,
+
+                section:
+                    state.navigation.section,
+
+                previousPage:
                     state.navigation
-                ),
+                        .previousPage,
 
-            sidePanel:
-                clone(
-                    state.sidePanel
-                ),
+                previousSection:
+                    state.navigation
+                        .previousSection
+            },
+
+            sidePanel: {
+                open:
+                    state.sidePanel.open,
+
+                collapsed:
+                    state.sidePanel.collapsed
+            },
 
             connection: {
                 endpoint:
@@ -338,7 +777,9 @@
     }
 
     function save() {
-        if (!canUseStorage()) {
+        if (
+            !canUseStorage()
+        ) {
             return false;
         }
 
@@ -348,11 +789,15 @@
 
             window.localStorage.setItem(
                 STORAGE_KEY,
-                JSON.stringify(payload)
+                JSON.stringify(
+                    payload
+                )
             );
 
             return true;
         } catch (error) {
+            invalidateStorageAvailability();
+
             console.warn(
                 "[CyberNexus State] Unable to save state:",
                 error
@@ -363,7 +808,10 @@
     }
 
     function scheduleSave() {
-        if (persistenceTimer !== null) {
+        if (
+            persistenceTimer !==
+            null
+        ) {
             window.clearTimeout(
                 persistenceTimer
             );
@@ -372,7 +820,9 @@
         persistenceTimer =
             window.setTimeout(
                 function () {
-                    persistenceTimer = null;
+                    persistenceTimer =
+                        null;
+
                     save();
                 },
                 PERSISTENCE_DELAY
@@ -380,7 +830,10 @@
     }
 
     function cancelScheduledSave() {
-        if (persistenceTimer === null) {
+        if (
+            persistenceTimer ===
+            null
+        ) {
             return;
         }
 
@@ -388,11 +841,65 @@
             persistenceTimer
         );
 
-        persistenceTimer = null;
+        persistenceTimer =
+            null;
+    }
+
+    /* =======================================================
+       STATE MIGRATION
+    ======================================================= */
+
+    function migratePersistedState(
+        saved
+    ) {
+        if (
+            !isPlainObject(saved)
+        ) {
+            return null;
+        }
+
+        const version =
+            Number(
+                saved.version || 0
+            );
+
+        /*
+         * Future state versions cannot
+         * safely be interpreted by an
+         * older frontend.
+         */
+        if (
+            Number.isFinite(
+                version
+            ) &&
+            version >
+                STATE_VERSION
+        ) {
+            return null;
+        }
+
+        /*
+         * Version 0 / legacy state.
+         *
+         * Current persisted structure is
+         * already compatible with the
+         * current state model, so merge
+         * it through normalization.
+         */
+        if (
+            version <=
+            STATE_VERSION
+        ) {
+            return saved;
+        }
+
+        return null;
     }
 
     function load() {
-        if (!canUseStorage()) {
+        if (
+            !canUseStorage()
+        ) {
             return false;
         }
 
@@ -406,135 +913,76 @@
                 return false;
             }
 
-            const saved =
-                JSON.parse(raw);
+            let saved;
 
-            if (
-                !saved ||
-                typeof saved !== "object" ||
-                Array.isArray(saved)
-            ) {
+            try {
+                saved =
+                    JSON.parse(raw);
+            } catch (error) {
+                console.warn(
+                    "[CyberNexus State] Saved state contains invalid JSON."
+                );
+
+                window.localStorage.removeItem(
+                    STORAGE_KEY
+                );
+
                 return false;
             }
 
-            /*
-             * Reject unsupported future state
-             * versions instead of guessing how
-             * to interpret them.
-             */
-            if (
-                saved.version !== undefined &&
-                Number(saved.version) >
-                    STATE_VERSION
-            ) {
+            const migrated =
+                migratePersistedState(
+                    saved
+                );
+
+            if (!migrated) {
+                /*
+                 * Unsupported future state.
+                 * Do not overwrite it.
+                 */
                 return false;
             }
 
-            const navigation =
-                isObject(
-                    saved.navigation
-                )
-                    ? saved.navigation
-                    : {};
-
-            const sidePanel =
-                isObject(
-                    saved.sidePanel
-                )
-                    ? saved.sidePanel
-                    : {};
-
-            const connection =
-                isObject(
-                    saved.connection
-                )
-                    ? saved.connection
-                    : {};
-
-            const loadedPage =
-                navigation.page !== undefined
-                    ? normalizePage(
-                          navigation.page
-                      )
-                    : state.navigation.page;
-
-            const loadedSection =
-                navigation.section !== undefined
-                    ? normalizeSection(
-                          navigation.section
-                      )
-                    : state.navigation.section;
-
-            const loadedPreviousPage =
-                navigation.previousPage
-                    ? normalizePage(
-                          navigation.previousPage
-                      )
-                    : "";
-
-            const loadedPreviousSection =
-                navigation.previousSection !==
-                undefined
-                    ? normalizeSection(
-                          navigation.previousSection
-                      )
-                    : "";
-
-            const loadedOpen =
-                typeof sidePanel.open ===
-                "boolean"
-                    ? sidePanel.open
-                    : state.sidePanel.open;
-
-            const loadedCollapsed =
-                typeof sidePanel.collapsed ===
-                "boolean"
-                    ? sidePanel.collapsed
-                    : state.sidePanel.collapsed;
+            const normalized =
+                normalizeState(
+                    mergeObjects(
+                        DEFAULT_STATE,
+                        migrated
+                    )
+                );
 
             /*
-             * A collapsed panel is always closed.
-             * An expanded panel preserves the
-             * saved open state.
+             * Runtime-only values must
+             * always start fresh.
              */
-            const normalizedCollapsed =
-                loadedCollapsed;
+            normalized.app =
+                clone(
+                    DEFAULT_STATE.app
+                );
 
-            const normalizedOpen =
-                normalizedCollapsed
-                    ? false
-                    : loadedOpen;
+            normalized.connection.state =
+                DEFAULT_STATE
+                    .connection
+                    .state;
 
-            const loadedEndpoint =
-                typeof connection.endpoint ===
-                "string"
-                    ? connection.endpoint.trim()
-                    : state.connection.endpoint;
+            normalized.connection.lastChecked =
+                null;
+
+            normalized.connection.latency =
+                null;
+
+            normalized.ui =
+                clone(
+                    DEFAULT_STATE.ui
+                );
 
             state =
-                mergeObjects(state, {
-                    navigation: {
-                        page: loadedPage,
-                        section: loadedSection,
-                        previousPage:
-                            loadedPreviousPage,
-                        previousSection:
-                            loadedPreviousSection
-                    },
+                normalized;
 
-                    sidePanel: {
-                        open: normalizedOpen,
-                        collapsed:
-                            normalizedCollapsed
-                    },
-
-                    connection: {
-                        endpoint:
-                            loadedEndpoint
-                    }
-                });
-
-            notify("state-loaded");
+            notify(
+                "state-loaded",
+                false
+            );
 
             return true;
         } catch (error) {
@@ -550,7 +998,9 @@
     function clearSavedState() {
         cancelScheduledSave();
 
-        if (!canUseStorage()) {
+        if (
+            !canUseStorage()
+        ) {
             return false;
         }
 
@@ -561,6 +1011,8 @@
 
             return true;
         } catch (error) {
+            invalidateStorageAvailability();
+
             console.warn(
                 "[CyberNexus State] Unable to clear saved state:",
                 error
@@ -574,19 +1026,32 @@
        STATE NOTIFICATION
     ======================================================= */
 
-    function notify(reason, persist) {
-        const snapshot = getState();
+    function notify(
+        reason,
+        persist
+    ) {
+        const snapshot =
+            getState();
 
-        subscribers.forEach(function (listener) {
-            try {
-                listener(snapshot, reason);
-            } catch (error) {
-                console.error(
-                    "[CyberNexus State] Subscriber error:",
-                    error
-                );
+        subscribers.forEach(
+            function (listener) {
+                try {
+                    /*
+                     * Every subscriber receives
+                     * an isolated snapshot.
+                     */
+                    listener(
+                        clone(snapshot),
+                        reason
+                    );
+                } catch (error) {
+                    console.error(
+                        "[CyberNexus State] Subscriber error:",
+                        error
+                    );
+                }
             }
-        });
+        );
 
         if (persist) {
             scheduleSave();
@@ -611,18 +1076,23 @@
                 .split(".")
                 .filter(Boolean);
 
-        let value = state;
+        let value =
+            state;
 
-        for (const key of keys) {
+        for (
+            const key of keys
+        ) {
             if (
                 value === null ||
-                typeof value !== "object" ||
+                typeof value !==
+                    "object" ||
                 !(key in value)
             ) {
                 return undefined;
             }
 
-            value = value[key];
+            value =
+                value[key];
         }
 
         return clone(value);
@@ -632,37 +1102,79 @@
        SET STATE
     ======================================================= */
 
-    function setState(update, reason) {
-        if (typeof update === "function") {
-            update = update(getState());
+    function setState(
+        update,
+        reason
+    ) {
+        const current =
+            getState();
+
+        let nextUpdate =
+            update;
+
+        if (
+            typeof nextUpdate ===
+            "function"
+        ) {
+            nextUpdate =
+                nextUpdate(
+                    current
+                );
         }
 
-        if (!isObject(update)) {
+        if (
+            !isPlainObject(
+                nextUpdate
+            )
+        ) {
+            return current;
+        }
+
+        const merged =
+            mergeObjects(
+                state,
+                nextUpdate
+            );
+
+        const normalized =
+            normalizeState(
+                merged
+            );
+
+        if (
+            valuesEqual(
+                state,
+                normalized
+            )
+        ) {
             return getState();
         }
 
         state =
-            mergeObjects(
-                state,
-                update
-            );
+            normalized;
 
         notify(
-            reason || "state-updated",
+            reason ||
+                "state-updated",
             true
         );
 
         return getState();
     }
 
-    function resetState(reason) {
+    function resetState(
+        reason
+    ) {
         cancelScheduledSave();
 
         state =
-            clone(DEFAULT_STATE);
+            clone(
+                DEFAULT_STATE
+            );
 
         notify(
-            reason || "state-reset",
+            reason ||
+                "state-reset",
             true
         );
 
@@ -673,42 +1185,64 @@
        NAVIGATION STATE
     ======================================================= */
 
-    function setPage(page, options) {
+    function setPage(
+        page,
+        options
+    ) {
         const normalizedPage =
-            normalizePage(page);
+            normalizePage(
+                page
+            );
+
+        const settings =
+            isPlainObject(
+                options
+            )
+                ? options
+                : {};
 
         const currentPage =
             state.navigation.page;
 
-        const settings =
-            isObject(options)
-                ? options
-                : {};
+        const currentSection =
+            state.navigation.section;
 
-        const section =
-            settings.section !== undefined
+        const nextSection =
+            settings.section !==
+            undefined
                 ? normalizeSection(
                       settings.section
                   )
-                : state.navigation.section;
+                : currentSection;
 
         if (
-            normalizedPage === currentPage &&
-            section === state.navigation.section
+            normalizedPage ===
+                currentPage &&
+            nextSection ===
+                currentSection
         ) {
             return getState();
         }
 
         state =
-            mergeObjects(state, {
-                navigation: {
-                    page: normalizedPage,
-                    section: section,
-                    previousPage: currentPage,
-                    previousSection:
-                        state.navigation.section
+            mergeObjects(
+                state,
+                {
+                    navigation: {
+                        page:
+                            normalizedPage,
+
+                        section:
+                            nextSection,
+
+                        previousPage:
+                            currentPage,
+
+                        previousSection:
+                            currentSection
+                    }
                 }
-            });
+            );
 
         notify(
             "page-changed",
@@ -718,26 +1252,37 @@
         return getState();
     }
 
-    function setSection(section) {
+    function setSection(
+        section
+    ) {
         const normalizedSection =
-            normalizeSection(section);
+            normalizeSection(
+                section
+            );
 
         const currentSection =
             state.navigation.section;
 
         if (
-            normalizedSection === currentSection
+            normalizedSection ===
+            currentSection
         ) {
             return getState();
         }
 
         state =
-            mergeObjects(state, {
-                navigation: {
-                    section: normalizedSection,
-                    previousSection: currentSection
+            mergeObjects(
+                state,
+                {
+                    navigation: {
+                        section:
+                            normalizedSection,
+
+                        previousSection:
+                            currentSection
+                    }
                 }
-            });
+            );
 
         notify(
             "section-changed",
@@ -747,39 +1292,54 @@
         return getState();
     }
 
-    function setNavigation(page, section) {
+    function setNavigation(
+        page,
+        section
+    ) {
         const normalizedPage =
-            normalizePage(page);
+            normalizePage(
+                page
+            );
 
         const normalizedSection =
-            normalizeSection(section);
+            normalizeSection(
+                section
+            );
 
-        const pageChanged =
-            normalizedPage !==
+        const currentPage =
             state.navigation.page;
 
-        const sectionChanged =
-            normalizedSection !==
+        const currentSection =
             state.navigation.section;
 
         if (
-            !pageChanged &&
-            !sectionChanged
+            normalizedPage ===
+                currentPage &&
+            normalizedSection ===
+                currentSection
         ) {
             return getState();
         }
 
         state =
-            mergeObjects(state, {
-                navigation: {
-                    page: normalizedPage,
-                    section: normalizedSection,
-                    previousPage:
-                        state.navigation.page,
-                    previousSection:
-                        state.navigation.section
+            mergeObjects(
+                state,
+                {
+                    navigation: {
+                        page:
+                            normalizedPage,
+
+                        section:
+                            normalizedSection,
+
+                        previousPage:
+                            currentPage,
+
+                        previousSection:
+                            currentSection
+                    }
                 }
-            });
+            );
 
         notify(
             "navigation-changed",
@@ -790,47 +1350,62 @@
     }
 
     function getCurrentPage() {
-        return state.navigation.page;
+        return (
+            state.navigation.page
+        );
     }
 
     function getCurrentSection() {
-        return state.navigation.section;
+        return (
+            state.navigation.section
+        );
     }
 
     function getPreviousPage() {
-        return state.navigation.previousPage;
+        return (
+            state.navigation.previousPage
+        );
     }
 
     function getPreviousSection() {
-        return state.navigation.previousSection;
+        return (
+            state.navigation
+                .previousSection
+        );
     }
 
     /* =======================================================
        SIDE PANEL STATE
     ======================================================= */
 
-    function setSidePanelOpen(open) {
-        const value = Boolean(open);
+    function setSidePanelOpen(
+        open
+    ) {
+        const requested =
+            Boolean(open);
 
         /*
-         * Opening a collapsed panel also expands it.
+         * Opening a collapsed panel
+         * automatically restores it.
          */
-        if (value) {
-            const changed =
-                !state.sidePanel.open ||
-                state.sidePanel.collapsed;
-
-            if (!changed) {
+        if (requested) {
+            if (
+                state.sidePanel.open &&
+                !state.sidePanel.collapsed
+            ) {
                 return getState();
             }
 
             state =
-                mergeObjects(state, {
-                    sidePanel: {
-                        open: true,
-                        collapsed: false
+                mergeObjects(
+                    state,
+                    {
+                        sidePanel: {
+                            open: true,
+                            collapsed: false
+                        }
                     }
-                });
+                );
 
             notify(
                 "side-panel-open-changed",
@@ -840,19 +1415,25 @@
             return getState();
         }
 
+        /*
+         * Closing the panel does not
+         * automatically collapse it.
+         */
         if (
-            !state.sidePanel.open &&
-            !state.sidePanel.collapsed
+            !state.sidePanel.open
         ) {
             return getState();
         }
 
         state =
-            mergeObjects(state, {
-                sidePanel: {
-                    open: false
+            mergeObjects(
+                state,
+                {
+                    sidePanel: {
+                        open: false
+                    }
                 }
-            });
+            );
 
         notify(
             "side-panel-open-changed",
@@ -863,11 +1444,15 @@
     }
 
     function openSidePanel() {
-        return setSidePanelOpen(true);
+        return setSidePanelOpen(
+            true
+        );
     }
 
     function closeSidePanel() {
-        return setSidePanelOpen(false);
+        return setSidePanelOpen(
+            false
+        );
     }
 
     function toggleSidePanel() {
@@ -884,19 +1469,26 @@
 
         if (value) {
             if (
-                state.sidePanel.collapsed &&
+                state.sidePanel
+                    .collapsed &&
                 !state.sidePanel.open
             ) {
                 return getState();
             }
 
             state =
-                mergeObjects(state, {
-                    sidePanel: {
-                        collapsed: true,
-                        open: false
+                mergeObjects(
+                    state,
+                    {
+                        sidePanel: {
+                            collapsed:
+                                true,
+
+                            open:
+                                false
+                        }
                     }
-                });
+                );
 
             notify(
                 "side-panel-collapse-changed",
@@ -906,19 +1498,31 @@
             return getState();
         }
 
+        /*
+         * Expanding/restoring the panel
+         * also opens it.
+         */
         if (
-            !state.sidePanel.collapsed
+            !state.sidePanel
+                .collapsed &&
+            state.sidePanel.open
         ) {
             return getState();
         }
 
         state =
-            mergeObjects(state, {
-                sidePanel: {
-                    collapsed: false,
-                    open: true
+            mergeObjects(
+                state,
+                {
+                    sidePanel: {
+                        collapsed:
+                            false,
+
+                        open:
+                            true
+                    }
                 }
-            });
+            );
 
         notify(
             "side-panel-expand-changed",
@@ -929,16 +1533,21 @@
     }
 
     function collapseSidePanel() {
-        return setSidePanelCollapsed(true);
+        return setSidePanelCollapsed(
+            true
+        );
     }
 
     function expandSidePanel() {
-        return setSidePanelCollapsed(false);
+        return setSidePanelCollapsed(
+            false
+        );
     }
 
     function restoreSidePanel() {
         const changed =
-            state.sidePanel.collapsed ||
+            state.sidePanel
+                .collapsed ||
             !state.sidePanel.open;
 
         if (!changed) {
@@ -946,12 +1555,18 @@
         }
 
         state =
-            mergeObjects(state, {
-                sidePanel: {
-                    collapsed: false,
-                    open: true
+            mergeObjects(
+                state,
+                {
+                    sidePanel: {
+                        collapsed:
+                            false,
+
+                        open:
+                            true
+                    }
                 }
-            });
+            );
 
         notify(
             "side-panel-restored",
@@ -999,72 +1614,90 @@
             );
 
         const settings =
-            isObject(options)
+            isPlainObject(
+                options
+            )
                 ? options
                 : {};
 
+        const previous =
+            state.connection;
+
         const endpoint =
-            typeof settings.endpoint === "string"
-                ? settings.endpoint.trim()
-                : state.connection.endpoint;
+            settings.endpoint !==
+            undefined
+                ? normalizeEndpoint(
+                      settings.endpoint
+                  )
+                : previous.endpoint;
 
         const lastChecked =
-            settings.lastChecked !== undefined
+            settings.lastChecked !==
+            undefined
                 ? normalizeTimestamp(
                       settings.lastChecked
                   )
                 : new Date().toISOString();
 
         const latency =
-            settings.latency !== undefined
+            settings.latency !==
+            undefined
                 ? normalizeLatency(
                       settings.latency
                   )
-                : state.connection.latency;
+                : previous.latency;
 
         const changed =
             normalizedState !==
-                state.connection.state ||
+                previous.state ||
             endpoint !==
-                state.connection.endpoint ||
+                previous.endpoint ||
             lastChecked !==
-                state.connection.lastChecked ||
+                previous.lastChecked ||
             latency !==
-                state.connection.latency;
+                previous.latency;
 
         if (!changed) {
             return getState();
         }
 
         state =
-            mergeObjects(state, {
-                connection: {
-                    state: normalizedState,
-                    endpoint: endpoint,
-                    lastChecked: lastChecked,
-                    latency: latency
+            mergeObjects(
+                state,
+                {
+                    connection: {
+                        state:
+                            normalizedState,
+
+                        endpoint,
+
+                        lastChecked,
+
+                        latency
+                    }
                 }
-            });
+            );
 
         /*
-         * Only the endpoint is persisted.
-         * Runtime connection state remains
-         * transient.
+         * Only endpoint changes require
+         * persistence.
          */
         notify(
             "connection-changed",
             endpoint !==
-                state.connection.endpoint
+                previous.endpoint
         );
 
         return getState();
     }
 
-    function setEndpoint(endpoint) {
+    function setEndpoint(
+        endpoint
+    ) {
         const value =
-            typeof endpoint === "string"
-                ? endpoint.trim()
-                : "";
+            normalizeEndpoint(
+                endpoint
+            );
 
         if (
             value ===
@@ -1074,11 +1707,15 @@
         }
 
         state =
-            mergeObjects(state, {
-                connection: {
-                    endpoint: value
+            mergeObjects(
+                state,
+                {
+                    connection: {
+                        endpoint:
+                            value
+                    }
                 }
-            });
+            );
 
         notify(
             "endpoint-changed",
@@ -1088,24 +1725,42 @@
         return getState();
     }
 
-    function setLatency(latency) {
+    function setLatency(
+        latency
+    ) {
         const value =
-            normalizeLatency(latency);
+            normalizeLatency(
+                latency
+            );
 
         const checked =
             new Date().toISOString();
 
+        if (
+            value ===
+                state.connection.latency &&
+            checked ===
+                state.connection.lastChecked
+        ) {
+            return getState();
+        }
+
         state =
-            mergeObjects(state, {
-                connection: {
-                    latency: value,
-                    lastChecked: checked
+            mergeObjects(
+                state,
+                {
+                    connection: {
+                        latency:
+                            value,
+
+                        lastChecked:
+                            checked
+                    }
                 }
-            });
+            );
 
         /*
-         * Latency and lastChecked are transient
-         * runtime information and are not saved.
+         * Runtime-only information.
          */
         notify(
             "latency-changed",
@@ -1122,7 +1777,9 @@
     }
 
     function getConnectionStatus() {
-        return state.connection.state;
+        return (
+            state.connection.state
+        );
     }
 
     function getStatusLabel() {
@@ -1138,7 +1795,9 @@
        APPLICATION STATE
     ======================================================= */
 
-    function setInitialized(value) {
+    function setInitialized(
+        value
+    ) {
         const next =
             Boolean(value);
 
@@ -1150,11 +1809,15 @@
         }
 
         state =
-            mergeObjects(state, {
-                app: {
-                    initialized: next
+            mergeObjects(
+                state,
+                {
+                    app: {
+                        initialized:
+                            next
+                    }
                 }
-            });
+            );
 
         notify(
             "initialized-changed",
@@ -1164,7 +1827,9 @@
         return getState();
     }
 
-    function setReady(value) {
+    function setReady(
+        value
+    ) {
         const next =
             Boolean(value);
 
@@ -1176,11 +1841,15 @@
         }
 
         state =
-            mergeObjects(state, {
-                app: {
-                    ready: next
+            mergeObjects(
+                state,
+                {
+                    app: {
+                        ready:
+                            next
+                    }
                 }
-            });
+            );
 
         notify(
             "ready-changed",
@@ -1206,7 +1875,9 @@
        UI STATE
     ======================================================= */
 
-    function setLoading(value) {
+    function setLoading(
+        value
+    ) {
         const next =
             Boolean(value);
 
@@ -1218,11 +1889,15 @@
         }
 
         state =
-            mergeObjects(state, {
-                ui: {
-                    loading: next
+            mergeObjects(
+                state,
+                {
+                    ui: {
+                        loading:
+                            next
+                    }
                 }
-            });
+            );
 
         notify(
             "loading-changed",
@@ -1232,7 +1907,9 @@
         return getState();
     }
 
-    function setBusy(value) {
+    function setBusy(
+        value
+    ) {
         const next =
             Boolean(value);
 
@@ -1244,11 +1921,15 @@
         }
 
         state =
-            mergeObjects(state, {
-                ui: {
-                    busy: next
+            mergeObjects(
+                state,
+                {
+                    ui: {
+                        busy:
+                            next
+                    }
                 }
-            });
+            );
 
         notify(
             "busy-changed",
@@ -1258,12 +1939,13 @@
         return getState();
     }
 
-    function setModal(modal) {
+    function setModal(
+        modal
+    ) {
         const value =
-            modal === null ||
-            typeof modal === "string"
-                ? modal
-                : null;
+            normalizeModal(
+                modal
+            );
 
         if (
             value ===
@@ -1273,11 +1955,15 @@
         }
 
         state =
-            mergeObjects(state, {
-                ui: {
-                    modal: value
+            mergeObjects(
+                state,
+                {
+                    ui: {
+                        modal:
+                            value
+                    }
                 }
-            });
+            );
 
         notify(
             "modal-changed",
@@ -1288,7 +1974,9 @@
     }
 
     function closeModal() {
-        return setModal(null);
+        return setModal(
+            null
+        );
     }
 
     function setNotification(
@@ -1299,24 +1987,26 @@
                 notification
             );
 
-        const current =
-            state.ui.notification;
-
         if (
-            notificationsEqual(
+            valuesEqual(
                 value,
-                current
+                state.ui
+                    .notification
             )
         ) {
             return getState();
         }
 
         state =
-            mergeObjects(state, {
-                ui: {
-                    notification: value
+            mergeObjects(
+                state,
+                {
+                    ui: {
+                        notification:
+                            value
+                    }
                 }
-            });
+            );
 
         notify(
             "notification-changed",
@@ -1327,29 +2017,49 @@
     }
 
     function clearNotification() {
-        return setNotification(null);
+        return setNotification(
+            null
+        );
     }
 
     /* =======================================================
        SUBSCRIPTIONS
     ======================================================= */
 
-    function subscribe(listener) {
+    function subscribe(
+        listener
+    ) {
         if (
-            typeof listener !== "function"
+            typeof listener !==
+            "function"
         ) {
             return function () {};
         }
 
-        subscribers.add(listener);
+        subscribers.add(
+            listener
+        );
 
         return function unsubscribe() {
-            subscribers.delete(listener);
+            subscribers.delete(
+                listener
+            );
         };
     }
 
-    function unsubscribe(listener) {
-        subscribers.delete(listener);
+    function unsubscribe(
+        listener
+    ) {
+        if (
+            typeof listener !==
+            "function"
+        ) {
+            return false;
+        }
+
+        return subscribers.delete(
+            listener
+        );
     }
 
     function clearSubscribers() {
@@ -1360,84 +2070,111 @@
        PUBLIC API
     ======================================================= */
 
-    const State = Object.freeze({
-        constants: Object.freeze({
-            STORAGE_KEY,
-            STATE_VERSION,
-            PAGES,
-            CONNECTION_STATES,
-            STATUS_LABELS
-        }),
+    const State =
+        Object.freeze({
+            constants:
+                Object.freeze({
+                    STORAGE_KEY,
+                    STATE_VERSION,
+                    PAGES,
+                    CONNECTION_STATES,
+                    STATUS_LABELS,
+                    NOTIFICATION_TYPES,
+                    DEFAULT_NOTIFICATION_DURATION
+                }),
 
-        getState,
-        get,
-        setState,
-        resetState,
+            getState,
+            get,
+            setState,
+            resetState,
 
-        setPage,
-        setSection,
-        setNavigation,
-        getCurrentPage,
-        getCurrentSection,
-        getPreviousPage,
-        getPreviousSection,
+            setPage,
+            setSection,
+            setNavigation,
 
-        setSidePanelOpen,
-        openSidePanel,
-        closeSidePanel,
-        toggleSidePanel,
+            getCurrentPage,
+            getCurrentSection,
+            getPreviousPage,
+            getPreviousSection,
 
-        setSidePanelCollapsed,
-        collapseSidePanel,
-        expandSidePanel,
-        restoreSidePanel,
-        toggleSidePanelCollapsed,
+            setSidePanelOpen,
+            openSidePanel,
+            closeSidePanel,
+            toggleSidePanel,
 
-        getSidePanelState,
-        isSidePanelOpen,
-        isSidePanelCollapsed,
+            setSidePanelCollapsed,
+            collapseSidePanel,
+            expandSidePanel,
+            restoreSidePanel,
+            toggleSidePanelCollapsed,
 
-        setConnectionState,
-        setEndpoint,
-        setLatency,
-        getConnectionState,
-        getConnectionStatus,
-        getStatusLabel,
+            getSidePanelState,
+            isSidePanelOpen,
+            isSidePanelCollapsed,
 
-        setInitialized,
-        setReady,
-        isInitialized,
-        isReady,
+            setConnectionState,
+            setEndpoint,
+            setLatency,
 
-        setLoading,
-        setBusy,
-        setModal,
-        closeModal,
-        setNotification,
-        clearNotification,
+            getConnectionState,
+            getConnectionStatus,
+            getStatusLabel,
 
-        subscribe,
-        unsubscribe,
-        clearSubscribers,
+            setInitialized,
+            setReady,
+            isInitialized,
+            isReady,
 
-        save,
-        load,
-        clearSavedState
-    });
+            setLoading,
+            setBusy,
+
+            setModal,
+            closeModal,
+
+            setNotification,
+            clearNotification,
+
+            subscribe,
+            unsubscribe,
+            clearSubscribers,
+
+            save,
+            load,
+            clearSavedState
+        });
 
     /* =======================================================
        GLOBAL EXPORT
     ======================================================= */
 
-    CyberNexus.State = State;
+    CyberNexus.State =
+        State;
 
     /*
      * Backward-compatible global alias.
      *
-     * Canonical API:
+     * Canonical:
      *
-     *   window.CyberNexus.State
+     *     window.CyberNexus.State
+     *
+     * Compatibility:
+     *
+     *     window.CyberNexusState
      */
-    window.CyberNexusState = State;
+    window.CyberNexusState =
+        State;
+
+    /* =======================================================
+       INITIAL LOAD
+    ======================================================= */
+
+    /*
+     * Load only persisted, non-sensitive
+     * configuration/navigation state.
+     *
+     * Runtime state remains at its
+     * secure defaults.
+     */
+    load();
 
 })(window);

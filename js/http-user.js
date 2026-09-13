@@ -25,29 +25,46 @@
 (function (window) {
     "use strict";
 
-    /* =======================================================
+    /* ==========================================================================
        NAMESPACE
-    ======================================================= */
+       ========================================================================== */
 
     const CyberNexus =
         (window.CyberNexus =
             window.CyberNexus || {});
 
-    /* =======================================================
+    /* ==========================================================================
        CONSTANTS
-    ======================================================= */
+       ========================================================================== */
 
     const DEFAULT_TIMEOUT = 15000;
     const DEFAULT_RETRIES = 0;
     const DEFAULT_RETRY_DELAY = 500;
+    const DEFAULT_MAX_RETRY_DELAY = 10000;
 
-    const RETRYABLE_METHODS = Object.freeze(
-        new Set([
-            "GET",
-            "HEAD",
-            "OPTIONS"
-        ])
-    );
+    const DEFAULT_CREDENTIALS =
+        "same-origin";
+
+    const DEFAULT_MODE =
+        "cors";
+
+    const DEFAULT_CACHE =
+        "default";
+
+    const DEFAULT_REDIRECT =
+        "follow";
+
+    const DEFAULT_REFERRER_POLICY =
+        "strict-origin-when-cross-origin";
+
+    const RETRYABLE_METHODS =
+        Object.freeze(
+            new Set([
+                "GET",
+                "HEAD",
+                "OPTIONS"
+            ])
+        );
 
     const RETRYABLE_STATUS_CODES =
         Object.freeze(
@@ -62,41 +79,71 @@
             ])
         );
 
-    /* =======================================================
+    const JSON_CONTENT_TYPES =
+        Object.freeze(
+            new Set([
+                "application/json"
+            ])
+        );
+
+    /* ==========================================================================
        SETTINGS
-    ======================================================= */
+       ========================================================================== */
 
     const settings = {
         baseUrl: "",
         timeout: DEFAULT_TIMEOUT,
         retries: DEFAULT_RETRIES,
-        retryDelay: DEFAULT_RETRY_DELAY
+        retryDelay: DEFAULT_RETRY_DELAY,
+        maxRetryDelay:
+            DEFAULT_MAX_RETRY_DELAY
     };
 
-    /* =======================================================
+    /* ==========================================================================
+       OBJECT HELPERS
+       ========================================================================== */
+
+    function isObject(value) {
+        return (
+            value !== null &&
+            typeof value === "object" &&
+            !Array.isArray(value)
+        );
+    }
+
+    function isPlainObject(value) {
+        if (!isObject(value)) {
+            return false;
+        }
+
+        const prototype =
+            Object.getPrototypeOf(
+                value
+            );
+
+        return (
+            prototype ===
+                Object.prototype ||
+            prototype === null
+        );
+    }
+
+    /* ==========================================================================
        RUNTIME CONFIGURATION
-    ======================================================= */
+       ========================================================================== */
 
     function getRuntimeConfig() {
         const runtime =
             window.__CYBERNEXUS_CONFIG__;
 
-        if (
-            runtime &&
-            typeof runtime === "object" &&
-            !Array.isArray(runtime)
-        ) {
+        if (isObject(runtime)) {
             return runtime;
         }
 
         const namespaceConfig =
             CyberNexus.Config;
 
-        if (
-            namespaceConfig &&
-            typeof namespaceConfig === "object" &&
-            !Array.isArray(namespaceConfig)
-        ) {
+        if (isObject(namespaceConfig)) {
             return namespaceConfig;
         }
 
@@ -104,18 +151,20 @@
     }
 
     function getStateEndpoint() {
-        const state =
-            CyberNexus.State;
+        const State =
+            CyberNexus.State ||
+            window.CyberNexusState;
 
         if (
-            !state ||
-            typeof state.get !== "function"
+            !State ||
+            typeof State.get !==
+                "function"
         ) {
             return "";
         }
 
         const endpoint =
-            state.get(
+            State.get(
                 "connection.endpoint"
             );
 
@@ -144,23 +193,33 @@
         return getStateEndpoint();
     }
 
+    /* ==========================================================================
+       CONFIGURATION
+       ========================================================================== */
+
     function configure(options) {
         const value =
-            options &&
-            typeof options === "object" &&
-            !Array.isArray(options)
+            isObject(options)
                 ? options
                 : {};
 
         if (
-            typeof value.baseUrl === "string"
+            Object.prototype.hasOwnProperty.call(
+                value,
+                "baseUrl"
+            )
         ) {
             settings.baseUrl =
-                value.baseUrl.trim();
+                typeof value.baseUrl ===
+                "string"
+                    ? value.baseUrl.trim()
+                    : "";
         }
 
         if (
-            Number.isFinite(value.timeout) &&
+            Number.isFinite(
+                value.timeout
+            ) &&
             value.timeout >= 0
         ) {
             settings.timeout =
@@ -168,7 +227,9 @@
         }
 
         if (
-            Number.isInteger(value.retries) &&
+            Number.isInteger(
+                value.retries
+            ) &&
             value.retries >= 0
         ) {
             settings.retries =
@@ -185,14 +246,23 @@
                 value.retryDelay;
         }
 
+        if (
+            Number.isFinite(
+                value.maxRetryDelay
+            ) &&
+            value.maxRetryDelay >= 0
+        ) {
+            settings.maxRetryDelay =
+                value.maxRetryDelay;
+        }
+
         return getConfig();
     }
 
     function getConfig() {
         return Object.freeze({
             baseUrl:
-                settings.baseUrl ||
-                resolveBaseUrl(),
+                getBaseUrl(),
 
             timeout:
                 settings.timeout,
@@ -201,13 +271,84 @@
                 settings.retries,
 
             retryDelay:
-                settings.retryDelay
+                settings.retryDelay,
+
+            maxRetryDelay:
+                settings.maxRetryDelay,
+
+            credentials:
+                DEFAULT_CREDENTIALS,
+
+            mode:
+                DEFAULT_MODE
         });
     }
 
-    /* =======================================================
-       NORMALIZATION
-    ======================================================= */
+    /* ==========================================================================
+       URL HELPERS
+       ========================================================================== */
+
+    function isAbsoluteUrl(value) {
+        return (
+            /^https?:\/\//i.test(
+                value
+            ) ||
+            /^\/\//.test(value)
+        );
+    }
+
+    function normalizeUrlPart(value) {
+        return String(
+            value || ""
+        ).trim();
+    }
+
+    function joinUrl(
+        baseUrl,
+        path
+    ) {
+        const target =
+            normalizeUrlPart(path);
+
+        const base =
+            normalizeUrlPart(baseUrl);
+
+        if (!target) {
+            return base;
+        }
+
+        /*
+         * Absolute URLs bypass baseUrl.
+         */
+        if (
+            isAbsoluteUrl(target)
+        ) {
+            return target;
+        }
+
+        /*
+         * Relative URL without base.
+         */
+        if (!base) {
+            return target;
+        }
+
+        return (
+            base.replace(
+                /\/+$/,
+                ""
+            ) +
+            "/" +
+            target.replace(
+                /^\/+/,
+                ""
+            )
+        );
+    }
+
+    /* ==========================================================================
+       METHOD
+       ========================================================================== */
 
     function normalizeMethod(method) {
         return String(
@@ -217,7 +358,13 @@
             .toUpperCase();
     }
 
-    function normalizeHeaders(headers) {
+    /* ==========================================================================
+       HEADERS
+       ========================================================================== */
+
+    function normalizeHeaders(
+        headers
+    ) {
         const result = {};
 
         if (!headers) {
@@ -225,12 +372,17 @@
         }
 
         if (
-            typeof Headers !== "undefined" &&
+            typeof Headers !==
+                "undefined" &&
             headers instanceof Headers
         ) {
             headers.forEach(
-                function (value, key) {
-                    result[key] = value;
+                function (
+                    value,
+                    key
+                ) {
+                    result[key] =
+                        value;
                 }
             );
 
@@ -238,16 +390,18 @@
         }
 
         if (
-            typeof headers === "object" &&
-            !Array.isArray(headers)
+            isObject(headers)
         ) {
-            Object.keys(headers).forEach(
+            Object.keys(
+                headers
+            ).forEach(
                 function (key) {
                     const value =
                         headers[key];
 
                     if (
-                        value !== undefined &&
+                        value !==
+                            undefined &&
                         value !== null
                     ) {
                         result[key] =
@@ -265,9 +419,13 @@
         name
     ) {
         const target =
-            String(name).toLowerCase();
+            String(
+                name
+            ).toLowerCase();
 
-        return Object.keys(headers).some(
+        return Object.keys(
+            headers
+        ).some(
             function (key) {
                 return (
                     key.toLowerCase() ===
@@ -277,71 +435,91 @@
         );
     }
 
-    function joinUrl(
-        baseUrl,
-        path
+    function setHeaderIfMissing(
+        headers,
+        name,
+        value
     ) {
-        const target =
-            String(path || "").trim();
-
-        const base =
-            String(baseUrl || "").trim();
-
-        if (!target) {
-            return base;
-        }
-
         if (
-            /^https?:\/\//i.test(target) ||
-            /^\/\//.test(target)
+            !hasHeader(
+                headers,
+                name
+            )
         ) {
-            return target;
+            headers[name] =
+                value;
         }
+    }
 
-        if (!base) {
-            return target;
-        }
+    /* ==========================================================================
+       BODY HELPERS
+       ========================================================================== */
 
+    function isFormData(
+        body
+    ) {
         return (
-            base.replace(/\/+$/, "") +
-            "/" +
-            target.replace(/^\/+/, "")
+            typeof FormData !==
+                "undefined" &&
+            body instanceof FormData
         );
     }
 
-    /* =======================================================
-       REQUEST BODY
-    ======================================================= */
+    function isBlob(
+        body
+    ) {
+        return (
+            typeof Blob !==
+                "undefined" &&
+            body instanceof Blob
+        );
+    }
+
+    function isURLSearchParams(
+        body
+    ) {
+        return (
+            typeof URLSearchParams !==
+                "undefined" &&
+            body instanceof
+                URLSearchParams
+        );
+    }
+
+    function isArrayBuffer(
+        body
+    ) {
+        return (
+            typeof ArrayBuffer !==
+                "undefined" &&
+            body instanceof
+                ArrayBuffer
+        );
+    }
+
+    function isArrayBufferView(
+        body
+    ) {
+        return (
+            typeof ArrayBuffer !==
+                "undefined" &&
+            typeof ArrayBuffer.isView ===
+                "function" &&
+            ArrayBuffer.isView(
+                body
+            )
+        );
+    }
 
     function isBodyInstance(
         body
     ) {
         return (
-            (
-                typeof Blob !== "undefined" &&
-                body instanceof Blob
-            ) ||
-            (
-                typeof FormData !== "undefined" &&
-                body instanceof FormData
-            ) ||
-            (
-                typeof URLSearchParams !==
-                    "undefined" &&
-                body instanceof URLSearchParams
-            ) ||
-            (
-                typeof ArrayBuffer !==
-                    "undefined" &&
-                body instanceof ArrayBuffer
-            ) ||
-            (
-                typeof ArrayBuffer !==
-                    "undefined" &&
-                typeof ArrayBuffer.isView ===
-                    "function" &&
-                ArrayBuffer.isView(body)
-            )
+            isFormData(body) ||
+            isBlob(body) ||
+            isURLSearchParams(body) ||
+            isArrayBuffer(body) ||
+            isArrayBufferView(body)
         );
     }
 
@@ -356,35 +534,50 @@
             return undefined;
         }
 
+        /*
+         * Never manually set multipart
+         * Content-Type for FormData.
+         *
+         * The browser adds the correct
+         * boundary automatically.
+         */
         if (
-            typeof body === "string" ||
-            isBodyInstance(body)
+            isFormData(body)
         ) {
             return body;
         }
 
         if (
-            typeof body === "object"
+            typeof body === "string" ||
+            isBlob(body) ||
+            isURLSearchParams(body) ||
+            isArrayBuffer(body) ||
+            isArrayBufferView(body)
         ) {
-            if (
-                !hasHeader(
-                    headers,
-                    "Content-Type"
-                )
-            ) {
-                headers["Content-Type"] =
-                    "application/json";
-            }
+            return body;
+        }
 
-            return JSON.stringify(body);
+        if (
+            isPlainObject(body) ||
+            Array.isArray(body)
+        ) {
+            setHeaderIfMissing(
+                headers,
+                "Content-Type",
+                "application/json"
+            );
+
+            return JSON.stringify(
+                body
+            );
         }
 
         return String(body);
     }
 
-    /* =======================================================
+    /* ==========================================================================
        ABORT / TIMEOUT
-    ======================================================= */
+       ========================================================================== */
 
     function createAbortController(
         timeout,
@@ -396,7 +589,8 @@
         ) {
             return {
                 signal:
-                    externalSignal || undefined,
+                    externalSignal ||
+                    undefined,
 
                 timedOut:
                     function () {
@@ -436,21 +630,27 @@
                 window.setTimeout(
                     function () {
                         timedOut = true;
+
                         controller.abort();
                     },
                     timeout
                 );
         }
 
-        if (externalSignal) {
+        if (
+            externalSignal
+        ) {
             if (
                 externalSignal.aborted
             ) {
-                externallyAborted = true;
+                externallyAborted =
+                    true;
+
                 controller.abort();
             } else if (
-                typeof externalSignal.addEventListener ===
-                "function"
+                typeof externalSignal
+                    .addEventListener ===
+                    "function"
             ) {
                 abortHandler =
                     function () {
@@ -497,7 +697,8 @@
                     if (
                         externalSignal &&
                         abortHandler &&
-                        typeof externalSignal.removeEventListener ===
+                        typeof externalSignal
+                            .removeEventListener ===
                             "function"
                     ) {
                         externalSignal.removeEventListener(
@@ -509,9 +710,30 @@
         };
     }
 
-    /* =======================================================
+    /* ==========================================================================
        RESPONSE PARSING
-    ======================================================= */
+       ========================================================================== */
+
+    function isJsonContentType(
+        contentType
+    ) {
+        const normalized =
+            String(
+                contentType || ""
+            )
+                .split(";")[0]
+                .trim()
+                .toLowerCase();
+
+        return (
+            JSON_CONTENT_TYPES.has(
+                normalized
+            ) ||
+            normalized.endsWith(
+                "+json"
+            )
+        );
+    }
 
     async function parseResponse(
         response
@@ -536,16 +758,20 @@
         }
 
         if (
-            contentType.includes(
-                "application/json"
-            ) ||
-            contentType.includes(
-                "+json"
+            isJsonContentType(
+                contentType
             )
         ) {
             try {
-                return JSON.parse(text);
+                return JSON.parse(
+                    text
+                );
             } catch (error) {
+                /*
+                 * Keep the raw response if
+                 * the server incorrectly labels
+                 * invalid JSON as JSON.
+                 */
                 return text;
             }
         }
@@ -553,9 +779,98 @@
         return text;
     }
 
-    /* =======================================================
+    /* ==========================================================================
+       RETRY-AFTER
+       ========================================================================== */
+
+    function getRetryAfter(
+        response
+    ) {
+        if (
+            !response ||
+            !response.headers
+        ) {
+            return null;
+        }
+
+        const value =
+            response.headers.get(
+                "Retry-After"
+            );
+
+        if (!value) {
+            return null;
+        }
+
+        /*
+         * Retry-After can be:
+         *
+         * 5
+         *
+         * or an HTTP date.
+         */
+        const seconds =
+            Number(value);
+
+        if (
+            Number.isFinite(
+                seconds
+            ) &&
+            seconds >= 0
+        ) {
+            return (
+                seconds * 1000
+            );
+        }
+
+        const timestamp =
+            Date.parse(value);
+
+        if (
+            Number.isFinite(
+                timestamp
+            )
+        ) {
+            return Math.max(
+                0,
+                timestamp -
+                    Date.now()
+            );
+        }
+
+        return null;
+    }
+
+    /* ==========================================================================
        ERRORS
-    ======================================================= */
+       ========================================================================== */
+
+    function extractErrorMessage(
+        data,
+        fallback
+    ) {
+        if (
+            data &&
+            typeof data === "object" &&
+            !Array.isArray(data)
+        ) {
+            return (
+                data.message ||
+                data.error ||
+                data.detail ||
+                fallback
+            );
+        }
+
+        if (
+            typeof data === "string" &&
+            data.trim()
+        ) {
+            return data.trim();
+        }
+
+        return fallback;
+    }
 
     async function createHttpError(
         response,
@@ -573,34 +888,20 @@
             data = null;
         }
 
-        let message =
+        const fallback =
+            response.statusText ||
             "HTTP request failed.";
 
-        if (
-            data &&
-            typeof data === "object" &&
-            !Array.isArray(data)
-        ) {
-            message =
-                data.message ||
-                data.error ||
-                data.detail ||
-                message;
-        } else if (
-            typeof data === "string" &&
-            data.trim()
-        ) {
-            message =
-                data.trim();
-        } else if (
-            response.statusText
-        ) {
-            message =
-                response.statusText;
-        }
+        const message =
+            extractErrorMessage(
+                data,
+                fallback
+            );
 
         const error =
-            new Error(message);
+            new Error(
+                String(message)
+            );
 
         error.name =
             "HttpError";
@@ -609,7 +910,8 @@
             response.status;
 
         error.statusText =
-            response.statusText || "";
+            response.statusText ||
+            "";
 
         error.method =
             method;
@@ -620,7 +922,45 @@
         error.data =
             data;
 
-        error.ok = false;
+        error.ok =
+            false;
+
+        error.retryable =
+            RETRYABLE_STATUS_CODES.has(
+                response.status
+            );
+
+        error.retryAfter =
+            getRetryAfter(
+                response
+            );
+
+        return error;
+    }
+
+    function createAbortError(
+        message
+    ) {
+        let error;
+
+        if (
+            typeof DOMException !==
+            "undefined"
+        ) {
+            error =
+                new DOMException(
+                    message,
+                    "AbortError"
+                );
+        } else {
+            error =
+                new Error(
+                    message
+                );
+
+            error.name =
+                "AbortError";
+        }
 
         return error;
     }
@@ -639,7 +979,8 @@
 
         const externallyAborted =
             abortControl &&
-            typeof abortControl.externallyAborted ===
+            typeof abortControl
+                .externallyAborted ===
                 "function"
                 ? abortControl.externallyAborted()
                 : Boolean(
@@ -654,7 +995,9 @@
         let name =
             "HttpNetworkError";
 
-        if (timedOut) {
+        if (
+            timedOut
+        ) {
             message =
                 "The HTTP request timed out.";
 
@@ -671,7 +1014,9 @@
         }
 
         const normalized =
-            new Error(message);
+            new Error(
+                message
+            );
 
         normalized.name =
             name;
@@ -685,11 +1030,14 @@
         normalized.url =
             request.url;
 
-        normalized.status = 0;
+        normalized.status =
+            0;
 
-        normalized.statusText = "";
+        normalized.statusText =
+            "";
 
-        normalized.ok = false;
+        normalized.ok =
+            false;
 
         normalized.timedOut =
             timedOut;
@@ -697,12 +1045,63 @@
         normalized.aborted =
             externallyAborted;
 
+        normalized.retryable =
+            !timedOut &&
+            !externallyAborted &&
+            RETRYABLE_METHODS.has(
+                request.method
+            );
+
         return normalized;
     }
 
-    /* =======================================================
+    /* ==========================================================================
        RETRY
-    ======================================================= */
+       ========================================================================== */
+
+    function calculateRetryDelay(
+        request,
+        attempt,
+        response
+    ) {
+        const retryAfter =
+            getRetryAfter(
+                response
+            );
+
+        if (
+            retryAfter !== null
+        ) {
+            return Math.min(
+                retryAfter,
+                request.maxRetryDelay
+            );
+        }
+
+        const exponential =
+            request.retryDelay *
+            Math.pow(
+                2,
+                attempt
+            );
+
+        /*
+         * Small jitter helps prevent
+         * multiple clients retrying
+         * at exactly the same time.
+         */
+        const jitter =
+            Math.random() *
+            Math.min(
+                250,
+                request.retryDelay
+            );
+
+        return Math.min(
+            exponential + jitter,
+            request.maxRetryDelay
+        );
+    }
 
     function shouldRetry(
         method,
@@ -733,109 +1132,212 @@
         );
     }
 
+    /* ==========================================================================
+       WAIT
+       ========================================================================== */
+
     function wait(
-        milliseconds
+        milliseconds,
+        signal
     ) {
+        const delay =
+            Math.max(
+                0,
+                Number(milliseconds) || 0
+            );
+
         if (
-            !milliseconds ||
-            milliseconds <= 0
+            signal &&
+            signal.aborted
+        ) {
+            return Promise.reject(
+                createAbortError(
+                    "The HTTP request was aborted."
+                )
+            );
+        }
+
+        if (
+            delay === 0
         ) {
             return Promise.resolve();
         }
 
         return new Promise(
-            function (resolve) {
-                window.setTimeout(
-                    resolve,
-                    milliseconds
-                );
+            function (
+                resolve,
+                reject
+            ) {
+                let timerId =
+                    null;
+
+                let abortHandler =
+                    null;
+
+                function cleanup() {
+                    if (
+                        timerId !== null
+                    ) {
+                        window.clearTimeout(
+                            timerId
+                        );
+
+                        timerId =
+                            null;
+                    }
+
+                    if (
+                        signal &&
+                        abortHandler &&
+                        typeof signal
+                            .removeEventListener ===
+                            "function"
+                    ) {
+                        signal.removeEventListener(
+                            "abort",
+                            abortHandler
+                        );
+
+                        abortHandler =
+                            null;
+                    }
+                }
+
+                function abort() {
+                    cleanup();
+
+                    reject(
+                        createAbortError(
+                            "The HTTP request was aborted."
+                        )
+                    );
+                }
+
+                if (
+                    signal &&
+                    signal.aborted
+                ) {
+                    abort();
+
+                    return;
+                }
+
+                if (
+                    signal &&
+                    typeof signal
+                        .addEventListener ===
+                        "function"
+                ) {
+                    abortHandler =
+                        abort;
+
+                    signal.addEventListener(
+                        "abort",
+                        abortHandler,
+                        {
+                            once: true
+                        }
+                    );
+                }
+
+                timerId =
+                    window.setTimeout(
+                        function () {
+                            cleanup();
+
+                            resolve();
+                        },
+                        delay
+                    );
             }
         );
     }
 
-    /* =======================================================
+    /* ==========================================================================
        REQUEST EXECUTION
-    ======================================================= */
+       ========================================================================== */
 
     async function execute(
-        request
+        requestOptions
     ) {
         for (
             let attempt = 0;
-            attempt <= request.retries;
+            attempt <=
+            requestOptions.retries;
             attempt += 1
         ) {
-            let abortControl = null;
+            let abortControl =
+                null;
 
             try {
                 abortControl =
                     createAbortController(
-                        request.timeout,
-                        request.signal
+                        requestOptions.timeout,
+                        requestOptions.signal
                     );
 
                 if (
                     abortControl.externallyAborted()
                 ) {
-                    const abortedError =
-                        new Error(
-                            "The HTTP request was aborted."
-                        );
-
-                    abortedError.name =
-                        "HttpAbortError";
-
-                    throw abortedError;
+                    throw createAbortError(
+                        "The HTTP request was aborted."
+                    );
                 }
 
                 const response =
                     await fetch(
-                        request.url,
+                        requestOptions.url,
                         {
                             method:
-                                request.method,
+                                requestOptions.method,
 
                             headers:
-                                request.headers,
+                                requestOptions.headers,
 
                             body:
-                                request.body,
+                                requestOptions.body,
 
                             credentials:
-                                request.credentials,
+                                requestOptions.credentials,
 
                             mode:
-                                request.mode,
+                                requestOptions.mode,
 
                             cache:
-                                request.cache,
+                                requestOptions.cache,
 
                             redirect:
-                                request.redirect,
+                                requestOptions.redirect,
 
                             referrerPolicy:
-                                request.referrerPolicy,
+                                requestOptions.referrerPolicy,
 
                             signal:
                                 abortControl.signal
                         }
                     );
 
-                if (!response.ok) {
+                if (
+                    !response.ok
+                ) {
                     if (
                         shouldRetry(
-                            request.method,
+                            requestOptions.method,
                             response,
                             attempt,
-                            request.retries
+                            requestOptions.retries
                         )
                     ) {
+                        const delay =
+                            calculateRetryDelay(
+                                requestOptions,
+                                attempt,
+                                response
+                            );
+
                         await wait(
-                            request.retryDelay *
-                                Math.pow(
-                                    2,
-                                    attempt
-                                )
+                            delay,
+                            requestOptions.signal
                         );
 
                         continue;
@@ -843,8 +1345,8 @@
 
                     throw await createHttpError(
                         response,
-                        request.url,
-                        request.method
+                        requestOptions.url,
+                        requestOptions.method
                     );
                 }
 
@@ -873,10 +1375,10 @@
                         response,
 
                     url:
-                        request.url,
+                        requestOptions.url,
 
                     method:
-                        request.method,
+                        requestOptions.method,
 
                     attempts:
                         attempt + 1
@@ -884,12 +1386,8 @@
             } catch (error) {
                 if (
                     error &&
-                    (
-                        error.name ===
-                            "HttpError" ||
-                        error.name ===
-                            "HttpAbortError"
-                    )
+                    error.name ===
+                        "HttpError"
                 ) {
                     throw error;
                 }
@@ -903,53 +1401,73 @@
                     abortControl.externallyAborted();
 
                 /*
-                 * Timeout and caller cancellation
-                 * are terminal conditions.
-                 *
-                 * They must never be retried.
+                 * Timeout and explicit cancellation
+                 * are always terminal.
                  */
                 if (
                     timedOut ||
-                    externallyAborted
+                    externallyAborted ||
+                    (
+                        error &&
+                        error.name ===
+                            "AbortError"
+                    )
                 ) {
                     throw createNetworkError(
                         error,
-                        request,
+                        requestOptions,
                         abortControl
                     );
                 }
 
                 /*
-                 * Network failures may be retried
-                 * only for explicitly retryable
-                 * HTTP methods.
+                 * Network failure.
+                 *
+                 * Only safe/idempotent methods
+                 * may be automatically retried.
                  */
                 if (
                     shouldRetry(
-                        request.method,
+                        requestOptions.method,
                         null,
                         attempt,
-                        request.retries
+                        requestOptions.retries
                     )
                 ) {
-                    await wait(
-                        request.retryDelay *
-                            Math.pow(
-                                2,
-                                attempt
-                            )
-                    );
+                    const delay =
+                        calculateRetryDelay(
+                            requestOptions,
+                            attempt,
+                            null
+                        );
+
+                    try {
+                        await wait(
+                            delay,
+                            requestOptions.signal
+                        );
+                    } catch (
+                        retryError
+                    ) {
+                        throw createNetworkError(
+                            retryError,
+                            requestOptions,
+                            abortControl
+                        );
+                    }
 
                     continue;
                 }
 
                 throw createNetworkError(
                     error,
-                    request,
+                    requestOptions,
                     abortControl
                 );
             } finally {
-                if (abortControl) {
+                if (
+                    abortControl
+                ) {
                     abortControl.cleanup();
                 }
             }
@@ -960,18 +1478,16 @@
         );
     }
 
-    /* =======================================================
+    /* ==========================================================================
        PUBLIC REQUEST
-    ======================================================= */
+       ========================================================================== */
 
     async function request(
         url,
         options
     ) {
         const value =
-            options &&
-            typeof options === "object" &&
-            !Array.isArray(options)
+            isObject(options)
                 ? options
                 : {};
 
@@ -980,16 +1496,19 @@
                 value.method
             );
 
-        const baseUrl =
+        const configuredBaseUrl =
             value.baseUrl !==
             undefined
                 ? String(
-                      value.baseUrl || ""
+                      value.baseUrl ||
+                          ""
                   ).trim()
-                : (
-                    settings.baseUrl ||
-                    resolveBaseUrl()
-                );
+                : "";
+
+        const baseUrl =
+            configuredBaseUrl ||
+            settings.baseUrl ||
+            resolveBaseUrl();
 
         const requestUrl =
             joinUrl(
@@ -1014,6 +1533,56 @@
                 headers
             );
 
+        /*
+         * JSON is the normal API response
+         * format. Accept both JSON and text.
+         */
+        setHeaderIfMissing(
+            headers,
+            "Accept",
+            "application/json, text/plain, */*"
+        );
+
+        const timeout =
+            Number.isFinite(
+                value.timeout
+            )
+                ? Math.max(
+                      0,
+                      value.timeout
+                  )
+                : settings.timeout;
+
+        const retries =
+            Number.isInteger(
+                value.retries
+            )
+                ? Math.max(
+                      0,
+                      value.retries
+                  )
+                : settings.retries;
+
+        const retryDelay =
+            Number.isFinite(
+                value.retryDelay
+            )
+                ? Math.max(
+                      0,
+                      value.retryDelay
+                  )
+                : settings.retryDelay;
+
+        const maxRetryDelay =
+            Number.isFinite(
+                value.maxRetryDelay
+            )
+                ? Math.max(
+                      0,
+                      value.maxRetryDelay
+                  )
+                : settings.maxRetryDelay;
+
         return execute({
             method:
                 method,
@@ -1028,63 +1597,46 @@
                 body,
 
             timeout:
-                Number.isFinite(
-                    value.timeout
-                )
-                    ? Math.max(
-                          0,
-                          value.timeout
-                      )
-                    : settings.timeout,
+                timeout,
 
             retries:
-                Number.isInteger(
-                    value.retries
-                )
-                    ? Math.max(
-                          0,
-                          value.retries
-                      )
-                    : settings.retries,
+                retries,
 
             retryDelay:
-                Number.isFinite(
-                    value.retryDelay
-                )
-                    ? Math.max(
-                          0,
-                          value.retryDelay
-                      )
-                    : settings.retryDelay,
+                retryDelay,
+
+            maxRetryDelay:
+                maxRetryDelay,
 
             signal:
-                value.signal || null,
+                value.signal ||
+                null,
 
             credentials:
                 value.credentials ||
-                "same-origin",
+                DEFAULT_CREDENTIALS,
 
             mode:
                 value.mode ||
-                "cors",
+                DEFAULT_MODE,
 
             cache:
                 value.cache ||
-                "default",
+                DEFAULT_CACHE,
 
             redirect:
                 value.redirect ||
-                "follow",
+                DEFAULT_REDIRECT,
 
             referrerPolicy:
                 value.referrerPolicy ||
-                "strict-origin-when-cross-origin"
+                DEFAULT_REFERRER_POLICY
         });
     }
 
-    /* =======================================================
+    /* ==========================================================================
        HTTP METHODS
-    ======================================================= */
+       ========================================================================== */
 
     function get(
         url,
@@ -1096,7 +1648,8 @@
                 {},
                 options,
                 {
-                    method: "GET"
+                    method:
+                        "GET"
                 }
             )
         );
@@ -1113,8 +1666,11 @@
                 {},
                 options,
                 {
-                    method: "POST",
-                    body: body
+                    method:
+                        "POST",
+
+                    body:
+                        body
                 }
             )
         );
@@ -1131,8 +1687,11 @@
                 {},
                 options,
                 {
-                    method: "PUT",
-                    body: body
+                    method:
+                        "PUT",
+
+                    body:
+                        body
                 }
             )
         );
@@ -1149,8 +1708,11 @@
                 {},
                 options,
                 {
-                    method: "PATCH",
-                    body: body
+                    method:
+                        "PATCH",
+
+                    body:
+                        body
                 }
             )
         );
@@ -1166,7 +1728,8 @@
                 {},
                 options,
                 {
-                    method: "DELETE"
+                    method:
+                        "DELETE"
                 }
             )
         );
@@ -1182,7 +1745,8 @@
                 {},
                 options,
                 {
-                    method: "HEAD"
+                    method:
+                        "HEAD"
                 }
             )
         );
@@ -1198,25 +1762,27 @@
                 {},
                 options,
                 {
-                    method: "OPTIONS"
+                    method:
+                        "OPTIONS"
                 }
             )
         );
     }
 
-    /* =======================================================
+    /* ==========================================================================
        BASE URL
-    ======================================================= */
+       ========================================================================== */
 
     function setBaseUrl(
         baseUrl
     ) {
         settings.baseUrl =
-            typeof baseUrl === "string"
+            typeof baseUrl ===
+            "string"
                 ? baseUrl.trim()
                 : "";
 
-        return settings.baseUrl;
+        return getBaseUrl();
     }
 
     function getBaseUrl() {
@@ -1226,9 +1792,9 @@
         );
     }
 
-    /* =======================================================
+    /* ==========================================================================
        PUBLIC API
-    ======================================================= */
+       ========================================================================== */
 
     const Http =
         Object.freeze({
@@ -1238,21 +1804,38 @@
             post,
             put,
             patch,
-            delete: remove,
+
+            delete:
+                remove,
+
             head,
+
             options:
                 optionsRequest,
 
             configure,
+
             getConfig,
 
             setBaseUrl,
+
             getBaseUrl
         });
+
+    /* ==========================================================================
+       GLOBAL EXPORT
+       ========================================================================== */
 
     CyberNexus.Http =
         Http;
 
+    /*
+     * Backward-compatible alias.
+     *
+     * Canonical API:
+     *
+     *     window.CyberNexus.Http
+     */
     window.CyberNexusHttp =
         Http;
 
