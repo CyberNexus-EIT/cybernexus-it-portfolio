@@ -697,13 +697,25 @@ table {
 
         width: max-content;
         min-width: max-content;
-        max-width: none;
+        max-width: 100%;
 
         white-space: nowrap;
     }
 
     .status-label {
+        display: inline-block;
+        width: auto;
+        max-width: none;
+        min-width: 0;
+
+        overflow: visible;
+        text-overflow: clip;
+
         white-space: nowrap;
+    }
+
+    .status-indicator {
+        flex: 0 0 auto;
     }
 
     .side-panel-toggle {
@@ -955,10 +967,8 @@ table {
      * Mobile header:
      *
      * Row 1 = Brand + Menu
-     * Row 2 = Status
+     * Row 2 = Auto-fit Status
      * Row 3 = Navigation
-     *
-     * This deliberately gives the status its own row.
      */
 
     :root {
@@ -1076,9 +1086,6 @@ table {
         height: var(--cn-header-height);
         min-height: var(--cn-header-height);
 
-        /*
-         * Brand and menu only on row 1.
-         */
         grid-template-columns:
             minmax(0, 1fr)
             44px;
@@ -1158,11 +1165,16 @@ table {
     .system-status {
         grid-area: status;
 
-        display: flex;
+        display: inline-flex;
         align-items: center;
         justify-content: flex-start;
 
-        width: 100%;
+        /*
+         * Auto-fit:
+         * the status takes only the space it needs,
+         * while remaining responsive inside the row.
+         */
+        width: fit-content;
         max-width: 100%;
         min-width: 0;
 
@@ -1176,24 +1188,19 @@ table {
         white-space: nowrap;
     }
 
-    /*
-     * The status is now allowed to use the whole row.
-     * No clipping.
-     * No ellipsis.
-     * No tiny 0.56rem text.
-     */
-
     .status-content {
         display: inline-flex;
         align-items: center;
 
-        width: auto;
+        width: fit-content;
         max-width: 100%;
         min-width: 0;
+
+        flex: 0 1 auto;
     }
 
     .status-label {
-        display: inline;
+        display: inline-block;
 
         width: auto;
         max-width: none;
@@ -1206,6 +1213,8 @@ table {
 
         font-size: 0.78rem;
         line-height: 1.2;
+
+        flex: 0 1 auto;
     }
 
     .status-indicator {
@@ -1848,11 +1857,6 @@ table {
 @media (max-width: 479px) {
 
     :root {
-        /*
-         * 56px brand row
-         * 44px status row
-         * 44px navigation row
-         */
         --cn-header-height: 144px;
 
         --cn-side-panel-width: min(290px, 90vw);
@@ -1916,12 +1920,18 @@ table {
         font-size: 0.7rem;
     }
 
+    /* =====================================================
+       SMALL MOBILE STATUS
+       ===================================================== */
+
     .status,
     .header-status,
     .app-status,
     .cn-status,
     .system-status {
-        width: 100%;
+        display: inline-flex;
+
+        width: fit-content;
         max-width: 100%;
         min-width: 0;
 
@@ -1929,22 +1939,42 @@ table {
 
         padding-inline:
             var(--cn-space-2);
+
+        overflow: visible;
+        white-space: nowrap;
+    }
+
+    .status-content {
+        display: inline-flex;
+        align-items: center;
+
+        width: fit-content;
+        max-width: 100%;
+        min-width: 0;
     }
 
     .status-label {
+        display: inline-block;
+
+        width: auto;
+        max-width: none;
+        min-width: 0;
+
         font-size: 0.74rem;
         line-height: 1.2;
-
-        max-width: none;
 
         overflow: visible;
         text-overflow: clip;
         white-space: nowrap;
+
+        flex: 0 1 auto;
     }
 
     .status-indicator {
         width: 7px;
         height: 7px;
+
+        flex: 0 0 auto;
     }
 
     .header-nav-link,
@@ -2089,18 +2119,18 @@ table {
         display: none;
     }
 
-    /*
-     * IMPORTANT:
-     * Status remains a complete independent row.
-     * It is NOT compressed into the brand row.
-     */
+    /* =====================================================
+       VERY SMALL MOBILE STATUS
+       ===================================================== */
 
     .status,
     .header-status,
     .app-status,
     .cn-status,
     .system-status {
-        width: 100%;
+        display: inline-flex;
+
+        width: fit-content;
         max-width: 100%;
         min-width: 0;
 
@@ -2110,22 +2140,40 @@ table {
             var(--cn-space-2);
 
         overflow: visible;
+        white-space: nowrap;
+    }
+
+    .status-content {
+        display: inline-flex;
+        align-items: center;
+
+        width: fit-content;
+        max-width: 100%;
+        min-width: 0;
     }
 
     .status-label {
+        display: inline-block;
+
+        width: auto;
+        max-width: none;
+        min-width: 0;
+
         font-size: 0.68rem;
         line-height: 1.2;
-
-        max-width: none;
 
         overflow: visible;
         text-overflow: clip;
         white-space: nowrap;
+
+        flex: 0 1 auto;
     }
 
     .status-indicator {
         width: 6px;
         height: 6px;
+
+        flex: 0 0 auto;
     }
 
     .side-panel {
@@ -2247,11 +2295,6 @@ table {
 
 @media (max-width: 767px) and (orientation: landscape) {
 
-    /*
-     * Landscape has limited vertical space.
-     * Keep the same logical order, but reduce row heights.
-     */
-
     :root {
         --cn-header-height: 120px;
     }
@@ -2278,13 +2321,36 @@ table {
     .app-status,
     .cn-status,
     .system-status {
+        display: inline-flex;
+
+        width: fit-content;
+        max-width: 100%;
+        min-width: 0;
+
         min-height: 36px;
+
         padding-inline:
             var(--cn-space-2);
+
+        overflow: visible;
+        white-space: nowrap;
+    }
+
+    .status-content {
+        width: fit-content;
+        max-width: 100%;
+        min-width: 0;
     }
 
     .status-label {
         font-size: 0.7rem;
+
+        width: auto;
+        max-width: none;
+
+        overflow: visible;
+        text-overflow: clip;
+        white-space: nowrap;
     }
 
     .header-nav,
