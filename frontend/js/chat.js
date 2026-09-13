@@ -1,80 +1,69 @@
-/* ==========================================================================
-   CyberNexus IT Portfolio Platform
-   File: frontend/js/chat.js
-
-   Responsibility:
-   - Chat and AI interaction behavior
-   - Chat message state
-   - Conversation identification
-   - Chat form/input interaction
-   - Chat message presentation
-
-   Does NOT own:
-   - Generic HTTP transport
-   - API path construction
-   - Authentication
-   - Account/profile management
-   - Application state
-   - Main application lifecycle
-   - Voice interaction
-   - CSS presentation
-   ========================================================================== */
+/*
+ * CyberNexus IT Portfolio Platform
+ * File: frontend/js/chat.js
+ *
+ * Responsibility:
+ * - Chat and AI interaction behavior
+ * - Chat message state
+ * - Conversation identification
+ * - Chat form/input interaction
+ * - Chat message presentation
+ *
+ * Does NOT own:
+ * - Generic HTTP transport
+ * - API path construction
+ * - Authentication implementation
+ * - Account/profile management
+ * - Persistent application state
+ * - Main application lifecycle
+ * - Voice interaction
+ * - CSS presentation
+ */
 
 (function (window, document) {
     "use strict";
 
-    /* =======================================================
+    /* =========================================================
        NAMESPACE
-    ======================================================= */
+       ========================================================= */
 
     const CyberNexus =
         (window.CyberNexus =
             window.CyberNexus || {});
 
-    /* =======================================================
+    /* =========================================================
        DEPENDENCIES
-    ======================================================= */
+       ========================================================= */
 
     const Api =
         CyberNexus.Api ||
-        window.CyberNexusApi;
+        window.CyberNexusApi ||
+        null;
 
     const Auth =
         CyberNexus.Auth ||
-        window.CyberNexusAuth;
+        window.CyberNexusAuth ||
+        null;
 
-    if (
-        !Api ||
-        typeof Api.post !== "function"
-    ) {
-        throw new Error(
-            "CyberNexus.Api must be loaded before chat.js."
-        );
-    }
-
-    if (
-        !Auth ||
-        typeof Auth.verifySession !== "function"
-    ) {
-        throw new Error(
-            "CyberNexus.Auth must be loaded before chat.js."
-        );
-    }
-
-    /* =======================================================
+    /* =========================================================
        CHAT STATE
-    ======================================================= */
+       ========================================================= */
 
     const CHAT = {
         initialized: false,
+
         busy: false,
+
         messages: [],
-        conversationId: null
+
+        conversationId: null,
+
+        messageSequence: 0
     };
 
-    /* =======================================================
-       DOM
-    ======================================================= */
+    /* =========================================================
+       DOM HELPERS
+       ========================================================= */
 
     function getElements() {
         return {
@@ -105,9 +94,212 @@
         };
     }
 
-    /* =======================================================
-       MESSAGE
-    ======================================================= */
+    /* =========================================================
+       GENERAL HELPERS
+       ========================================================= */
+
+    function normalizeString(
+        value
+    ) {
+        if (
+            value === null ||
+            value === undefined
+        ) {
+            return "";
+        }
+
+        return String(
+            value
+        ).trim();
+    }
+
+    function emit(
+        eventName,
+        detail
+    ) {
+        const name =
+            normalizeString(
+                eventName
+            );
+
+        if (!name) {
+            return;
+        }
+
+        document.dispatchEvent(
+            new CustomEvent(
+                name,
+                {
+                    detail:
+                        detail &&
+                        typeof detail ===
+                            "object"
+                            ? detail
+                            : {}
+                }
+            )
+        );
+    }
+
+    function getErrorMessage(
+        error
+    ) {
+        const fallback =
+            "Unable to connect to the AI service.";
+
+        if (!error) {
+            return fallback;
+        }
+
+        if (
+            typeof error ===
+            "string"
+        ) {
+            return (
+                normalizeString(
+                    error
+                ) || fallback
+            );
+        }
+
+        if (
+            typeof error.message ===
+            "string"
+        ) {
+            return (
+                normalizeString(
+                    error.message
+                ) || fallback
+            );
+        }
+
+        if (
+            error.data &&
+            typeof error.data ===
+                "object"
+        ) {
+            if (
+                typeof error.data.message ===
+                "string"
+            ) {
+                return (
+                    normalizeString(
+                        error.data.message
+                    ) || fallback
+                );
+            }
+
+            if (
+                typeof error.data.error ===
+                "string"
+            ) {
+                return (
+                    normalizeString(
+                        error.data.error
+                    ) || fallback
+                );
+            }
+        }
+
+        if (
+            error.response &&
+            typeof error.response ===
+                "object"
+        ) {
+            if (
+                typeof error.response.message ===
+                "string"
+            ) {
+                return (
+                    normalizeString(
+                        error.response.message
+                    ) || fallback
+                );
+            }
+
+            if (
+                typeof error.response.error ===
+                "string"
+            ) {
+                return (
+                    normalizeString(
+                        error.response.error
+                    ) || fallback
+                );
+            }
+
+            if (
+                error.response.data &&
+                typeof error.response.data ===
+                    "object"
+            ) {
+                if (
+                    typeof error.response.data.message ===
+                    "string"
+                ) {
+                    return (
+                        normalizeString(
+                            error.response.data.message
+                        ) || fallback
+                    );
+                }
+
+                if (
+                    typeof error.response.data.error ===
+                    "string"
+                ) {
+                    return (
+                        normalizeString(
+                            error.response.data.error
+                        ) || fallback
+                    );
+                }
+            }
+        }
+
+        return fallback;
+    }
+
+    function createMessageId() {
+        CHAT.messageSequence += 1;
+
+        return (
+            "local-" +
+            Date.now() +
+            "-" +
+            CHAT.messageSequence
+        );
+    }
+
+    /* =========================================================
+       MESSAGE NORMALIZATION
+       ========================================================= */
+
+    function normalizeRole(
+        role
+    ) {
+        const value =
+            normalizeString(
+                role
+            ).toLowerCase();
+
+        const allowed =
+            new Set([
+                "system",
+                "user",
+                "assistant"
+            ]);
+
+        if (
+            allowed.has(
+                value
+            )
+        ) {
+            return value;
+        }
+
+        return "assistant";
+    }
 
     function normalizeMessage(
         message
@@ -120,54 +312,92 @@
         }
 
         if (
-            typeof message === "string"
+            typeof message ===
+            "string"
         ) {
             return {
-                id: null,
-                role: "assistant",
-                content: message,
-                timestamp: Date.now()
+                id:
+                    createMessageId(),
+
+                role:
+                    "assistant",
+
+                content:
+                    message,
+
+                timestamp:
+                    Date.now()
             };
         }
 
         if (
-            typeof message !== "object" ||
-            Array.isArray(message)
+            typeof message !==
+                "object" ||
+            Array.isArray(
+                message
+            )
         ) {
             return null;
         }
 
-        const content =
+        const rawContent =
             message.content !==
             undefined
                 ? message.content
                 : message.message !==
                     undefined
                     ? message.message
-                    : "";
+                    : message.text !==
+                        undefined
+                        ? message.text
+                        : "";
 
-        const role =
-            String(
-                message.role ||
-                    "assistant"
-            ).trim() ||
-            "assistant";
+        const content =
+            normalizeString(
+                rawContent
+            );
+
+        if (!content) {
+            return null;
+        }
+
+        const rawId =
+            message.id !==
+            undefined
+                ? message.id
+                : message.messageId !==
+                    undefined
+                    ? message.messageId
+                    : null;
+
+        const id =
+            rawId === null ||
+            rawId === undefined ||
+            normalizeString(
+                rawId
+            ) === ""
+                ? createMessageId()
+                : String(
+                      rawId
+                  );
+
+        const timestamp =
+            message.timestamp ||
+            message.created_at ||
+            message.createdAt ||
+            Date.now();
 
         return {
-            id:
-                message.id !==
-                undefined
-                    ? message.id
-                    : null,
+            id,
 
-            role,
+            role:
+                normalizeRole(
+                    message.role
+                ),
 
-            content:
-                String(content),
+            content,
 
-            timestamp:
-                message.timestamp ||
-                Date.now()
+            timestamp
         };
     }
 
@@ -191,7 +421,42 @@
             normalized
         );
 
+        emit(
+            "cybernexus:chat:message",
+            {
+                message:
+                    Object.assign(
+                        {},
+                        normalized
+                    )
+            }
+        );
+
         return normalized;
+    }
+
+    function addMessages(
+        messages
+    ) {
+        if (
+            !Array.isArray(
+                messages
+            )
+        ) {
+            return [];
+        }
+
+        return messages
+            .map(
+                function (message) {
+                    return addMessage(
+                        message
+                    );
+                }
+            )
+            .filter(
+                Boolean
+            );
     }
 
     function getMessages() {
@@ -216,14 +481,19 @@
         ) {
             elements.container.replaceChildren();
         }
+
+        emit(
+            "cybernexus:chat:cleared"
+        );
     }
 
-    /* =======================================================
+    /* =========================================================
        PRESENTATION
-    ======================================================= */
+       ========================================================= */
 
     function setStatus(
-        text
+        text,
+        type
     ) {
         const elements =
             getElements();
@@ -234,17 +504,48 @@
             return;
         }
 
-        elements.status.textContent =
-            String(
-                text || ""
+        const message =
+            normalizeString(
+                text
             );
+
+        elements.status.hidden =
+            !message;
+
+        elements.status.textContent =
+            message;
+
+        elements.status.dataset.status =
+            normalizeString(
+                type
+            );
+
+        elements.status.classList.toggle(
+            "is-error",
+            type ===
+                "error"
+        );
+
+        elements.status.classList.toggle(
+            "is-loading",
+            type ===
+                "loading"
+        );
+
+        elements.status.classList.toggle(
+            "is-success",
+            type ===
+                "success"
+        );
     }
 
     function setBusy(
         busy
     ) {
         const value =
-            Boolean(busy);
+            Boolean(
+                busy
+            );
 
         const elements =
             getElements();
@@ -257,6 +558,13 @@
         ) {
             elements.input.disabled =
                 value;
+
+            elements.input.setAttribute(
+                "aria-busy",
+                String(
+                    value
+                )
+            );
         }
 
         if (
@@ -266,11 +574,12 @@
                 value;
         }
 
-        setStatus(
-            value
-                ? "Thinking..."
-                : ""
-        );
+        if (value) {
+            setStatus(
+                "Thinking...",
+                "loading"
+            );
+        }
     }
 
     function scrollToBottom() {
@@ -296,7 +605,7 @@
         if (
             !elements.container
         ) {
-            return;
+            return null;
         }
 
         const normalized =
@@ -305,7 +614,7 @@
             );
 
         if (!normalized) {
-            return;
+            return null;
         }
 
         const item =
@@ -319,14 +628,10 @@
         item.dataset.role =
             normalized.role;
 
-        if (
-            normalized.id !== null
-        ) {
-            item.dataset.messageId =
-                String(
-                    normalized.id
-                );
-        }
+        item.dataset.messageId =
+            String(
+                normalized.id
+            );
 
         const content =
             document.createElement(
@@ -337,8 +642,13 @@
             "cn-chat-message-content";
 
         /*
-         * Never interpret user or AI
-         * content as HTML.
+         * Security:
+         *
+         * Never use innerHTML for
+         * chat content.
+         *
+         * Both user input and AI
+         * output are untrusted data.
          */
         content.textContent =
             normalized.content;
@@ -352,6 +662,8 @@
         );
 
         scrollToBottom();
+
+        return item;
     }
 
     function renderMessages() {
@@ -373,11 +685,13 @@
                 );
             }
         );
+
+        scrollToBottom();
     }
 
-    /* =======================================================
+    /* =========================================================
        CONVERSATION
-    ======================================================= */
+       ========================================================= */
 
     function setConversationId(
         id
@@ -393,72 +707,194 @@
         }
 
         const value =
-            String(id).trim();
+            normalizeString(
+                id
+            );
 
         CHAT.conversationId =
-            value || null;
+            value ||
+            null;
 
         return CHAT.conversationId;
     }
 
     function getConversationId() {
-        return CHAT.conversationId;
+        return (
+            CHAT.conversationId
+        );
+    }
+
+    function resetConversation() {
+        setConversationId(
+            null
+        );
+
+        clearMessages();
+
+        setStatus(
+            ""
+        );
+
+        emit(
+            "cybernexus:chat:new-conversation"
+        );
+    }
+
+    /* =========================================================
+       API RESPONSE
+       ========================================================= */
+
+    function getResponseData(
+        response
+    ) {
+        if (
+            response &&
+            response.data &&
+            typeof response.data ===
+                "object" &&
+            !Array.isArray(
+                response.data
+            )
+        ) {
+            return response.data;
+        }
+
+        if (
+            response &&
+            typeof response ===
+                "object" &&
+            !Array.isArray(
+                response
+            )
+        ) {
+            return response;
+        }
+
+        return {};
     }
 
     function extractReply(
         response
     ) {
         const data =
-            response &&
-            response.data;
+            getResponseData(
+                response
+            );
 
         if (
-            data === null ||
-            data === undefined
-        ) {
-            return null;
-        }
-
-        if (
-            typeof data === "string"
+            typeof data ===
+            "string"
         ) {
             return data;
         }
 
         if (
-            typeof data !== "object" ||
-            Array.isArray(data)
+            !data ||
+            typeof data !==
+                "object"
         ) {
             return null;
         }
 
-        return (
+        const reply =
             data.reply ||
             data.message ||
             data.content ||
             data.response ||
-            null
+            null;
+
+        if (
+            reply &&
+            typeof reply ===
+                "object"
+        ) {
+            if (
+                typeof reply.content ===
+                "string"
+            ) {
+                return reply.content;
+            }
+
+            if (
+                typeof reply.message ===
+                "string"
+            ) {
+                return reply.message;
+            }
+
+            if (
+                typeof reply.text ===
+                "string"
+            ) {
+                return reply.text;
+            }
+        }
+
+        if (
+            reply === null ||
+            reply === undefined
+        ) {
+            return null;
+        }
+
+        return String(
+            reply
         );
+    }
+
+    function extractMessages(
+        response
+    ) {
+        const data =
+            getResponseData(
+                response
+            );
+
+        if (
+            !data ||
+            typeof data !==
+                "object"
+        ) {
+            return [];
+        }
+
+        const messages =
+            Array.isArray(
+                data.messages
+            )
+                ? data.messages
+                : [];
+
+        return messages
+            .map(
+                normalizeMessage
+            )
+            .filter(
+                Boolean
+            );
     }
 
     function updateConversation(
         response
     ) {
         const data =
-            response &&
-            response.data;
+            getResponseData(
+                response
+            );
 
         if (
             !data ||
-            typeof data !== "object" ||
-            Array.isArray(data)
+            typeof data !==
+                "object"
         ) {
             return;
         }
 
         const id =
             data.conversation_id ||
-            data.conversationId;
+            data.conversationId ||
+            data.conversation ||
+            null;
 
         if (
             id !== null &&
@@ -470,11 +906,52 @@
         }
     }
 
-    /* =======================================================
+    function isSuccessfulResponse(
+        response
+    ) {
+        if (!response) {
+            return false;
+        }
+
+        if (
+            typeof response.ok ===
+            "boolean" &&
+            !response.ok
+        ) {
+            return false;
+        }
+
+        const data =
+            getResponseData(
+                response
+            );
+
+        if (
+            data &&
+            data.success ===
+            false
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /* =========================================================
        AUTHENTICATION
-    ======================================================= */
+       ========================================================= */
 
     async function requireAuthentication() {
+        if (
+            !Auth ||
+            typeof Auth.verifySession !==
+                "function"
+        ) {
+            throw new Error(
+                "The authentication module is not available."
+            );
+        }
+
         const authenticated =
             await Auth.verifySession();
 
@@ -487,17 +964,49 @@
         return true;
     }
 
-    /* =======================================================
+    /* =========================================================
+       CHAT API
+       ========================================================= */
+
+    async function requestChat(
+        content
+    ) {
+        if (
+            !Api ||
+            typeof Api.sendChat !==
+                "function"
+        ) {
+            throw new Error(
+                "The chat API method is not configured."
+            );
+        }
+
+        /*
+         * api-user.js owns the actual
+         * /api/chat endpoint.
+         */
+        return Api.sendChat(
+            {
+                conversation_id:
+                    CHAT.conversationId,
+
+                message:
+                    content
+            }
+        );
+    }
+
+    /* =========================================================
        SEND
-    ======================================================= */
+       ========================================================= */
 
     async function send(
         message
     ) {
         const content =
-            String(
-                message || ""
-            ).trim();
+            normalizeString(
+                message
+            );
 
         if (
             !content ||
@@ -508,76 +1017,135 @@
 
         await requireAuthentication();
 
-        addMessage({
-            role: "user",
-            content
-        });
+        /*
+         * The user's message is added
+         * only after authentication
+         * succeeds.
+         */
+        const userMessage =
+            addMessage({
+                role:
+                    "user",
 
-        setBusy(true);
+                content
+            });
+
+        setBusy(
+            true
+        );
 
         try {
-            /*
-             * The backend owns conversation
-             * history. The frontend sends only
-             * the conversation identifier and
-             * current message.
-             */
             const response =
-                await Api.post(
-                    "/chat",
-                    {
-                        conversation_id:
-                            CHAT.conversationId,
-
-                        message:
-                            content
-                    }
+                await requestChat(
+                    content
                 );
+
+            if (
+                !isSuccessfulResponse(
+                    response
+                )
+            ) {
+                throw new Error(
+                    getErrorMessage(
+                        response
+                    )
+                );
+            }
 
             updateConversation(
                 response
             );
 
-            const reply =
-                extractReply(
+            /*
+             * If the backend returns a complete
+             * message history, use it only when
+             * it actually contains messages.
+             *
+             * Otherwise preserve the local
+             * conversation and add the reply.
+             */
+            const responseMessages =
+                extractMessages(
                     response
                 );
 
             if (
-                reply !== null &&
-                String(reply).trim()
+                responseMessages.length >
+                0
             ) {
-                addMessage({
-                    role:
-                        "assistant",
+                CHAT.messages =
+                    responseMessages;
 
-                    content:
-                        String(reply)
-                });
+                renderMessages();
+            } else {
+                const reply =
+                    extractReply(
+                        response
+                    );
+
+                if (
+                    reply !== null &&
+                    normalizeString(
+                        reply
+                    )
+                ) {
+                    addMessage({
+                        role:
+                            "assistant",
+
+                        content:
+                            reply
+                    });
+                }
             }
 
-            setStatus("");
+            setStatus(
+                ""
+            );
+
+            emit(
+                "cybernexus:chat:success",
+                {
+                    response,
+
+                    message:
+                        userMessage,
+
+                    conversationId:
+                        CHAT.conversationId
+                }
+            );
 
             return response;
         } catch (error) {
-            const errorMessage =
-                error &&
-                error.message
-                    ? error.message
-                    : "Unable to connect to the AI service.";
+            const messageText =
+                getErrorMessage(
+                    error
+                );
 
-            /*
-             * Errors are UI status only.
-             * They are never inserted into
-             * the conversation history.
-             */
             setStatus(
-                errorMessage
+                messageText,
+                "error"
+            );
+
+            emit(
+                "cybernexus:chat:error",
+                {
+                    error,
+
+                    message:
+                        userMessage,
+
+                    conversationId:
+                        CHAT.conversationId
+                }
             );
 
             throw error;
         } finally {
-            setBusy(false);
+            setBusy(
+                false
+            );
         }
     }
 
@@ -593,12 +1161,18 @@
         }
 
         const value =
-            elements.input.value.trim();
+            normalizeString(
+                elements.input.value
+            );
 
         if (!value) {
             return null;
         }
 
+        /*
+         * Clear immediately to prevent
+         * duplicate submissions.
+         */
         elements.input.value =
             "";
 
@@ -613,9 +1187,9 @@
         }
     }
 
-    /* =======================================================
+    /* =========================================================
        FORM
-    ======================================================= */
+       ========================================================= */
 
     function initializeForm() {
         const elements =
@@ -628,7 +1202,8 @@
         }
 
         if (
-            elements.form.dataset.chatBound ===
+            elements.form.dataset
+                .chatBound ===
             "true"
         ) {
             return;
@@ -642,10 +1217,14 @@
             function (event) {
                 event.preventDefault();
 
-                sendCurrentInput();
+                void sendCurrentInput();
             }
         );
     }
+
+    /* =========================================================
+       INPUT
+       ========================================================= */
 
     function initializeInput() {
         const elements =
@@ -658,7 +1237,8 @@
         }
 
         if (
-            elements.input.dataset.chatInputBound ===
+            elements.input.dataset
+                .chatInputBound ===
             "true"
         ) {
             return;
@@ -681,14 +1261,14 @@
 
                 event.preventDefault();
 
-                sendCurrentInput();
+                void sendCurrentInput();
             }
         );
     }
 
-    /* =======================================================
-       LIFECYCLE
-    ======================================================= */
+    /* =========================================================
+       INITIALIZATION
+       ========================================================= */
 
     function initialize() {
         if (
@@ -698,53 +1278,69 @@
         }
 
         initializeForm();
+
         initializeInput();
 
         CHAT.initialized =
             true;
 
-        document.dispatchEvent(
-            new CustomEvent(
-                "cybernexus:chat-ready"
-            )
+        emit(
+            "cybernexus:chat-ready"
         );
     }
 
     function isInitialized() {
-        return CHAT.initialized;
+        return Boolean(
+            CHAT.initialized
+        );
     }
 
     function isBusy() {
-        return CHAT.busy;
+        return Boolean(
+            CHAT.busy
+        );
     }
 
-    /* =======================================================
+    /* =========================================================
        PUBLIC API
-    ======================================================= */
+       ========================================================= */
 
     const Chat =
         Object.freeze({
             initialize,
+
             isInitialized,
+
             isBusy,
 
             send,
+
             sendCurrentInput,
 
             addMessage,
+
+            addMessages,
+
             clearMessages,
+
+            renderMessage,
+
             renderMessages,
+
             getMessages,
 
             setConversationId,
+
             getConversationId,
+
+            resetConversation,
 
             setStatus
         });
 
-    /* =======================================================
-       GLOBAL EXPORT
-    ======================================================= */
+    /* =========================================================
+       EXPORT
+       ========================================================= */
 
     CyberNexus.Chat =
         Chat;
@@ -752,9 +1348,9 @@
     window.CyberNexusChat =
         Chat;
 
-    /* =======================================================
+    /* =========================================================
        START
-    ======================================================= */
+       ========================================================= */
 
     if (
         document.readyState ===

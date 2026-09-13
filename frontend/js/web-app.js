@@ -1,75 +1,153 @@
-/* ==========================================================================
-   CyberNexus IT Portfolio Platform
-   File: frontend/js/web-app.js
-
-   Responsibility:
-   - Main frontend application lifecycle
-   - Page navigation synchronization
-   - Section navigation synchronization
-   - Side-panel behavior
-   - Frontend form interception
-   - Resume button behavior
-   - Keyboard interaction
-   - External-link safety
-   - Responsive synchronization
-   - Authentication/account initialization
-
-   Does NOT own:
-   - Persistent application state
-   - HTTP transport
-   - API endpoint definitions
-   - Authentication implementation
-   - Account implementation
-   - Chat/voice implementation
-   - CSS presentation
-   ========================================================================== */
+/*
+ * CyberNexus IT Portfolio Platform
+ * File: frontend/js/web-app.js
+ *
+ * Responsibility:
+ * - Main frontend application lifecycle
+ * - Page navigation synchronization
+ * - Section navigation synchronization
+ * - Side-panel behavior
+ * - Frontend form interception
+ * - Contact form lifecycle
+ * - Resume button behavior
+ * - Keyboard interaction
+ * - External-link safety
+ * - Responsive synchronization
+ * - Authentication/account initialization
+ * - DOM/UI coordination
+ *
+ * Does NOT own:
+ * - Persistent application state
+ * - HTTP transport
+ * - API path construction
+ * - Authentication implementation
+ * - Account implementation
+ * - Chat/voice implementation
+ * - CSS presentation
+ */
 
 (function (window, document) {
     "use strict";
 
-    /* ==========================================================================
+    /* =========================================================
        NAMESPACE
-       ========================================================================== */
+       ========================================================= */
 
     const CyberNexus =
         (window.CyberNexus =
             window.CyberNexus || {});
 
-    /* ==========================================================================
+    /* =========================================================
        DEPENDENCIES
-       ========================================================================== */
+       ========================================================= */
 
     const State =
         CyberNexus.State ||
-        window.CyberNexusState;
+        window.CyberNexusState ||
+        null;
 
     const Auth =
         CyberNexus.Auth ||
-        window.CyberNexusAuth;
+        window.CyberNexusAuth ||
+        null;
 
     const Account =
         CyberNexus.Account ||
-        window.CyberNexusAccount;
+        window.CyberNexusAccount ||
+        null;
 
-    /* ==========================================================================
+    const Api =
+        CyberNexus.Api ||
+        window.CyberNexusApi ||
+        null;
+
+    /* =========================================================
        APPLICATION STATE
-       ========================================================================== */
+       ========================================================= */
 
     const APP = {
         initialized: false,
 
-        listeners: [],
+        initializing: false,
 
         stateSubscription: null,
 
+        authSubscription: null,
+
+        accountSubscription: null,
+
         responsiveInitialized: false,
 
-        keyboardInitialized: false
+        keyboardInitialized: false,
+
+        contactForms:
+            new WeakSet(),
+
+        contactSubmitting:
+            new WeakSet(),
+
+        boundPageLinks:
+            new WeakSet(),
+
+        boundSectionLinks:
+            new WeakSet(),
+
+        boundSidePanelControls:
+            new WeakSet(),
+
+        boundForms:
+            new WeakSet(),
+
+        boundResumeControls:
+            new WeakSet(),
+
+        boundExternalLinks:
+            new WeakSet(),
+
+        resizeFrame: null
     };
 
-    /* ==========================================================================
+    /* =========================================================
+       DEPENDENCY VALIDATION
+       ========================================================= */
+
+    function validateDependencies() {
+        if (
+            !State
+        ) {
+            console.warn(
+                "CyberNexus.State is not available."
+            );
+        }
+
+        if (
+            !Auth
+        ) {
+            console.warn(
+                "CyberNexus.Auth is not available."
+            );
+        }
+
+        if (
+            !Account
+        ) {
+            console.warn(
+                "CyberNexus.Account is not available."
+            );
+        }
+
+        if (
+            !Api
+        ) {
+            console.warn(
+                "CyberNexus.Api is not available."
+            );
+        }
+    }
+
+    /* =========================================================
        DOM HELPERS
-       ========================================================================== */
+       ========================================================= */
 
     function query(
         selector,
@@ -77,7 +155,9 @@
     ) {
         return (
             root || document
-        ).querySelector(selector);
+        ).querySelector(
+            selector
+        );
     }
 
     function queryAll(
@@ -87,35 +167,316 @@
         return Array.from(
             (
                 root || document
-            ).querySelectorAll(selector)
+            ).querySelectorAll(
+                selector
+            )
         );
     }
 
-    /* ==========================================================================
+    function isElement(
+        value
+    ) {
+        return (
+            value instanceof
+            Element
+        );
+    }
+
+    /* =========================================================
+       GENERAL HELPERS
+       ========================================================= */
+
+    function normalizeString(
+        value
+    ) {
+        if (
+            value === null ||
+            value === undefined
+        ) {
+            return "";
+        }
+
+        return String(
+            value
+        ).trim();
+    }
+
+    function getFormValue(
+        form,
+        name
+    ) {
+        if (
+            !form ||
+            !name
+        ) {
+            return "";
+        }
+
+        const field =
+            form.elements.namedItem(
+                name
+            );
+
+        if (
+            !field ||
+            typeof field.value !==
+                "string"
+        ) {
+            return "";
+        }
+
+        return normalizeString(
+            field.value
+        );
+    }
+
+    function getErrorMessage(
+        error
+    ) {
+        const fallback =
+            "Something went wrong. Please try again.";
+
+        if (!error) {
+            return fallback;
+        }
+
+        if (
+            typeof error ===
+            "string"
+        ) {
+            return (
+                normalizeString(
+                    error
+                ) || fallback
+            );
+        }
+
+        if (
+            typeof error.message ===
+            "string"
+        ) {
+            return (
+                normalizeString(
+                    error.message
+                ) || fallback
+            );
+        }
+
+        /*
+         * Normalized http-user.js error:
+         *
+         * error.data
+         */
+        if (
+            error.data &&
+            typeof error.data ===
+                "object"
+        ) {
+            if (
+                typeof error.data.message ===
+                "string"
+            ) {
+                return (
+                    normalizeString(
+                        error.data.message
+                    ) || fallback
+                );
+            }
+
+            if (
+                typeof error.data.error ===
+                "string"
+            ) {
+                return (
+                    normalizeString(
+                        error.data.error
+                    ) || fallback
+                );
+            }
+        }
+
+        /*
+         * Some HTTP wrappers expose:
+         *
+         * error.response.data
+         */
+        if (
+            error.response &&
+            typeof error.response ===
+                "object"
+        ) {
+            if (
+                typeof error.response.message ===
+                "string"
+            ) {
+                return (
+                    normalizeString(
+                        error.response.message
+                    ) || fallback
+                );
+            }
+
+            if (
+                typeof error.response.error ===
+                "string"
+            ) {
+                return (
+                    normalizeString(
+                        error.response.error
+                    ) || fallback
+                );
+            }
+
+            if (
+                error.response.data &&
+                typeof error.response.data ===
+                    "object"
+            ) {
+                if (
+                    typeof error.response.data.message ===
+                    "string"
+                ) {
+                    return (
+                        normalizeString(
+                            error.response.data.message
+                        ) || fallback
+                    );
+                }
+
+                if (
+                    typeof error.response.data.error ===
+                    "string"
+                ) {
+                    return (
+                        normalizeString(
+                            error.response.data.error
+                        ) || fallback
+                    );
+                }
+            }
+        }
+
+        if (
+            typeof error.error ===
+            "string"
+        ) {
+            return (
+                normalizeString(
+                    error.error
+                ) || fallback
+            );
+        }
+
+        return fallback;
+    }
+
+    function emit(
+        eventName,
+        detail
+    ) {
+        const name =
+            normalizeString(
+                eventName
+            );
+
+        if (!name) {
+            return;
+        }
+
+        document.dispatchEvent(
+            new CustomEvent(
+                name,
+                {
+                    detail:
+                        detail &&
+                        typeof detail ===
+                            "object"
+                            ? detail
+                            : {}
+                }
+            )
+        );
+    }
+
+    function on(
+        eventName,
+        callback
+    ) {
+        const name =
+            normalizeString(
+                eventName
+            );
+
+        if (
+            !name ||
+            typeof callback !==
+                "function"
+        ) {
+            return function () {};
+        }
+
+        document.addEventListener(
+            name,
+            callback
+        );
+
+        return function unsubscribe() {
+            document.removeEventListener(
+                name,
+                callback
+            );
+        };
+    }
+
+    /* =========================================================
        PAGE
-       ========================================================================== */
+       ========================================================= */
 
     function getPageName() {
-        const path =
+        const pathname =
             window.location.pathname
+                .replace(
+                    /\/+$/,
+                    ""
+                );
+
+        const filename =
+            pathname
                 .split("/")
                 .pop()
                 .toLowerCase();
 
-        const pages = {
-            "": "portfolio",
-            "index.html": "portfolio",
-            "portfolio.html": "portfolio",
-            "projects.html": "projects",
-            "skills.html": "skills",
-            "experience.html": "experience",
-            "contact.html": "contact",
-            "privacy.html": "privacy",
-            "terms.html": "terms"
-        };
+        const pages = Object.freeze({
+            "":
+                "portfolio",
+
+            "index.html":
+                "portfolio",
+
+            "portfolio.html":
+                "portfolio",
+
+            "projects.html":
+                "projects",
+
+            "skills.html":
+                "skills",
+
+            "experience.html":
+                "experience",
+
+            "contact.html":
+                "contact",
+
+            "privacy.html":
+                "privacy",
+
+            "terms.html":
+                "terms"
+        });
 
         return (
-            pages[path] ||
+            pages[filename] ||
             "portfolio"
         );
     }
@@ -129,31 +490,45 @@
             return;
         }
 
-        const currentSection =
+        const section =
             State &&
             typeof State.getCurrentSection ===
                 "function"
-                ? State.getCurrentSection()
+                ? normalizeString(
+                      State.getCurrentSection()
+                  )
                 : "";
 
-        /*
-         * State.setPage(page, options)
-         *
-         * The section belongs inside the
-         * options object.
-         */
         State.setPage(
             getPageName(),
             {
-                section:
-                    currentSection
+                section
             }
         );
     }
 
-    /* ==========================================================================
+    function getCurrentPage() {
+        if (
+            State &&
+            typeof State.getCurrentPage ===
+                "function"
+        ) {
+            const page =
+                normalizeString(
+                    State.getCurrentPage()
+                ).toLowerCase();
+
+            if (page) {
+                return page;
+            }
+        }
+
+        return getPageName();
+    }
+
+    /* =========================================================
        PAGE NAVIGATION
-       ========================================================================== */
+       ========================================================= */
 
     function getPageNavigationLinks() {
         return queryAll(
@@ -163,137 +538,138 @@
 
     function updateNavigation() {
         const currentPage =
-            State &&
-            typeof State.getCurrentPage ===
-                "function"
-                ? State.getCurrentPage()
-                : getPageName();
+            getCurrentPage();
 
-        getPageNavigationLinks().forEach(
-            function (link) {
-                const page =
-                    String(
-                        link.dataset.page ||
-                            ""
-                    )
-                        .trim()
-                        .toLowerCase();
+        getPageNavigationLinks()
+            .forEach(
+                function (link) {
+                    const page =
+                        normalizeString(
+                            link.dataset.page
+                        ).toLowerCase();
 
-                const current =
-                    page === currentPage;
+                    const current =
+                        Boolean(
+                            page &&
+                            page ===
+                                currentPage
+                        );
 
-                link.classList.toggle(
-                    "is-current",
-                    current
-                );
-
-                if (current) {
-                    link.setAttribute(
-                        "aria-current",
-                        "page"
+                    link.classList.toggle(
+                        "is-current",
+                        current
                     );
-                } else {
-                    link.removeAttribute(
-                        "aria-current"
+
+                    link.classList.toggle(
+                        "is-active",
+                        current
                     );
+
+                    link.dataset.current =
+                        String(
+                            current
+                        );
+
+                    if (current) {
+                        link.setAttribute(
+                            "aria-current",
+                            "page"
+                        );
+                    } else {
+                        link.removeAttribute(
+                            "aria-current"
+                        );
+                    }
                 }
-            }
-        );
+            );
     }
 
     function initializeNavigation() {
-        getPageNavigationLinks().forEach(
-            function (link) {
-                if (
-                    link.dataset.pageBound ===
-                    "true"
-                ) {
-                    return;
-                }
-
-                link.dataset.pageBound =
-                    "true";
-
-                link.addEventListener(
-                    "click",
-                    function (event) {
-                        const page =
-                            String(
-                                link.dataset.page ||
-                                    ""
-                            )
-                                .trim()
-                                .toLowerCase();
-
-                        const href =
-                            link.getAttribute(
-                                "href"
-                            );
-
-                        if (
-                            !page ||
-                            !href
-                        ) {
-                            return;
-                        }
-
-                        const currentPage =
-                            State &&
-                            typeof State.getCurrentPage ===
-                                "function"
-                                ? State.getCurrentPage()
-                                : getPageName();
-
-                        /*
-                         * Keep the current page link
-                         * focusable and accessible.
-                         *
-                         * Only prevent an unnecessary
-                         * reload of the same page.
-                         */
-                        if (
-                            page ===
-                            currentPage
-                        ) {
-                            event.preventDefault();
-
-                            return;
-                        }
-
-                        if (
-                            State &&
-                            typeof State.setPage ===
-                                "function"
-                        ) {
-                            State.setPage(
-                                page,
-                                {
-                                    section:
-                                        ""
-                                }
-                            );
-                        }
-
-                        /*
-                         * Allow the browser to follow
-                         * the actual page URL.
-                         */
-                        if (
-                            isMobile()
-                        ) {
-                            closeSidePanel();
-                        }
+        getPageNavigationLinks()
+            .forEach(
+                function (link) {
+                    if (
+                        APP.boundPageLinks.has(
+                            link
+                        )
+                    ) {
+                        return;
                     }
-                );
-            }
-        );
+
+                    APP.boundPageLinks.add(
+                        link
+                    );
+
+                    link.addEventListener(
+                        "click",
+                        function (event) {
+                            const page =
+                                normalizeString(
+                                    link.dataset.page
+                                ).toLowerCase();
+
+                            const href =
+                                link.getAttribute(
+                                    "href"
+                                );
+
+                            if (
+                                !page ||
+                                !href
+                            ) {
+                                return;
+                            }
+
+                            const currentPage =
+                                getCurrentPage();
+
+                            /*
+                             * Same-page links
+                             * may still contain
+                             * a hash.
+                             */
+                            if (
+                                page ===
+                                    currentPage &&
+                                !href.includes(
+                                    "#"
+                                )
+                            ) {
+                                event.preventDefault();
+
+                                return;
+                            }
+
+                            if (
+                                State &&
+                                typeof State.setPage ===
+                                    "function"
+                            ) {
+                                State.setPage(
+                                    page,
+                                    {
+                                        section:
+                                            ""
+                                    }
+                                );
+                            }
+
+                            if (
+                                isMobile()
+                            ) {
+                                closeSidePanel();
+                            }
+                        }
+                    );
+                }
+            );
 
         updateNavigation();
     }
 
-    /* ==========================================================================
+    /* =========================================================
        SECTION NAVIGATION
-       ========================================================================== */
+       ========================================================= */
 
     function getSectionNavigationLinks() {
         return queryAll(
@@ -309,16 +685,15 @@
         }
 
         const configured =
-            link.dataset.sectionLink;
+            normalizeString(
+                link.dataset.sectionLink
+            );
 
-        if (
-            typeof configured ===
-                "string" &&
-            configured.trim()
-        ) {
-            return configured
-                .trim()
-                .replace(/^#/, "");
+        if (configured) {
+            return configured.replace(
+                /^#/,
+                ""
+            );
         }
 
         const href =
@@ -331,101 +706,135 @@
                 "string" &&
             href.includes("#")
         ) {
-            return href
-                .split("#")
-                .pop()
-                .trim();
+            return normalizeString(
+                href
+                    .split("#")
+                    .pop()
+            );
         }
 
         return "";
     }
 
-    function updateSectionNavigation() {
-        const currentSection =
+    function getCurrentSection() {
+        if (
             State &&
             typeof State.getCurrentSection ===
                 "function"
-                ? State.getCurrentSection()
-                : "";
+        ) {
+            return normalizeString(
+                State.getCurrentSection()
+            );
+        }
 
-        getSectionNavigationLinks().forEach(
-            function (link) {
-                const section =
-                    getSectionFromLink(
-                        link
-                    );
-
-                const current =
-                    section ===
-                    currentSection;
-
-                link.classList.toggle(
-                    "is-current",
-                    current
-                );
-
-                if (current) {
-                    link.setAttribute(
-                        "aria-current",
-                        "location"
-                    );
-                } else {
-                    link.removeAttribute(
-                        "aria-current"
-                    );
-                }
-            }
+        return normalizeString(
+            window.location.hash
+                .replace(
+                    /^#/,
+                    ""
+                )
         );
     }
 
-    function initializeSectionNavigation() {
-        getSectionNavigationLinks().forEach(
-            function (link) {
-                if (
-                    link.dataset.sectionBound ===
-                    "true"
-                ) {
-                    return;
-                }
+    function updateSectionNavigation() {
+        const currentSection =
+            getCurrentSection();
 
-                link.dataset.sectionBound =
-                    "true";
+        getSectionNavigationLinks()
+            .forEach(
+                function (link) {
+                    const section =
+                        getSectionFromLink(
+                            link
+                        );
 
-                link.addEventListener(
-                    "click",
-                    function () {
-                        const section =
-                            getSectionFromLink(
-                                link
-                            );
+                    const current =
+                        Boolean(
+                            section &&
+                            section ===
+                                currentSection
+                        );
 
-                        if (
-                            State &&
-                            typeof State.setSection ===
-                                "function" &&
-                            section
-                        ) {
-                            State.setSection(
-                                section
-                            );
-                        }
+                    link.classList.toggle(
+                        "is-current",
+                        current
+                    );
 
-                        if (
-                            isMobile()
-                        ) {
-                            closeSidePanel();
-                        }
+                    link.classList.toggle(
+                        "is-active",
+                        current
+                    );
+
+                    link.dataset.current =
+                        String(
+                            current
+                        );
+
+                    if (current) {
+                        link.setAttribute(
+                            "aria-current",
+                            "location"
+                        );
+                    } else {
+                        link.removeAttribute(
+                            "aria-current"
+                        );
                     }
-                );
-            }
-        );
+                }
+            );
+    }
+
+    function initializeSectionNavigation() {
+        getSectionNavigationLinks()
+            .forEach(
+                function (link) {
+                    if (
+                        APP.boundSectionLinks.has(
+                            link
+                        )
+                    ) {
+                        return;
+                    }
+
+                    APP.boundSectionLinks.add(
+                        link
+                    );
+
+                    link.addEventListener(
+                        "click",
+                        function () {
+                            const section =
+                                getSectionFromLink(
+                                    link
+                                );
+
+                            if (
+                                State &&
+                                typeof State.setSection ===
+                                    "function" &&
+                                section
+                            ) {
+                                State.setSection(
+                                    section
+                                );
+                            }
+
+                            if (
+                                isMobile()
+                            ) {
+                                closeSidePanel();
+                            }
+                        }
+                    );
+                }
+            );
 
         updateSectionNavigation();
     }
 
-    /* ==========================================================================
+    /* =========================================================
        RESPONSIVE
-       ========================================================================== */
+       ========================================================= */
 
     function isMobile() {
         if (
@@ -440,9 +849,9 @@
         ).matches;
     }
 
-    /* ==========================================================================
+    /* =========================================================
        SIDE PANEL STATE
-       ========================================================================== */
+       ========================================================= */
 
     function getSidePanelState() {
         if (
@@ -450,12 +859,26 @@
             typeof State.getSidePanelState ===
                 "function"
         ) {
-            return (
-                State.getSidePanelState() || {
-                    open: false,
-                    collapsed: false
-                }
-            );
+            const state =
+                State.getSidePanelState();
+
+            if (
+                state &&
+                typeof state ===
+                    "object"
+            ) {
+                return {
+                    open:
+                        Boolean(
+                            state.open
+                        ),
+
+                    collapsed:
+                        Boolean(
+                            state.collapsed
+                        )
+                };
+            }
         }
 
         return {
@@ -464,47 +887,59 @@
         };
     }
 
+    /* =========================================================
+       SIDE PANEL ACTIONS
+       ========================================================= */
+
     function openSidePanel() {
+        if (!State) {
+            return;
+        }
+
         if (
-            State &&
             typeof State.openSidePanel ===
-                "function"
+            "function"
         ) {
             State.openSidePanel();
         } else if (
-            State &&
             typeof State.setSidePanelOpen ===
-                "function"
+            "function"
         ) {
-            State.setSidePanelOpen(true);
+            State.setSidePanelOpen(
+                true
+            );
         }
 
         syncSidePanel();
     }
 
     function closeSidePanel() {
+        if (!State) {
+            return;
+        }
+
         if (
-            State &&
             typeof State.closeSidePanel ===
-                "function"
+            "function"
         ) {
             State.closeSidePanel();
         } else if (
-            State &&
             typeof State.setSidePanelOpen ===
-                "function"
+            "function"
         ) {
-            State.setSidePanelOpen(false);
+            State.setSidePanelOpen(
+                false
+            );
         }
 
         syncSidePanel();
     }
 
     function toggleSidePanel() {
-        const current =
+        const state =
             getSidePanelState();
 
-        if (current.open) {
+        if (state.open) {
             closeSidePanel();
         } else {
             openSidePanel();
@@ -560,9 +995,9 @@
         syncSidePanel();
     }
 
-    /* ==========================================================================
-       SIDE PANEL DOM
-       ========================================================================== */
+    /* =========================================================
+       SIDE PANEL SYNCHRONIZATION
+       ========================================================= */
 
     function syncSidePanel() {
         const panel =
@@ -574,10 +1009,14 @@
             getSidePanelState();
 
         const open =
-            Boolean(state.open);
+            Boolean(
+                state.open
+            );
 
         const collapsed =
-            Boolean(state.collapsed);
+            Boolean(
+                state.collapsed
+            );
 
         if (panel) {
             panel.classList.toggle(
@@ -610,19 +1049,21 @@
                 collapsed
             );
 
-            panel.setAttribute(
-                "data-open",
-                String(open)
-            );
+            panel.dataset.open =
+                String(
+                    open
+                );
 
-            panel.setAttribute(
-                "data-collapsed",
-                String(collapsed)
-            );
+            panel.dataset.collapsed =
+                String(
+                    collapsed
+                );
 
             panel.setAttribute(
                 "aria-hidden",
-                String(!open)
+                String(
+                    !open
+                )
             );
         }
 
@@ -630,14 +1071,14 @@
             "[data-side-panel-toggle]"
         ).forEach(
             function (button) {
-                button.setAttribute(
-                    "type",
-                    "button"
-                );
+                button.type =
+                    "button";
 
                 button.setAttribute(
                     "aria-expanded",
-                    String(open)
+                    String(
+                        open
+                    )
                 );
 
                 button.setAttribute(
@@ -653,14 +1094,14 @@
             "[data-side-panel-open]"
         ).forEach(
             function (button) {
-                button.setAttribute(
-                    "type",
-                    "button"
-                );
+                button.type =
+                    "button";
 
                 button.setAttribute(
                     "aria-expanded",
-                    String(open)
+                    String(
+                        open
+                    )
                 );
 
                 button.setAttribute(
@@ -677,14 +1118,14 @@
             "[data-side-panel-close]"
         ).forEach(
             function (button) {
-                button.setAttribute(
-                    "type",
-                    "button"
-                );
+                button.type =
+                    "button";
 
                 button.setAttribute(
                     "aria-expanded",
-                    String(open)
+                    String(
+                        open
+                    )
                 );
 
                 button.setAttribute(
@@ -701,14 +1142,14 @@
             "[data-side-panel-collapse]"
         ).forEach(
             function (button) {
-                button.setAttribute(
-                    "type",
-                    "button"
-                );
+                button.type =
+                    "button";
 
                 button.setAttribute(
                     "aria-expanded",
-                    String(!collapsed)
+                    String(
+                        !collapsed
+                    )
                 );
 
                 button.setAttribute(
@@ -727,14 +1168,14 @@
             "[data-side-panel-restore]"
         ).forEach(
             function (button) {
-                button.setAttribute(
-                    "type",
-                    "button"
-                );
+                button.type =
+                    "button";
 
                 button.setAttribute(
                     "aria-expanded",
-                    String(!collapsed)
+                    String(
+                        !collapsed
+                    )
                 );
 
                 button.setAttribute(
@@ -764,13 +1205,15 @@
                 !open
             );
 
-            backdrop.setAttribute(
-                "aria-hidden",
-                String(!open)
-            );
-
             backdrop.hidden =
                 !open;
+
+            backdrop.setAttribute(
+                "aria-hidden",
+                String(
+                    !open
+                )
+            );
         }
 
         document.body.classList.toggle(
@@ -788,154 +1231,85 @@
             collapsed
         );
 
-        const lock =
+        const mobileOpen =
             isMobile() &&
             open;
 
         document.documentElement.classList.toggle(
             "side-panel-lock",
-            lock
+            mobileOpen
         );
 
         document.body.classList.toggle(
             "side-panel-lock",
-            lock
+            mobileOpen
         );
     }
 
-    /* ==========================================================================
+    /* =========================================================
        SIDE PANEL INITIALIZATION
-       ========================================================================== */
+       ========================================================= */
+
+    function bindSidePanelControl(
+        selector,
+        callback
+    ) {
+        queryAll(
+            selector
+        ).forEach(
+            function (button) {
+                if (
+                    APP.boundSidePanelControls.has(
+                        button
+                    )
+                ) {
+                    return;
+                }
+
+                APP.boundSidePanelControls.add(
+                    button
+                );
+
+                button.type =
+                    "button";
+
+                button.addEventListener(
+                    "click",
+                    function (event) {
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        callback();
+                    }
+                );
+            }
+        );
+    }
 
     function initializeSidePanel() {
-        queryAll(
-            "[data-side-panel-toggle]"
-        ).forEach(
-            function (button) {
-                if (
-                    button.dataset.sidePanelBound ===
-                    "true"
-                ) {
-                    return;
-                }
-
-                button.dataset.sidePanelBound =
-                    "true";
-
-                button.addEventListener(
-                    "click",
-                    function (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        toggleSidePanel();
-                    }
-                );
-            }
+        bindSidePanelControl(
+            "[data-side-panel-toggle]",
+            toggleSidePanel
         );
 
-        queryAll(
-            "[data-side-panel-open]"
-        ).forEach(
-            function (button) {
-                if (
-                    button.dataset.sidePanelBound ===
-                    "true"
-                ) {
-                    return;
-                }
-
-                button.dataset.sidePanelBound =
-                    "true";
-
-                button.addEventListener(
-                    "click",
-                    function (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        openSidePanel();
-                    }
-                );
-            }
+        bindSidePanelControl(
+            "[data-side-panel-open]",
+            openSidePanel
         );
 
-        queryAll(
-            "[data-side-panel-close]"
-        ).forEach(
-            function (button) {
-                if (
-                    button.dataset.sidePanelBound ===
-                    "true"
-                ) {
-                    return;
-                }
-
-                button.dataset.sidePanelBound =
-                    "true";
-
-                button.addEventListener(
-                    "click",
-                    function (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        closeSidePanel();
-                    }
-                );
-            }
+        bindSidePanelControl(
+            "[data-side-panel-close]",
+            closeSidePanel
         );
 
-        queryAll(
-            "[data-side-panel-collapse]"
-        ).forEach(
-            function (button) {
-                if (
-                    button.dataset.sidePanelBound ===
-                    "true"
-                ) {
-                    return;
-                }
-
-                button.dataset.sidePanelBound =
-                    "true";
-
-                button.addEventListener(
-                    "click",
-                    function (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        collapseSidePanel();
-                    }
-                );
-            }
+        bindSidePanelControl(
+            "[data-side-panel-collapse]",
+            collapseSidePanel
         );
 
-        queryAll(
-            "[data-side-panel-restore]"
-        ).forEach(
-            function (button) {
-                if (
-                    button.dataset.sidePanelBound ===
-                    "true"
-                ) {
-                    return;
-                }
-
-                button.dataset.sidePanelBound =
-                    "true";
-
-                button.addEventListener(
-                    "click",
-                    function (event) {
-                        event.preventDefault();
-                        event.stopPropagation();
-
-                        restoreSidePanel();
-                    }
-                );
-            }
+        bindSidePanelControl(
+            "[data-side-panel-restore]",
+            restoreSidePanel
         );
 
         const backdrop =
@@ -945,11 +1319,13 @@
 
         if (
             backdrop &&
-            backdrop.dataset.sidePanelBound !==
-                "true"
+            !APP.boundSidePanelControls.has(
+                backdrop
+            )
         ) {
-            backdrop.dataset.sidePanelBound =
-                "true";
+            APP.boundSidePanelControls.add(
+                backdrop
+            );
 
             backdrop.addEventListener(
                 "click",
@@ -965,18 +1341,13 @@
         syncSidePanel();
     }
 
-    /* ==========================================================================
+    /* =========================================================
        STATE SUBSCRIPTION
-       ========================================================================== */
+       ========================================================= */
 
     function initializeStateSubscription() {
         if (
-            APP.stateSubscription
-        ) {
-            return;
-        }
-
-        if (
+            APP.stateSubscription ||
             !State ||
             typeof State.subscribe !==
                 "function"
@@ -996,9 +1367,633 @@
             );
     }
 
-    /* ==========================================================================
-       FORMS
-       ========================================================================== */
+    /* =========================================================
+       AUTH SUBSCRIPTION
+       ========================================================= */
+
+    function initializeAuthSubscription() {
+        if (
+            APP.authSubscription ||
+            !Auth ||
+            typeof Auth.subscribe !==
+                "function"
+        ) {
+            return;
+        }
+
+        APP.authSubscription =
+            Auth.subscribe(
+                function (
+                    snapshot
+                ) {
+                    emit(
+                        "cybernexus:auth-state",
+                        {
+                            snapshot
+                        }
+                    );
+                }
+            );
+    }
+
+    /* =========================================================
+       ACCOUNT SUBSCRIPTION
+       ========================================================= */
+
+    function initializeAccountSubscription() {
+        if (
+            APP.accountSubscription ||
+            !Account ||
+            typeof Account.subscribe !==
+                "function"
+        ) {
+            return;
+        }
+
+        APP.accountSubscription =
+            Account.subscribe(
+                function (
+                    snapshot
+                ) {
+                    emit(
+                        "cybernexus:account-state",
+                        {
+                            snapshot
+                        }
+                    );
+                }
+            );
+    }
+
+    /* =========================================================
+       FORM STATUS
+       ========================================================= */
+
+    function getFormStatusElement(
+        form
+    ) {
+        if (!form) {
+            return null;
+        }
+
+        return (
+            query(
+                "[data-contact-status]",
+                form
+            ) ||
+            query(
+                "[data-form-status]",
+                form
+            )
+        );
+    }
+
+    function setFormStatus(
+        form,
+        message,
+        type
+    ) {
+        const status =
+            getFormStatusElement(
+                form
+            );
+
+        if (!status) {
+            return;
+        }
+
+        const text =
+            normalizeString(
+                message
+            );
+
+        status.hidden =
+            !text;
+
+        status.textContent =
+            text;
+
+        status.dataset.status =
+            type || "";
+
+        status.classList.toggle(
+            "is-success",
+            type === "success"
+        );
+
+        status.classList.toggle(
+            "is-error",
+            type === "error"
+        );
+
+        status.classList.toggle(
+            "is-loading",
+            type === "loading"
+        );
+
+        status.setAttribute(
+            "aria-live",
+            "polite"
+        );
+    }
+
+    function clearFormStatus(
+        form
+    ) {
+        setFormStatus(
+            form,
+            "",
+            ""
+        );
+    }
+
+    /* =========================================================
+       FORM BUSY STATE
+       ========================================================= */
+
+    function setFormBusy(
+        form,
+        busy
+    ) {
+        if (!form) {
+            return;
+        }
+
+        const isBusy =
+            Boolean(
+                busy
+            );
+
+        form.setAttribute(
+            "aria-busy",
+            String(
+                isBusy
+            )
+        );
+
+        form.classList.toggle(
+            "is-submitting",
+            isBusy
+        );
+
+        queryAll(
+            "button, input, textarea, select",
+            form
+        ).forEach(
+            function (control) {
+                if (isBusy) {
+                    if (
+                        control.dataset
+                            .previousDisabled ===
+                        undefined
+                    ) {
+                        control.dataset.previousDisabled =
+                            String(
+                                control.disabled
+                            );
+                    }
+
+                    control.disabled =
+                        true;
+
+                    return;
+                }
+
+                const previous =
+                    control.dataset
+                        .previousDisabled;
+
+                if (
+                    previous !==
+                    undefined
+                ) {
+                    control.disabled =
+                        previous ===
+                        "true";
+
+                    delete control
+                        .dataset
+                        .previousDisabled;
+                }
+            }
+        );
+    }
+
+    /* =========================================================
+       CONTACT VALIDATION
+       ========================================================= */
+
+    function validateContactForm(
+        form
+    ) {
+        if (!form) {
+            return {
+                valid: false,
+
+                message:
+                    "The contact form is unavailable."
+            };
+        }
+
+        const name =
+            getFormValue(
+                form,
+                "name"
+            );
+
+        const email =
+            getFormValue(
+                form,
+                "email"
+            );
+
+        const subject =
+            getFormValue(
+                form,
+                "subject"
+            );
+
+        const message =
+            getFormValue(
+                form,
+                "message"
+            );
+
+        if (
+            name.length < 2
+        ) {
+            return {
+                valid: false,
+
+                message:
+                    "Please enter your name."
+            };
+        }
+
+        if (
+            name.length > 100
+        ) {
+            return {
+                valid: false,
+
+                message:
+                    "Your name is too long."
+            };
+        }
+
+        if (!email) {
+            return {
+                valid: false,
+
+                message:
+                    "Please enter your email address."
+            };
+        }
+
+        if (
+            email.length > 254
+        ) {
+            return {
+                valid: false,
+
+                message:
+                    "Your email address is too long."
+            };
+        }
+
+        const emailPattern =
+            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (
+            !emailPattern.test(
+                email
+            )
+        ) {
+            return {
+                valid: false,
+
+                message:
+                    "Please enter a valid email address."
+            };
+        }
+
+        if (
+            subject.length < 3
+        ) {
+            return {
+                valid: false,
+
+                message:
+                    "Please enter a subject."
+            };
+        }
+
+        if (
+            subject.length > 200
+        ) {
+            return {
+                valid: false,
+
+                message:
+                    "Your subject is too long."
+            };
+        }
+
+        if (
+            message.length < 10
+        ) {
+            return {
+                valid: false,
+
+                message:
+                    "Please enter a message."
+            };
+        }
+
+        if (
+            message.length > 5000
+        ) {
+            return {
+                valid: false,
+
+                message:
+                    "Your message is too long."
+            };
+        }
+
+        return {
+            valid: true,
+
+            data: {
+                name,
+                email,
+                subject,
+                message
+            }
+        };
+    }
+
+    /* =========================================================
+       CONTACT RESPONSE
+       ========================================================= */
+
+    function getResponseData(
+        response
+    ) {
+        if (
+            response &&
+            response.data &&
+            typeof response.data ===
+                "object"
+        ) {
+            return response.data;
+        }
+
+        if (
+            response &&
+            typeof response ===
+                "object"
+        ) {
+            return response;
+        }
+
+        return {};
+    }
+
+    function isSuccessfulResponse(
+        response
+    ) {
+        if (!response) {
+            return false;
+        }
+
+        if (
+            typeof response.ok ===
+            "boolean"
+        ) {
+            if (
+                !response.ok
+            ) {
+                return false;
+            }
+        }
+
+        const data =
+            getResponseData(
+                response
+            );
+
+        if (
+            data &&
+            data.success ===
+            false
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /* =========================================================
+       CONTACT API
+       ========================================================= */
+
+    async function submitContactRequest(
+        data
+    ) {
+        if (
+            !Api ||
+            typeof Api.submitContact !==
+                "function"
+        ) {
+            throw new Error(
+                "The contact API method is not configured."
+            );
+        }
+
+        /*
+         * Canonical API:
+         *
+         * Api.submitContact()
+         *
+         * api-user.js owns:
+         *
+         * POST /api/contact
+         */
+        return Api.submitContact(
+            data
+        );
+    }
+
+    /* =========================================================
+       CONTACT SUBMISSION
+       ========================================================= */
+
+    async function handleContactFormSubmit(
+        form
+    ) {
+        if (!form) {
+            return;
+        }
+
+        if (
+            APP.contactSubmitting.has(
+                form
+            )
+        ) {
+            return;
+        }
+
+        const validation =
+            validateContactForm(
+                form
+            );
+
+        if (
+            !validation.valid
+        ) {
+            setFormStatus(
+                form,
+                validation.message,
+                "error"
+            );
+
+            return;
+        }
+
+        APP.contactSubmitting.add(
+            form
+        );
+
+        setFormBusy(
+            form,
+            true
+        );
+
+        setFormStatus(
+            form,
+            "Sending your message...",
+            "loading"
+        );
+
+        try {
+            const response =
+                await submitContactRequest(
+                    validation.data
+                );
+
+            if (
+                !isSuccessfulResponse(
+                    response
+                )
+            ) {
+                throw new Error(
+                    getErrorMessage(
+                        response
+                    )
+                );
+            }
+
+            form.reset();
+
+            setFormStatus(
+                form,
+                "Your message was sent successfully.",
+                "success"
+            );
+
+            emit(
+                "cybernexus:contact:success",
+                {
+                    form,
+                    response
+                }
+            );
+        } catch (error) {
+            setFormStatus(
+                form,
+                getErrorMessage(
+                    error
+                ),
+                "error"
+            );
+
+            emit(
+                "cybernexus:contact:error",
+                {
+                    form,
+                    error
+                }
+            );
+        } finally {
+            APP.contactSubmitting.delete(
+                form
+            );
+
+            setFormBusy(
+                form,
+                false
+            );
+        }
+    }
+
+    /* =========================================================
+       CONTACT FORM INITIALIZATION
+       ========================================================= */
+
+    function initializeContactForm(
+        form
+    ) {
+        if (
+            APP.contactForms.has(
+                form
+            )
+        ) {
+            return;
+        }
+
+        APP.contactForms.add(
+            form
+        );
+
+        form.addEventListener(
+            "input",
+            function () {
+                const status =
+                    getFormStatusElement(
+                        form
+                    );
+
+                if (
+                    status &&
+                    status.dataset.status ===
+                        "error"
+                ) {
+                    clearFormStatus(
+                        form
+                    );
+                }
+            }
+        );
+
+        form.addEventListener(
+            "reset",
+            function () {
+                window.setTimeout(
+                    function () {
+                        clearFormStatus(
+                            form
+                        );
+                    },
+                    0
+                );
+            }
+        );
+    }
+
+    /* =========================================================
+       FORM INITIALIZATION
+       ========================================================= */
 
     function initializeForms() {
         queryAll(
@@ -1006,20 +2001,41 @@
         ).forEach(
             function (form) {
                 if (
-                    form.dataset.frontendFormBound ===
-                    "true"
+                    APP.boundForms.has(
+                        form
+                    )
                 ) {
                     return;
                 }
 
-                form.dataset.frontendFormBound =
-                    "true";
+                APP.boundForms.add(
+                    form
+                );
+
+                const type =
+                    normalizeString(
+                        form.dataset
+                            .frontendForm
+                    ).toLowerCase();
+
+                if (
+                    type ===
+                    "contact"
+                ) {
+                    initializeContactForm(
+                        form
+                    );
+                }
 
                 form.addEventListener(
                     "submit",
                     function (event) {
+                        /*
+                         * Native forms retain
+                         * normal browser behavior.
+                         */
                         if (
-                            form.dataset.frontendForm ===
+                            type ===
                             "native"
                         ) {
                             return;
@@ -1027,23 +2043,23 @@
 
                         event.preventDefault();
 
-                        form.dispatchEvent(
-                            new CustomEvent(
-                                "cybernexus:formsubmit",
-                                {
-                                    bubbles:
-                                        true,
+                        if (
+                            type ===
+                            "contact"
+                        ) {
+                            void handleContactFormSubmit(
+                                form
+                            );
 
-                                    detail: {
-                                        form,
+                            return;
+                        }
 
-                                        data:
-                                            new FormData(
-                                                form
-                                            )
-                                    }
-                                }
-                            )
+                        emit(
+                            "cybernexus:formsubmit",
+                            {
+                                form,
+                                type
+                            }
                         );
                     }
                 );
@@ -1051,9 +2067,9 @@
         );
     }
 
-    /* ==========================================================================
-       RESUME BUTTONS
-       ========================================================================== */
+    /* =========================================================
+       RESUME
+       ========================================================= */
 
     function initializeResumeButtons() {
         queryAll(
@@ -1061,27 +2077,33 @@
         ).forEach(
             function (button) {
                 if (
-                    button.dataset.resumeBound ===
-                    "true"
+                    APP.boundResumeControls.has(
+                        button
+                    )
                 ) {
                     return;
                 }
 
-                button.dataset.resumeBound =
-                    "true";
-
-                button.setAttribute(
-                    "type",
-                    "button"
+                APP.boundResumeControls.add(
+                    button
                 );
+
+                button.type =
+                    "button";
 
                 button.addEventListener(
                     "click",
                     function (event) {
                         event.preventDefault();
 
-                        alert(
-                            "Resume not yet available."
+                        emit(
+                            "cybernexus:resume-request",
+                            {
+                                action:
+                                    button
+                                        .dataset
+                                        .action
+                            }
                         );
                     }
                 );
@@ -1089,9 +2111,9 @@
         );
     }
 
-    /* ==========================================================================
+    /* =========================================================
        KEYBOARD
-       ========================================================================== */
+       ========================================================= */
 
     function initializeNavigationKeys() {
         if (
@@ -1113,11 +2135,11 @@
                     return;
                 }
 
-                const panelState =
+                const state =
                     getSidePanelState();
 
                 if (
-                    panelState.open
+                    state.open
                 ) {
                     closeSidePanel();
 
@@ -1130,75 +2152,75 @@
                     );
 
                 if (modal) {
-                    modal.dispatchEvent(
-                        new CustomEvent(
-                            "cybernexus:modal-close",
-                            {
-                                bubbles:
-                                    true,
+                    emit(
+                        "cybernexus:modal-close",
+                        {
+                            source:
+                                "keyboard",
 
-                                detail: {
-                                    source:
-                                        "keyboard"
-                                }
-                            }
-                        )
+                            modal
+                        }
                     );
                 }
             }
         );
     }
 
-    /* ==========================================================================
+    /* =========================================================
        EXTERNAL LINKS
-       ========================================================================== */
+       ========================================================= */
 
     function initializeExternalLinks() {
         queryAll(
             'a[target="_blank"]'
         ).forEach(
             function (link) {
-                const current =
-                    link.getAttribute(
-                        "rel"
-                    ) || "";
-
-                const tokens =
-                    current
-                        .split(/\s+/)
-                        .filter(Boolean);
-
                 if (
-                    !tokens.includes(
-                        "noopener"
+                    APP.boundExternalLinks.has(
+                        link
                     )
                 ) {
-                    tokens.push(
-                        "noopener"
-                    );
+                    return;
                 }
 
-                if (
-                    !tokens.includes(
-                        "noreferrer"
-                    )
-                ) {
-                    tokens.push(
-                        "noreferrer"
+                APP.boundExternalLinks.add(
+                    link
+                );
+
+                const rel =
+                    new Set(
+                        normalizeString(
+                            link.getAttribute(
+                                "rel"
+                            )
+                        )
+                            .split(/\s+/)
+                            .filter(
+                                Boolean
+                            )
                     );
-                }
+
+                rel.add(
+                    "noopener"
+                );
+
+                rel.add(
+                    "noreferrer"
+                );
 
                 link.setAttribute(
                     "rel",
-                    tokens.join(" ")
+                    Array.from(
+                        rel
+                    ).join(" ")
                 );
             }
         );
     }
 
-    /* ==========================================================================
+    /* =========================================================
        RESPONSIVE EVENTS
-       ========================================================================== */
+       ========================================================= */
 
     function initializeResponsiveEvents() {
         if (
@@ -1210,44 +2232,47 @@
         APP.responsiveInitialized =
             true;
 
-        let resizeFrame =
-            null;
+        function synchronize() {
+            APP.resizeFrame =
+                null;
 
-        function scheduleSync() {
+            syncSidePanel();
+
+            updateNavigation();
+
+            updateSectionNavigation();
+        }
+
+        function schedule() {
             if (
-                resizeFrame !== null
+                APP.resizeFrame !==
+                null
             ) {
                 return;
             }
-
-            const run =
-                function () {
-                    resizeFrame =
-                        null;
-
-                    syncSidePanel();
-                };
 
             if (
                 typeof window.requestAnimationFrame ===
                 "function"
             ) {
-                resizeFrame =
+                APP.resizeFrame =
                     window.requestAnimationFrame(
-                        run
+                        synchronize
                     );
-            } else {
-                resizeFrame =
-                    window.setTimeout(
-                        run,
-                        0
-                    );
+
+                return;
             }
+
+            APP.resizeFrame =
+                window.setTimeout(
+                    synchronize,
+                    0
+                );
         }
 
         window.addEventListener(
             "resize",
-            scheduleSync,
+            schedule,
             {
                 passive:
                     true
@@ -1256,7 +2281,18 @@
 
         window.addEventListener(
             "orientationchange",
-            scheduleSync,
+            schedule,
+            {
+                passive:
+                    true
+            }
+        );
+
+        window.addEventListener(
+            "hashchange",
+            function () {
+                updateSectionNavigation();
+            },
             {
                 passive:
                     true
@@ -1264,9 +2300,9 @@
         );
     }
 
-    /* ==========================================================================
-       AUTHENTICATION
-       ========================================================================== */
+    /* =========================================================
+       AUTHENTICATION INITIALIZATION
+       ========================================================= */
 
     async function initializeAuthentication() {
         if (!Auth) {
@@ -1278,12 +2314,15 @@
                 typeof Auth.initialize ===
                 "function"
             ) {
-                await Auth.initialize();
+                Auth.initialize();
             }
 
             /*
-             * The backend session remains the
-             * authentication authority.
+             * verifySession() is the authority.
+             *
+             * Auth.initialize() only restores
+             * the UI cache and must not be used
+             * as proof of authentication.
              */
             if (
                 typeof Auth.verifySession ===
@@ -1302,21 +2341,29 @@
                     Auth.isAuthenticated()
                 );
             }
-
-            return false;
         } catch (error) {
+            emit(
+                "cybernexus:auth-error",
+                {
+                    error
+                }
+            );
+
             return false;
         }
+
+        return false;
     }
 
-    /* ==========================================================================
-       ACCOUNT
-       ========================================================================== */
+    /* =========================================================
+       ACCOUNT INITIALIZATION
+       ========================================================= */
 
     async function initializeAccount(
         authenticated
     ) {
         if (
+            !authenticated ||
             !Account ||
             typeof Account.initialize !==
                 "function"
@@ -1324,26 +2371,27 @@
             return null;
         }
 
-        if (!authenticated) {
-            return null;
-        }
-
         try {
             return await Account.initialize();
         } catch (error) {
-            /*
-             * Account initialization failure must
-             * not block public pages.
-             */
+            emit(
+                "cybernexus:account-error",
+                {
+                    error
+                }
+            );
+
             return null;
         }
     }
 
-    /* ==========================================================================
+    /* =========================================================
        READY STATE
-       ========================================================================== */
+       ========================================================= */
 
-    function setReady() {
+    function setReady(
+        authenticated
+    ) {
         if (
             APP.initialized
         ) {
@@ -1353,11 +2401,13 @@
         APP.initialized =
             true;
 
-        /*
-         * Use the state methods only when they
-         * exist so web-app.js remains compatible
-         * with the state module.
-         */
+        APP.initializing =
+            false;
+
+        document.documentElement.classList.add(
+            "cn-app-ready"
+        );
+
         if (
             State &&
             typeof State.setInitialized ===
@@ -1378,10 +2428,6 @@
             );
         }
 
-        document.documentElement.classList.add(
-            "cn-app-ready"
-        );
-
         emit(
             "cybernexus:ready",
             {
@@ -1389,174 +2435,98 @@
                     getPageName(),
 
                 authenticated:
-                    Auth &&
-                    typeof Auth.isAuthenticated ===
-                        "function"
-                        ? Auth.isAuthenticated()
-                        : false
+                    Boolean(
+                        authenticated
+                    )
             }
         );
     }
 
-    /* ==========================================================================
-       APPLICATION INITIALIZATION
-       ========================================================================== */
+    /* =========================================================
+       INITIALIZATION
+       ========================================================= */
 
     async function initialize() {
         if (
-            APP.initialized
+            APP.initialized ||
+            APP.initializing
         ) {
             return;
         }
 
-        /*
-         * Establish the current page first.
-         */
-        setCurrentPage();
+        APP.initializing =
+            true;
 
-        /*
-         * Bind frontend behavior.
-         */
-        initializeNavigation();
+        try {
+            validateDependencies();
 
-        initializeSectionNavigation();
+            setCurrentPage();
 
-        initializeSidePanel();
+            initializeNavigation();
 
-        initializeStateSubscription();
+            initializeSectionNavigation();
 
-        initializeForms();
+            initializeSidePanel();
 
-        initializeResumeButtons();
+            initializeStateSubscription();
 
-        initializeNavigationKeys();
+            initializeAuthSubscription();
 
-        initializeExternalLinks();
+            initializeAccountSubscription();
 
-        initializeResponsiveEvents();
+            initializeForms();
 
-        /*
-         * Synchronize the initial DOM.
-         */
-        syncSidePanel();
+            initializeResumeButtons();
 
-        updateNavigation();
+            initializeNavigationKeys();
 
-        updateSectionNavigation();
+            initializeExternalLinks();
 
-        /*
-         * Authentication and account state
-         * initialize after the frontend controls.
-         */
-        const authenticated =
-            await initializeAuthentication();
+            initializeResponsiveEvents();
 
-        await initializeAccount(
-            authenticated
-        );
+            updateNavigation();
 
-        setReady();
-    }
+            updateSectionNavigation();
 
-    /* ==========================================================================
-       EVENTS
-       ========================================================================== */
+            syncSidePanel();
 
-    function on(
-        eventName,
-        callback
-    ) {
-        if (
-            typeof eventName !==
-                "string" ||
-            !eventName.trim() ||
-            typeof callback !==
-                "function"
-        ) {
-            return function () {};
-        }
+            const authenticated =
+                await initializeAuthentication();
 
-        const name =
-            eventName.trim();
-
-        const handler =
-            function (event) {
-                callback(event);
-            };
-
-        document.addEventListener(
-            name,
-            handler
-        );
-
-        APP.listeners.push({
-            eventName:
-                name,
-
-            callback,
-
-            handler
-        });
-
-        return function () {
-            document.removeEventListener(
-                name,
-                handler
+            await initializeAccount(
+                authenticated
             );
 
-            const index =
-                APP.listeners.findIndex(
-                    function (item) {
-                        return (
-                            item.eventName ===
-                                name &&
-                            item.handler ===
-                                handler
-                        );
-                    }
-                );
+            setReady(
+                authenticated
+            );
+        } catch (error) {
+            APP.initializing =
+                false;
 
-            if (
-                index !== -1
-            ) {
-                APP.listeners.splice(
-                    index,
-                    1
-                );
-            }
-        };
-    }
-
-    function emit(
-        eventName,
-        detail
-    ) {
-        if (
-            typeof eventName !==
-                "string" ||
-            !eventName.trim()
-        ) {
-            return;
-        }
-
-        document.dispatchEvent(
-            new CustomEvent(
-                eventName.trim(),
+            emit(
+                "cybernexus:initialization-error",
                 {
-                    detail:
-                        detail &&
-                        typeof detail ===
-                            "object"
-                            ? detail
-                            : {}
+                    error
                 }
-            )
-        );
+            );
+
+            /*
+             * Do not leave the document
+             * permanently marked as ready
+             * after a failed initialization.
+             */
+            document.documentElement.classList.remove(
+                "cn-app-ready"
+            );
+
+            throw error;
+        }
     }
 
-    /* ==========================================================================
+    /* =========================================================
        PUBLIC API
-       ========================================================================== */
+       ========================================================= */
 
     const WebApp =
         Object.freeze({
@@ -1564,37 +2534,48 @@
 
             isInitialized:
                 function () {
-                    return APP.initialized;
+                    return Boolean(
+                        APP.initialized
+                    );
+                },
+
+            isInitializing:
+                function () {
+                    return Boolean(
+                        APP.initializing
+                    );
                 },
 
             on,
-
             emit,
 
             getPageName,
+            getCurrentPage,
+            getCurrentSection,
 
             updateNavigation,
-
             updateSectionNavigation,
 
             getSidePanelState,
-
             syncSidePanel,
 
             openSidePanel,
-
             closeSidePanel,
-
             toggleSidePanel,
 
             collapseSidePanel,
+            restoreSidePanel,
 
-            restoreSidePanel
+            validateContactForm,
+
+            submitContactRequest,
+
+            handleContactFormSubmit
         });
 
-    /* ==========================================================================
-       GLOBAL EXPORT
-       ========================================================================== */
+    /* =========================================================
+       EXPORT
+       ========================================================= */
 
     CyberNexus.WebApp =
         WebApp;
@@ -1602,9 +2583,9 @@
     window.CyberNexusWebApp =
         WebApp;
 
-    /* ==========================================================================
-       START APPLICATION
-       ========================================================================== */
+    /* =========================================================
+       START
+       ========================================================= */
 
     if (
         document.readyState ===
@@ -1612,14 +2593,15 @@
     ) {
         document.addEventListener(
             "DOMContentLoaded",
-            initialize,
+            function () {
+                void initialize();
+            },
             {
-                once:
-                    true
+                once: true
             }
         );
     } else {
-        initialize();
+        void initialize();
     }
 
 })(window, document);
