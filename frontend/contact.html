@@ -12,7 +12,7 @@
 
     <meta
         name="description"
-        content="Contact Mark C. Pangilinan through the CyberNexus IT Portfolio Platform for IT opportunities, software and web development, technical work, project discussions, professional networking, and current Security Engineering career development."
+        content="Contact Mark C. Pangilinan through the CyberNexus IT Portfolio Platform for IT opportunities, software and web development, technical work, project discussions, professional networking, and career development toward Security Engineering."
     >
 
     <meta
@@ -119,7 +119,8 @@
         <div
             class="status status-online"
             data-status
-            aria-label="System status: Online"
+            data-status-value="active-development"
+            aria-label="Project status: Active Development"
         >
 
             <span
@@ -128,7 +129,7 @@
             ></span>
 
             <span class="status-label">
-                Online
+                Active Development
             </span>
 
         </div>
@@ -233,13 +234,15 @@
             class="button button-icon side-panel-toggle"
             type="button"
             data-side-panel-toggle
-            aria-label="Toggle section panel"
+            aria-label="Toggle contact section panel"
             aria-controls="contact-side-panel"
             aria-expanded="true"
         >
+
             <span aria-hidden="true">
                 ☰
             </span>
+
         </button>
 
     </div>
@@ -273,7 +276,7 @@
                 class="button button-icon"
                 type="button"
                 data-side-panel-toggle
-                aria-label="Hide section panel"
+                aria-label="Hide contact section panel"
                 aria-controls="contact-side-panel"
                 aria-expanded="true"
             >
@@ -397,10 +400,13 @@
 
     <main class="main-content">
 
+        <!-- ==================== OVERVIEW ==================== -->
+
         <section
             class="hero section section-xl"
             id="overview"
             data-section="overview"
+            aria-labelledby="contact-title"
         >
 
             <div class="hero-content">
@@ -409,7 +415,10 @@
                     Professional Contact
                 </span>
 
-                <h1 class="hero-title">
+                <h1
+                    class="hero-title"
+                    id="contact-title"
+                >
 
                     Let's
 
@@ -420,10 +429,10 @@
                 </h1>
 
                 <p class="hero-subtitle">
-                    Connect for IT opportunities, project
-                    discussions, technical collaboration,
-                    professional networking, or current
-                    Security Engineering career development.
+                    Connect for IT opportunities, software and
+                    web development, technical work, project
+                    discussions, professional networking, or
+                    career development toward Security Engineering.
                 </p>
 
                 <div class="hero-actions">
@@ -507,7 +516,17 @@
                                 status:
                             </span>
 
-                            ready
+                            active development
+
+                        </span>
+
+                        <span class="terminal-line">
+
+                            <span class="cn-text-cyan">
+                                direction:
+                            </span>
+
+                            security engineering
 
                         </span>
 
@@ -519,10 +538,13 @@
 
         </section>
 
+        <!-- ==================== MESSAGE ==================== -->
+
         <section
             class="section section-lg"
             id="contact-form"
             data-section="contact-form"
+            aria-labelledby="contact-form-title"
         >
 
             <div class="section-header">
@@ -531,7 +553,10 @@
                     02 / Message
                 </span>
 
-                <h2 class="section-title">
+                <h2
+                    class="section-title"
+                    id="contact-form-title"
+                >
                     Send a Message
                 </h2>
 
@@ -566,6 +591,8 @@
                             type="text"
                             autocomplete="name"
                             placeholder="Enter your name"
+                            minlength="2"
+                            maxlength="100"
                             required
                         >
 
@@ -582,7 +609,9 @@
                             name="email"
                             type="email"
                             autocomplete="email"
+                            inputmode="email"
                             placeholder="Enter your email address"
+                            maxlength="254"
                             required
                         >
 
@@ -600,7 +629,10 @@
                         id="contact-subject"
                         name="subject"
                         type="text"
+                        autocomplete="off"
                         placeholder="Enter the subject of your message"
+                        minlength="3"
+                        maxlength="200"
                         required
                     >
 
@@ -616,6 +648,8 @@
                         id="contact-message"
                         name="message"
                         rows="8"
+                        minlength="10"
+                        maxlength="5000"
                         placeholder="Write your professional inquiry, project discussion, technical question, collaboration request, or IT career opportunity."
                         required
                     ></textarea>
@@ -652,10 +686,13 @@
 
         </section>
 
+        <!-- ==================== CHANNELS ==================== -->
+
         <section
             class="section section-lg"
             id="channels"
             data-section="channels"
+            aria-labelledby="channels-title"
         >
 
             <div class="section-header">
@@ -664,7 +701,10 @@
                     03 / Channels
                 </span>
 
-                <h2 class="section-title">
+                <h2
+                    class="section-title"
+                    id="channels-title"
+                >
                     Contact Channels
                 </h2>
 
@@ -693,7 +733,8 @@
 
                     <p class="feature-text">
                         Use email for direct professional
-                        communication and project inquiries.
+                        communication, opportunities, and
+                        project inquiries.
                     </p>
 
                     <a
@@ -729,7 +770,7 @@
                         href="https://github.com/CyberNexus-EIT"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label="View CyberNexus EIT GitHub Profile"
+                        aria-label="View CyberNexus EIT GitHub profile"
                     >
                         GitHub Profile
                     </a>
@@ -760,7 +801,7 @@
                         href="https://www.linkedin.com/in/mark-pangilinan-192053293"
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label="View Mark C. Pangilinan LinkedIn Profile"
+                        aria-label="View Mark C. Pangilinan LinkedIn profile"
                     >
                         LinkedIn Profile
                     </a>
@@ -771,10 +812,13 @@
 
         </section>
 
+        <!-- ==================== OPPORTUNITIES ==================== -->
+
         <section
             class="section section-lg"
             id="opportunities"
             data-section="opportunities"
+            aria-labelledby="opportunities-title"
         >
 
             <div class="curved-panel">
@@ -785,7 +829,10 @@
                         04 / Opportunities
                     </span>
 
-                    <h2 class="section-title">
+                    <h2
+                        class="section-title"
+                        id="opportunities-title"
+                    >
                         IT Career &amp; Technical Opportunities
                     </h2>
 
@@ -817,6 +864,10 @@
                     </span>
 
                     <span class="tag">
+                        Information Security
+                    </span>
+
+                    <span class="tag">
                         Security Engineering
                     </span>
 
@@ -844,10 +895,13 @@
 
         </section>
 
+        <!-- ==================== CONNECT ==================== -->
+
         <section
             class="section section-lg"
             id="connect"
             data-section="connect"
+            aria-labelledby="connect-title"
         >
 
             <div class="section-header">
@@ -856,14 +910,17 @@
                     05 / Connect
                 </span>
 
-                <h2 class="section-title">
+                <h2
+                    class="section-title"
+                    id="connect-title"
+                >
                     Explore CyberNexus
                 </h2>
 
                 <p class="section-subtitle">
-                    Explore the portfolio, projects, practical
-                    skills, professional experience, and
-                    available technical services.
+                    Explore the portfolio, projects, skills,
+                    professional experience, and available
+                    technical services.
                 </p>
 
             </div>

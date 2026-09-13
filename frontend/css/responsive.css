@@ -85,7 +85,7 @@ table {
 }
 
 /* =========================================================
-   STICKER SCROLL OFFSET
+   SCROLL OFFSET
    ========================================================= */
 
 [id] {
@@ -334,8 +334,6 @@ table {
         min-width: 0;
         max-width: 100%;
         white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     .status,
@@ -344,15 +342,13 @@ table {
     .cn-status,
     .system-status {
         flex: 0 0 auto;
-        min-width: 0;
-        max-width: 180px;
+        width: max-content;
+        min-width: max-content;
+        max-width: none;
+        white-space: nowrap;
     }
 
     .status-label {
-        min-width: 0;
-        max-width: 120px;
-        overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
     }
 
@@ -438,7 +434,6 @@ table {
 
     .footer-links > a {
         flex: 0 1 auto;
-        min-width: 0;
         white-space: nowrap;
     }
 }
@@ -504,23 +499,10 @@ table {
         justify-content: space-between;
     }
 
-    .header-nav-item,
-    .primary-nav-item,
-    .page-nav-item {
-        flex: 0 1 auto;
-        min-width: 0;
-    }
-
     .header-nav-link,
     .primary-nav-link,
     .page-nav-link {
-        flex: 0 1 auto;
-        min-width: 0;
-        max-width: 100%;
         white-space: nowrap;
-        text-align: center;
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
 
     .status,
@@ -529,15 +511,13 @@ table {
     .cn-status,
     .system-status {
         flex: 0 0 auto;
-        min-width: 0;
-        max-width: 160px;
+        width: max-content;
+        min-width: max-content;
+        max-width: none;
+        white-space: nowrap;
     }
 
     .status-label {
-        min-width: 0;
-        max-width: 100px;
-        overflow: hidden;
-        text-overflow: ellipsis;
         white-space: nowrap;
     }
 
@@ -548,11 +528,7 @@ table {
     .grid-4,
     .grid-auto,
     .grid-auto-lg,
-    .card-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-    }
-
+    .card-grid,
     .grid-3 {
         grid-template-columns:
             repeat(2, minmax(0, 1fr));
@@ -583,14 +559,6 @@ table {
         min-width: 0;
     }
 
-    .technology-group-header > *,
-    .tech-group-header > *,
-    .tool-group-header > *,
-    .stack-group-header > * {
-        min-width: 0;
-        max-width: 100%;
-    }
-
     .technology-group .tag,
     .technology-group .chip,
     .technology-group .badge,
@@ -603,8 +571,6 @@ table {
     .stack-group .tag,
     .stack-group .chip,
     .stack-group .badge {
-        min-width: 0;
-        max-width: 100%;
         white-space: normal;
         overflow-wrap: anywhere;
         word-break: break-word;
@@ -626,20 +592,10 @@ table {
         gap: var(--cn-space-3);
     }
 
-    .footer-brand,
-    .footer-meta,
-    .footer-nav {
-        min-width: 0;
-    }
-
     .footer-links {
         width: 100%;
         flex-wrap: wrap;
         justify-content: flex-end;
-    }
-
-    .footer-links > a {
-        flex: 0 1 auto;
     }
 }
 
@@ -676,14 +632,13 @@ table {
     }
 
     /* =====================================================
-       STICKER
-       Row 1: Brand + Status + Menu
-       Row 2: Page Navigation
+       TABLET HEADER
        ===================================================== */
 
     .site-header,
     .app-header,
     .cn-header {
+        width: 100%;
         height: var(--cn-header-height);
         min-height: var(--cn-header-height);
         max-height: none;
@@ -698,13 +653,14 @@ table {
         width: 100%;
         max-width: 100%;
         min-width: 0;
+
         height: var(--cn-header-height);
         min-height: var(--cn-header-height);
 
         grid-template-columns:
             minmax(0, 1fr)
-            auto
-            auto;
+            max-content
+            44px;
 
         grid-template-rows:
             64px
@@ -739,8 +695,15 @@ table {
         display: inline-flex;
         align-items: center;
 
-        min-width: 0;
-        max-width: 150px;
+        width: max-content;
+        min-width: max-content;
+        max-width: none;
+
+        white-space: nowrap;
+    }
+
+    .status-label {
+        white-space: nowrap;
     }
 
     .side-panel-toggle {
@@ -749,8 +712,6 @@ table {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-
-        flex: 0 0 auto;
 
         width: 44px;
         min-width: 44px;
@@ -817,8 +778,6 @@ table {
         align-items: center;
         justify-content: center;
 
-        flex: 0 0 auto;
-
         width: auto;
         min-width: max-content;
         min-height: 44px;
@@ -842,7 +801,7 @@ table {
     }
 
     /* =====================================================
-       SIDE PANEL
+       TABLET SIDE PANEL
        ===================================================== */
 
     .side-panel {
@@ -868,7 +827,7 @@ table {
     }
 
     /* =====================================================
-       CONTENT
+       TABLET CONTENT
        ===================================================== */
 
     .grid-4,
@@ -912,14 +871,6 @@ table {
         display: flex;
         align-items: flex-start;
         flex-wrap: nowrap;
-    }
-
-    .technology-group-header > *,
-    .tech-group-header > *,
-    .tool-group-header > *,
-    .stack-group-header > * {
-        min-width: 0;
-        max-width: 100%;
     }
 
     .technology-group .tag-list,
@@ -969,21 +920,12 @@ table {
             );
     }
 
-    .section-heading {
-        align-items: flex-start;
-    }
-
     .footer-inner {
         grid-template-columns:
             minmax(0, 1fr)
             minmax(0, 1fr);
 
         gap: var(--cn-space-4);
-    }
-
-    .footer-brand,
-    .footer-meta {
-        min-width: 0;
     }
 
     .footer-meta {
@@ -1000,10 +942,6 @@ table {
         justify-content: flex-start;
         flex-wrap: wrap;
     }
-
-    .footer-links > a {
-        flex: 0 1 auto;
-    }
 }
 
 /* =========================================================
@@ -1013,8 +951,18 @@ table {
 
 @media (max-width: 767px) {
 
+    /*
+     * Mobile header:
+     *
+     * Row 1 = Brand + Menu
+     * Row 2 = Status
+     * Row 3 = Navigation
+     *
+     * This deliberately gives the status its own row.
+     */
+
     :root {
-        --cn-header-height: 108px;
+        --cn-header-height: 152px;
         --cn-side-panel-width: min(300px, 86vw);
         --cn-side-panel-min-width: 0;
         --cn-side-panel-collapsed-width: 60px;
@@ -1099,9 +1047,7 @@ table {
     }
 
     /* =====================================================
-       MOBILE STICKER
-       Row 1: Brand + Status + Menu
-       Row 2: Page Navigation
+       MOBILE HEADER
        ===================================================== */
 
     .site-header,
@@ -1130,23 +1076,31 @@ table {
         height: var(--cn-header-height);
         min-height: var(--cn-header-height);
 
+        /*
+         * Brand and menu only on row 1.
+         */
         grid-template-columns:
             minmax(0, 1fr)
-            auto
-            auto;
-
-        grid-template-rows:
-            64px
             44px;
 
-        grid-template-areas:
-            "brand status toggle"
-            "nav nav nav";
+        grid-template-rows:
+            56px
+            48px
+            48px;
 
-        gap: 0 var(--cn-space-1);
+        grid-template-areas:
+            "brand toggle"
+            "status status"
+            "nav nav";
+
+        gap: 0;
 
         overflow: visible;
     }
+
+    /* =====================================================
+       MOBILE BRAND
+       ===================================================== */
 
     .brand {
         grid-area: brand;
@@ -1154,25 +1108,33 @@ table {
         display: flex;
         align-items: center;
 
-        min-width: 0;
+        width: 100%;
         max-width: 100%;
+        min-width: 0;
+
+        overflow: hidden;
     }
 
     .brand-mark {
         width: 38px;
         height: 38px;
+
         flex: 0 0 auto;
     }
 
     .brand-text {
+        width: 100%;
         min-width: 0;
         max-width: 100%;
+
+        overflow: hidden;
     }
 
     .brand-name,
     .brand-subtitle {
         display: block;
 
+        width: 100%;
         min-width: 0;
         max-width: 100%;
 
@@ -1189,36 +1151,65 @@ table {
        MOBILE STATUS
        ===================================================== */
 
+    .status,
     .header-status,
     .app-status,
     .cn-status,
-    .status,
     .system-status {
         grid-area: status;
 
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        min-height: 48px;
+
+        padding-inline:
+            var(--cn-space-2);
+
+        overflow: visible;
+
+        white-space: nowrap;
+    }
+
+    /*
+     * The status is now allowed to use the whole row.
+     * No clipping.
+     * No ellipsis.
+     * No tiny 0.56rem text.
+     */
+
+    .status-content {
         display: inline-flex;
         align-items: center;
 
-        flex: 0 0 auto;
-
-        min-width: 0;
-        max-width: 120px;
-
-        overflow: visible;
-    }
-
-    .status-content {
-        min-width: 0;
+        width: auto;
         max-width: 100%;
+        min-width: 0;
     }
 
     .status-label {
-        min-width: 0;
-        max-width: 86px;
+        display: inline;
 
-        overflow: hidden;
-        text-overflow: ellipsis;
+        width: auto;
+        max-width: none;
+        min-width: 0;
+
+        overflow: visible;
+        text-overflow: clip;
+
         white-space: nowrap;
+
+        font-size: 0.78rem;
+        line-height: 1.2;
+    }
+
+    .status-indicator {
+        flex: 0 0 auto;
     }
 
     /* =====================================================
@@ -1232,15 +1223,16 @@ table {
         align-items: center;
         justify-content: center;
 
-        flex: 0 0 auto;
-
         width: 44px;
         min-width: 44px;
         min-height: 44px;
+
+        align-self: center;
+        justify-self: end;
     }
 
     /* =====================================================
-       MOBILE PAGE NAVIGATION
+       MOBILE NAVIGATION
        ===================================================== */
 
     .header-nav,
@@ -1254,7 +1246,7 @@ table {
         width: 100%;
         max-width: 100%;
         min-width: 0;
-        min-height: 44px;
+        min-height: 48px;
 
         overflow-x: auto;
         overflow-y: hidden;
@@ -1303,8 +1295,6 @@ table {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-
-        flex: 0 0 auto;
 
         width: auto;
         min-width: max-content;
@@ -1431,7 +1421,7 @@ table {
     }
 
     /* =====================================================
-       MAIN CONTENT
+       MOBILE CONTENT
        ===================================================== */
 
     .container,
@@ -1444,10 +1434,6 @@ table {
         max-width: 100%;
         min-width: 0;
     }
-
-    /* =====================================================
-       SECTIONS
-       ===================================================== */
 
     .section {
         width: 100%;
@@ -1482,7 +1468,7 @@ table {
     }
 
     /* =====================================================
-       HERO
+       MOBILE HERO
        ===================================================== */
 
     .hero {
@@ -1529,7 +1515,7 @@ table {
     }
 
     /* =====================================================
-       GENERAL GRIDS
+       MOBILE GRIDS
        ===================================================== */
 
     .grid-4,
@@ -1552,7 +1538,7 @@ table {
     }
 
     /* =====================================================
-       TECHNOLOGY / TOOL GROUPS
+       MOBILE TECHNOLOGY GROUPS
        ===================================================== */
 
     .technology-group,
@@ -1623,7 +1609,7 @@ table {
     }
 
     /* =====================================================
-       SPLIT LAYOUT
+       MOBILE SPLIT LAYOUT
        ===================================================== */
 
     .split-layout,
@@ -1637,7 +1623,7 @@ table {
     }
 
     /* =====================================================
-       CARDS
+       MOBILE CARDS
        ===================================================== */
 
     .card,
@@ -1666,7 +1652,7 @@ table {
     }
 
     /* =====================================================
-       TAGS
+       MOBILE TAGS
        ===================================================== */
 
     .tag-list {
@@ -1690,7 +1676,7 @@ table {
     }
 
     /* =====================================================
-       FORMS
+       MOBILE FORMS
        ===================================================== */
 
     form,
@@ -1738,7 +1724,7 @@ table {
     }
 
     /* =====================================================
-       CODE / TERMINAL
+       MOBILE CODE / TERMINAL
        ===================================================== */
 
     pre,
@@ -1756,7 +1742,7 @@ table {
     }
 
     /* =====================================================
-       TABLES
+       MOBILE TABLES
        ===================================================== */
 
     .table-wrapper,
@@ -1776,7 +1762,7 @@ table {
     }
 
     /* =====================================================
-       FOOTER
+       MOBILE FOOTER
        ===================================================== */
 
     .site-footer,
@@ -1824,10 +1810,6 @@ table {
         word-break: break-word;
     }
 
-    .footer-nav {
-        width: 100%;
-    }
-
     .footer-links {
         display: flex;
         align-items: stretch;
@@ -1866,7 +1848,13 @@ table {
 @media (max-width: 479px) {
 
     :root {
-        --cn-header-height: 100px;
+        /*
+         * 56px brand row
+         * 44px status row
+         * 44px navigation row
+         */
+        --cn-header-height: 144px;
+
         --cn-side-panel-width: min(290px, 90vw);
         --cn-side-panel-collapsed-width: 56px;
     }
@@ -1893,9 +1881,19 @@ table {
         height: var(--cn-header-height);
         min-height: var(--cn-header-height);
 
+        grid-template-columns:
+            minmax(0, 1fr)
+            44px;
+
         grid-template-rows:
             56px
+            44px
             44px;
+
+        grid-template-areas:
+            "brand toggle"
+            "status status"
+            "nav nav";
     }
 
     .site-header,
@@ -1903,7 +1901,6 @@ table {
     .cn-header {
         height: var(--cn-header-height);
         min-height: var(--cn-header-height);
-        max-height: none;
     }
 
     .brand-mark {
@@ -1919,16 +1916,35 @@ table {
         font-size: 0.7rem;
     }
 
+    .status,
     .header-status,
     .app-status,
     .cn-status,
-    .status,
     .system-status {
-        max-width: 100px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        min-height: 44px;
+
+        padding-inline:
+            var(--cn-space-2);
     }
 
     .status-label {
-        max-width: 70px;
+        font-size: 0.74rem;
+        line-height: 1.2;
+
+        max-width: none;
+
+        overflow: visible;
+        text-overflow: clip;
+        white-space: nowrap;
+    }
+
+    .status-indicator {
+        width: 7px;
+        height: 7px;
     }
 
     .header-nav-link,
@@ -2014,7 +2030,8 @@ table {
 @media (max-width: 359px) {
 
     :root {
-        --cn-header-height: 96px;
+        --cn-header-height: 136px;
+
         --cn-side-panel-width: 88vw;
         --cn-side-panel-collapsed-width: 52px;
     }
@@ -2041,9 +2058,19 @@ table {
         height: var(--cn-header-height);
         min-height: var(--cn-header-height);
 
+        grid-template-columns:
+            minmax(0, 1fr)
+            44px;
+
         grid-template-rows:
             52px
-            44px;
+            42px
+            42px;
+
+        grid-template-areas:
+            "brand toggle"
+            "status status"
+            "nav nav";
     }
 
     .site-header,
@@ -2051,7 +2078,6 @@ table {
     .cn-header {
         height: var(--cn-header-height);
         min-height: var(--cn-header-height);
-        max-height: none;
     }
 
     .brand-mark {
@@ -2063,23 +2089,43 @@ table {
         display: none;
     }
 
-    .status-label {
-        display: none;
-    }
+    /*
+     * IMPORTANT:
+     * Status remains a complete independent row.
+     * It is NOT compressed into the brand row.
+     */
 
+    .status,
     .header-status,
     .app-status,
     .cn-status,
-    .status,
     .system-status {
-        max-width: 28px;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+
+        min-height: 42px;
+
+        padding-inline:
+            var(--cn-space-2);
+
+        overflow: visible;
     }
 
-    .header-nav-link,
-    .primary-nav-link,
-    .page-nav-link {
-        min-width: max-content;
-        min-height: 44px;
+    .status-label {
+        font-size: 0.68rem;
+        line-height: 1.2;
+
+        max-width: none;
+
+        overflow: visible;
+        text-overflow: clip;
+        white-space: nowrap;
+    }
+
+    .status-indicator {
+        width: 6px;
+        height: 6px;
     }
 
     .side-panel {
@@ -2201,6 +2247,58 @@ table {
 
 @media (max-width: 767px) and (orientation: landscape) {
 
+    /*
+     * Landscape has limited vertical space.
+     * Keep the same logical order, but reduce row heights.
+     */
+
+    :root {
+        --cn-header-height: 120px;
+    }
+
+    .header-inner,
+    .app-header-inner,
+    .cn-header-inner {
+        height: var(--cn-header-height);
+        min-height: var(--cn-header-height);
+
+        grid-template-rows:
+            44px
+            36px
+            40px;
+
+        grid-template-areas:
+            "brand toggle"
+            "status status"
+            "nav nav";
+    }
+
+    .status,
+    .header-status,
+    .app-status,
+    .cn-status,
+    .system-status {
+        min-height: 36px;
+        padding-inline:
+            var(--cn-space-2);
+    }
+
+    .status-label {
+        font-size: 0.7rem;
+    }
+
+    .header-nav,
+    .primary-nav,
+    .page-nav {
+        min-height: 40px;
+    }
+
+    .header-nav-link,
+    .primary-nav-link,
+    .page-nav-link {
+        min-height: 40px;
+    }
+
     .hero {
         min-height: auto;
     }
@@ -2221,40 +2319,6 @@ table {
     .stack-grid {
         grid-template-columns:
             minmax(0, 1fr);
-    }
-
-    .technology-group,
-    .tech-group,
-    .tool-group,
-    .stack-group,
-    .technology-group-header,
-    .tech-group-header,
-    .tool-group-header,
-    .stack-group-header,
-    .technology-group .tag-list,
-    .tech-group .tag-list,
-    .tool-group .tag-list,
-    .stack-group .tag-list {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    .technology-group .tag,
-    .technology-group .chip,
-    .technology-group .badge,
-    .tech-group .tag,
-    .tech-group .chip,
-    .tech-group .badge,
-    .tool-group .tag,
-    .tool-group .chip,
-    .tool-group .badge,
-    .stack-group .tag,
-    .stack-group .chip,
-    .stack-group .badge {
-        white-space: normal;
-        overflow-wrap: anywhere;
-        word-break: break-word;
     }
 }
 

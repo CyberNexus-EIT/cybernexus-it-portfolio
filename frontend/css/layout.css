@@ -47,6 +47,27 @@
 }
 
 /* =========================================================
+   GLOBAL STRUCTURAL BOX MODEL
+   ========================================================= */
+
+html,
+body,
+#app,
+.app,
+.application,
+.app-shell,
+.page,
+.page-shell {
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+/* =========================================================
    ROOT APPLICATION
    ========================================================= */
 
@@ -115,9 +136,7 @@ body {
        │
        └── .site-footer
 
-   The side panel and main content MUST remain siblings.
-   This prevents the side panel from creating a vertical
-   gap between the header and main content.
+   The side panel and main content remain siblings.
    ========================================================= */
 
 .app-body {
@@ -255,27 +274,61 @@ body {
     min-height: 0;
 }
 
-/* =========================================================
-   HEADER BRAND
-   ========================================================= */
+/*
+ * Common header regions.
+ *
+ * The exact visual spacing belongs to style.css / spacing.css.
+ * Layout only controls how regions consume available width.
+ */
 
 .header-brand,
 .app-brand,
 .cn-brand,
 .brand {
     display: inline-flex;
-    flex: 0 0 auto;
+    flex: 0 1 auto;
     align-items: center;
 
     min-width: 0;
 }
 
-.header-brand a,
-.app-brand a,
-.cn-brand a {
-    display: inline-flex;
+.header-nav,
+.primary-nav,
+.page-nav {
+    display: flex;
+    flex: 1 1 auto;
     align-items: center;
 
+    min-width: 0;
+}
+
+.header-status,
+.app-status,
+.cn-status,
+.system-status,
+.status {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+
+    min-width: max-content;
+}
+
+.side-panel-toggle {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+}
+
+/* =========================================================
+   HEADER BRAND
+   ========================================================= */
+
+.header-brand a,
+.app-brand a,
+.cn-brand a,
+.brand {
     min-width: 0;
 }
 
@@ -313,6 +366,15 @@ body {
 
 /* =========================================================
    HEADER STATUS
+   =========================================================
+
+   Status is intentionally atomic.
+
+   "Active Development" must remain a single visible unit.
+   It must not become an ellipsis or disappear because another
+   header element consumes available width.
+
+   Responsive width adjustments belong to responsive.css.
    ========================================================= */
 
 .status,
@@ -320,11 +382,13 @@ body {
 .app-status,
 .cn-status,
 .system-status {
-    display: inline-flex;
-    flex: 0 0 auto;
-    align-items: center;
+    width: max-content;
+    max-width: none;
+    min-width: max-content;
 
-    min-width: 0;
+    overflow: visible;
+
+    white-space: nowrap;
 }
 
 .status-indicator {
@@ -341,33 +405,33 @@ body {
 
 .status-content {
     display: inline-flex;
+    flex: 0 0 auto;
     align-items: center;
 
-    min-width: 0;
+    width: max-content;
+    max-width: none;
+    min-width: max-content;
+
+    overflow: visible;
 }
 
 .status-label {
-    min-width: 0;
+    display: inline-block;
+    flex: 0 0 auto;
 
-    overflow: hidden;
-    text-overflow: ellipsis;
+    width: auto;
+    max-width: none;
+    min-width: max-content;
+
+    overflow: visible;
+
+    text-overflow: clip;
     white-space: nowrap;
 }
 
 /* =========================================================
    PRIMARY PAGE NAVIGATION
    ========================================================= */
-
-.header-nav,
-.primary-nav,
-.page-nav {
-    display: flex;
-    flex: 1 1 auto;
-    align-items: center;
-
-    width: 100%;
-    min-width: 0;
-}
 
 .header-nav-list,
 .primary-nav-list,
@@ -411,17 +475,6 @@ body {
 }
 
 /* =========================================================
-   HEADER CONTROLS
-   ========================================================= */
-
-.side-panel-toggle {
-    display: inline-flex;
-    flex: 0 0 auto;
-    align-items: center;
-    justify-content: center;
-}
-
-/* =========================================================
    SCROLL STRUCTURE
    ========================================================= */
 
@@ -461,7 +514,7 @@ body {
     flex-direction: column;
 
     width: var(--cn-side-panel-width);
-    min-width: var(--cn-side-panel-width);
+    min-width: var(--cn-side-panel-min-width);
     max-width: var(--cn-side-panel-width);
 
     height: calc(100vh - var(--cn-header-height));
@@ -1127,19 +1180,6 @@ body {
 
 /* =========================================================
    FOOTER
-   =========================================================
-
-   Desktop footer structure:
-
-   ┌──────────────────────────────────────────────────────┐
-   │ BRAND        │ META / ENGINEER       │ LINKS         │
-   └──────────────────────────────────────────────────────┘
-
-   Each region gets equal structural space.
-
-   Visual spacing and colors remain owned by:
-   - spacing.css
-   - style.css
    ========================================================= */
 
 .site-footer,

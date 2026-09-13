@@ -34,6 +34,22 @@
         Terms | CyberNexus IT Portfolio Platform
     </title>
 
+    <!-- ========================================================
+         CYBERNEXUS CSS ARCHITECTURE
+
+         theme
+           ↓
+         typography
+           ↓
+         spacing
+           ↓
+         layout
+           ↓
+         style
+           ↓
+         responsive
+         ======================================================== -->
+
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/typography.css">
     <link rel="stylesheet" href="css/spacing.css">
@@ -43,1130 +59,1343 @@
 
 </head>
 
+
 <body
     class="app-shell"
     data-page="terms"
     data-section="overview"
 >
 
-<header
-    class="site-header sticker"
-    data-header
->
 
-    <div class="header-inner">
+    <!-- ========================================================
+         STICKER / HEADER
+         ======================================================== -->
 
-        <a
-            class="brand"
-            href="portfolio.html"
-            aria-label="CyberNexus IT Portfolio Platform"
-        >
-
-            <span
-                class="brand-mark"
-                aria-hidden="true"
-            >
-                CN
-            </span>
-
-            <span class="brand-text">
-
-                <span class="brand-name">
-                    CyberNexus
-                </span>
-
-                <span class="brand-subtitle">
-                    IT Portfolio Platform
-                </span>
-
-            </span>
-
-        </a>
-
-        <div
-            class="status status-online"
-            data-status
-            aria-label="System status: Online"
-        >
-
-            <span
-                class="status-indicator"
-                aria-hidden="true"
-            ></span>
-
-            <span class="status-label">
-                Online
-            </span>
-
-        </div>
-
-        <nav
-            class="page-nav"
-            aria-label="Main navigation"
-        >
-
-            <ul class="page-nav-list">
-
-                <li class="page-nav-item">
-
-                    <a
-                        class="page-nav-link"
-                        href="portfolio.html"
-                        data-page="portfolio"
-                    >
-                        Portfolio
-                    </a>
-
-                </li>
-
-                <li class="page-nav-item">
-
-                    <a
-                        class="page-nav-link"
-                        href="projects.html"
-                        data-page="projects"
-                    >
-                        Projects
-                    </a>
-
-                </li>
-
-                <li class="page-nav-item">
-
-                    <a
-                        class="page-nav-link"
-                        href="skills.html"
-                        data-page="skills"
-                    >
-                        Skills
-                    </a>
-
-                </li>
-
-                <li class="page-nav-item">
-
-                    <a
-                        class="page-nav-link"
-                        href="experience.html"
-                        data-page="experience"
-                    >
-                        Experience
-                    </a>
-
-                </li>
-
-                <li class="page-nav-item">
-
-                    <a
-                        class="page-nav-link"
-                        href="contact.html"
-                        data-page="contact"
-                    >
-                        Contact
-                    </a>
-
-                </li>
-
-                <li class="page-nav-item">
-
-                    <a
-                        class="page-nav-link"
-                        href="privacy.html"
-                        data-page="privacy"
-                    >
-                        Privacy
-                    </a>
-
-                </li>
-
-                <li class="page-nav-item">
-
-                    <a
-                        class="page-nav-link is-current"
-                        href="terms.html"
-                        data-page="terms"
-                        aria-current="page"
-                    >
-                        Terms
-                    </a>
-
-                </li>
-
-            </ul>
-
-        </nav>
-
-        <button
-            class="button button-icon side-panel-toggle"
-            type="button"
-            data-side-panel-toggle
-            aria-label="Toggle section panel"
-            aria-controls="terms-side-panel"
-            aria-expanded="true"
-        >
-            <span aria-hidden="true">☰</span>
-        </button>
-
-    </div>
-
-</header>
-
-<div class="app-body">
-
-    <aside
-        class="side-panel"
-        id="terms-side-panel"
-        data-side-panel
-        data-open="true"
-        aria-label="Terms of Service sections"
+    <header
+        class="site-header sticker"
+        data-header
     >
 
-        <div class="side-panel-header">
+        <div class="header-inner">
 
-            <div>
 
-                <span class="eyebrow">
-                    Terms
+            <!-- Brand -->
+
+            <a
+                class="brand"
+                href="portfolio.html"
+                aria-label="CyberNexus IT Portfolio Platform"
+            >
+
+                <span
+                    class="brand-mark"
+                    aria-hidden="true"
+                >
+                    CN
                 </span>
 
-                <h2 class="side-panel-title">
-                    Sections
-                </h2>
+                <span class="brand-text">
+
+                    <span class="brand-name">
+                        CyberNexus
+                    </span>
+
+                    <span class="brand-subtitle">
+                        IT Portfolio Platform
+                    </span>
+
+                </span>
+
+            </a>
+
+
+            <!-- System / Project Status -->
+
+            <div
+                class="status status-online"
+                data-status
+                data-status-value="active-development"
+                aria-label="Project status: Active Development"
+            >
+
+                <span
+                    class="status-indicator"
+                    aria-hidden="true"
+                ></span>
+
+                <span class="status-label">
+                    Active Development
+                </span>
 
             </div>
 
+
+            <!-- Main Page Navigation -->
+
+            <nav
+                class="page-nav"
+                aria-label="Main navigation"
+            >
+
+                <ul class="page-nav-list">
+
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link"
+                            href="portfolio.html"
+                            data-page="portfolio"
+                        >
+                            Portfolio
+                        </a>
+
+                    </li>
+
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link"
+                            href="projects.html"
+                            data-page="projects"
+                        >
+                            Projects
+                        </a>
+
+                    </li>
+
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link"
+                            href="skills.html"
+                            data-page="skills"
+                        >
+                            Skills
+                        </a>
+
+                    </li>
+
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link"
+                            href="experience.html"
+                            data-page="experience"
+                        >
+                            Experience
+                        </a>
+
+                    </li>
+
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link"
+                            href="contact.html"
+                            data-page="contact"
+                        >
+                            Contact
+                        </a>
+
+                    </li>
+
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link"
+                            href="privacy.html"
+                            data-page="privacy"
+                        >
+                            Privacy
+                        </a>
+
+                    </li>
+
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link is-current"
+                            href="terms.html"
+                            data-page="terms"
+                            aria-current="page"
+                        >
+                            Terms
+                        </a>
+
+                    </li>
+
+
+                </ul>
+
+            </nav>
+
+
+            <!-- Side Panel Controller -->
+
             <button
-                class="button button-icon"
+                class="button button-icon side-panel-toggle"
                 type="button"
                 data-side-panel-toggle
-                aria-label="Hide section panel"
+                aria-label="Toggle Terms of Service section panel"
                 aria-controls="terms-side-panel"
                 aria-expanded="true"
             >
-                ×
+
+                <span aria-hidden="true">
+                    ☰
+                </span>
+
             </button>
+
 
         </div>
 
-        <nav
-            class="side-nav"
-            aria-label="Terms section navigation"
+    </header>
+
+
+    <!-- ========================================================
+         APPLICATION BODY
+         ======================================================== -->
+
+    <div class="app-body">
+
+
+        <!-- ====================================================
+             SIDE PANEL
+             ==================================================== -->
+
+        <aside
+            class="side-panel"
+            id="terms-side-panel"
+            data-side-panel
+            data-open="true"
+            aria-label="Terms of Service sections"
         >
 
-            <ul class="side-nav-list">
 
-                <li class="side-nav-item">
+            <div class="side-panel-header">
 
-                    <a
-                        class="side-nav-link is-current"
-                        href="#overview"
-                        data-section-link="overview"
-                        aria-current="location"
-                    >
+                <div>
 
-                        <span class="side-nav-index">
-                            01
-                        </span>
-
-                        <span>
-                            Overview
-                        </span>
-
-                    </a>
-
-                </li>
-
-                <li class="side-nav-item">
-
-                    <a
-                        class="side-nav-link"
-                        href="#use"
-                        data-section-link="use"
-                    >
-
-                        <span class="side-nav-index">
-                            02
-                        </span>
-
-                        <span>
-                            Use
-                        </span>
-
-                    </a>
-
-                </li>
-
-                <li class="side-nav-item">
-
-                    <a
-                        class="side-nav-link"
-                        href="#content"
-                        data-section-link="content"
-                    >
-
-                        <span class="side-nav-index">
-                            03
-                        </span>
-
-                        <span>
-                            Content
-                        </span>
-
-                    </a>
-
-                </li>
-
-                <li class="side-nav-item">
-
-                    <a
-                        class="side-nav-link"
-                        href="#security"
-                        data-section-link="security"
-                    >
-
-                        <span class="side-nav-index">
-                            04
-                        </span>
-
-                        <span>
-                            Security
-                        </span>
-
-                    </a>
-
-                </li>
-
-                <li class="side-nav-item">
-
-                    <a
-                        class="side-nav-link"
-                        href="#availability"
-                        data-section-link="availability"
-                    >
-
-                        <span class="side-nav-index">
-                            05
-                        </span>
-
-                        <span>
-                            Availability
-                        </span>
-
-                    </a>
-
-                </li>
-
-                <li class="side-nav-item">
-
-                    <a
-                        class="side-nav-link"
-                        href="#external"
-                        data-section-link="external"
-                    >
-
-                        <span class="side-nav-index">
-                            06
-                        </span>
-
-                        <span>
-                            External Services
-                        </span>
-
-                    </a>
-
-                </li>
-
-                <li class="side-nav-item">
-
-                    <a
-                        class="side-nav-link"
-                        href="#limitations"
-                        data-section-link="limitations"
-                    >
-
-                        <span class="side-nav-index">
-                            07
-                        </span>
-
-                        <span>
-                            Limitations
-                        </span>
-
-                    </a>
-
-                </li>
-
-                <li class="side-nav-item">
-
-                    <a
-                        class="side-nav-link"
-                        href="#changes"
-                        data-section-link="changes"
-                    >
-
-                        <span class="side-nav-index">
-                            08
-                        </span>
-
-                        <span>
-                            Changes
-                        </span>
-
-                    </a>
-
-                </li>
-
-                <li class="side-nav-item">
-
-                    <a
-                        class="side-nav-link"
-                        href="#contact"
-                        data-section-link="contact"
-                    >
-
-                        <span class="side-nav-index">
-                            09
-                        </span>
-
-                        <span>
-                            Contact
-                        </span>
-
-                    </a>
-
-                </li>
-
-            </ul>
-
-        </nav>
-
-        <div class="side-panel-actions">
-
-            <button
-                class="button button-secondary"
-                type="button"
-                data-side-panel-restore
-                hidden
-            >
-                Show Sections
-            </button>
-
-        </div>
-
-    </aside>
-
-    <main class="main-content">
-
-        <section
-            class="hero section section-xl"
-            id="overview"
-            data-section="overview"
-        >
-
-            <div class="hero-content">
-
-                <span class="eyebrow">
-                    Legal / Terms
-                </span>
-
-                <h1 class="hero-title">
-
-                    Terms of
-
-                    <span class="cn-gradient-text">
-                        Service
+                    <span class="eyebrow">
+                        Terms
                     </span>
 
-                </h1>
-
-                <p class="hero-subtitle">
-                    These Terms of Service describe the general
-                    conditions for accessing and using the
-                    CyberNexus IT Portfolio Platform.
-                </p>
-
-                <div class="hero-actions">
-
-                    <a
-                        class="button button-primary"
-                        href="#use"
-                    >
-                        Read Terms
-                    </a>
-
-                    <a
-                        class="button button-secondary"
-                        href="privacy.html"
-                    >
-                        Privacy Policy
-                    </a>
+                    <h2 class="side-panel-title">
+                        Sections
+                    </h2>
 
                 </div>
 
+
+                <button
+                    class="button button-icon"
+                    type="button"
+                    data-side-panel-toggle
+                    aria-label="Hide Terms of Service section panel"
+                    aria-controls="terms-side-panel"
+                    aria-expanded="true"
+                >
+
+                    <span aria-hidden="true">
+                        ×
+                    </span>
+
+                </button>
+
             </div>
 
-            <div
-                class="hero-visual"
-                aria-hidden="true"
+
+            <nav
+                class="side-nav"
+                aria-label="Terms of Service section navigation"
             >
 
-                <div class="hero-orb hero-orb-green"></div>
-                <div class="hero-orb hero-orb-cyan"></div>
-                <div class="hero-orb hero-orb-purple"></div>
+                <ul class="side-nav-list">
 
-                <div class="hero-grid"></div>
 
-                <div class="hero-terminal">
+                    <li class="side-nav-item">
 
-                    <div class="terminal-header">
+                        <a
+                            class="side-nav-link is-current"
+                            href="#overview"
+                            data-section-link="overview"
+                            aria-current="location"
+                        >
 
-                        <span></span>
-                        <span></span>
-                        <span></span>
+                            <span class="side-nav-index">
+                                01
+                            </span>
+
+                            <span>
+                                Overview
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#use"
+                            data-section-link="use"
+                        >
+
+                            <span class="side-nav-index">
+                                02
+                            </span>
+
+                            <span>
+                                Use
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#content"
+                            data-section-link="content"
+                        >
+
+                            <span class="side-nav-index">
+                                03
+                            </span>
+
+                            <span>
+                                Content
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#security"
+                            data-section-link="security"
+                        >
+
+                            <span class="side-nav-index">
+                                04
+                            </span>
+
+                            <span>
+                                Security
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#availability"
+                            data-section-link="availability"
+                        >
+
+                            <span class="side-nav-index">
+                                05
+                            </span>
+
+                            <span>
+                                Availability
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#external"
+                            data-section-link="external"
+                        >
+
+                            <span class="side-nav-index">
+                                06
+                            </span>
+
+                            <span>
+                                External Services
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#limitations"
+                            data-section-link="limitations"
+                        >
+
+                            <span class="side-nav-index">
+                                07
+                            </span>
+
+                            <span>
+                                Limitations
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#changes"
+                            data-section-link="changes"
+                        >
+
+                            <span class="side-nav-index">
+                                08
+                            </span>
+
+                            <span>
+                                Changes
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#contact"
+                            data-section-link="contact"
+                        >
+
+                            <span class="side-nav-index">
+                                09
+                            </span>
+
+                            <span>
+                                Contact
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                </ul>
+
+            </nav>
+
+
+            <div class="side-panel-actions">
+
+                <button
+                    class="button button-secondary"
+                    type="button"
+                    data-side-panel-restore
+                    hidden
+                >
+                    Show Sections
+                </button>
+
+            </div>
+
+
+        </aside>
+
+
+        <!-- ====================================================
+             MAIN CONTENT
+             ==================================================== -->
+
+        <main class="main-content">
+
+
+            <!-- ==================================================
+                 OVERVIEW / HERO
+                 ================================================== -->
+
+            <section
+                class="hero section section-xl"
+                id="overview"
+                data-section="overview"
+            >
+
+                <div class="hero-content">
+
+
+                    <span class="eyebrow">
+                        Legal / Terms
+                    </span>
+
+
+                    <h1 class="hero-title">
+
+                        Terms of
+
+                        <span class="cn-gradient-text">
+                            Service
+                        </span>
+
+                    </h1>
+
+
+                    <p class="hero-subtitle">
+                        These Terms of Service describe the general
+                        conditions for accessing and using the
+                        CyberNexus IT Portfolio Platform.
+                    </p>
+
+
+                    <div class="hero-actions">
+
+                        <a
+                            class="button button-primary"
+                            href="#use"
+                        >
+                            Read Terms
+                        </a>
+
+                        <a
+                            class="button button-secondary"
+                            href="privacy.html"
+                        >
+                            Privacy Policy
+                        </a>
 
                     </div>
 
-                    <div class="terminal-body">
-
-                        <span class="terminal-line">
-
-                            <span class="cn-text-green">
-                                $
-                            </span>
-
-                            terms --status
-
-                        </span>
-
-                        <span class="terminal-line">
-
-                            <span class="cn-text-cyan">
-                                access:
-                            </span>
-
-                            permitted
-
-                        </span>
-
-                        <span class="terminal-line">
-
-                            <span class="cn-text-purple">
-                                use:
-                            </span>
-
-                            responsible
-
-                        </span>
-
-                        <span class="terminal-line">
-
-                            <span class="cn-text-green">
-                                security:
-                            </span>
-
-                            required
-
-                        </span>
-
-                    </div>
 
                 </div>
 
-            </div>
 
-        </section>
+                <div
+                    class="hero-visual"
+                    aria-hidden="true"
+                >
 
-        <section
-            class="section section-lg"
-            id="use"
-            data-section="use"
-        >
+                    <div class="hero-orb hero-orb-green"></div>
 
-            <div class="section-header">
+                    <div class="hero-orb hero-orb-cyan"></div>
 
-                <span class="eyebrow">
-                    02 / Use
-                </span>
+                    <div class="hero-orb hero-orb-purple"></div>
 
-                <h2 class="section-title">
-                    Acceptable Use
-                </h2>
+                    <div class="hero-grid"></div>
 
-                <p class="section-subtitle">
-                    Use the platform responsibly, lawfully, and
-                    consistently with its intended purpose.
-                </p>
 
-            </div>
+                    <div class="hero-terminal">
 
-            <div class="grid-2">
 
-                <article class="card">
+                        <div class="terminal-header">
 
-                    <span class="card-label">
-                        Permitted
-                    </span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
 
-                    <h3 class="card-title">
-                        Responsible Access
-                    </h3>
+                        </div>
 
-                    <p class="card-text">
-                        You may access and use the platform for
-                        legitimate portfolio viewing, professional
-                        communication, project information, and
-                        other functions made available through
-                        the platform.
-                    </p>
 
-                </article>
+                        <div class="terminal-body">
 
-                <article class="card">
 
-                    <span class="card-label">
-                        Prohibited
-                    </span>
+                            <span class="terminal-line">
 
-                    <h3 class="card-title">
-                        Misuse
-                    </h3>
+                                <span class="cn-text-green">
+                                    $
+                                </span>
 
-                    <p class="card-text">
-                        You must not use the platform for unlawful
-                        activity, unauthorized access, abuse,
-                        interference, malicious activity, fraud,
-                        harassment, or conduct that violates the
-                        rights of other people or organizations.
-                    </p>
+                                terms --status
 
-                </article>
+                            </span>
 
-            </div>
 
-        </section>
+                            <span class="terminal-line">
 
-        <section
-            class="section section-lg"
-            id="content"
-            data-section="content"
-        >
+                                <span class="cn-text-cyan">
+                                    project:
+                                </span>
 
-            <div class="section-header">
+                                active development
 
-                <span class="eyebrow">
-                    03 / Content
-                </span>
+                            </span>
 
-                <h2 class="section-title">
-                    Platform Content
-                </h2>
 
-                <p class="section-subtitle">
-                    Portfolio information and project materials
-                    are provided primarily for informational,
-                    educational, and professional purposes.
-                </p>
+                            <span class="terminal-line">
 
-            </div>
+                                <span class="cn-text-purple">
+                                    access:
+                                </span>
 
-            <div class="grid-3">
+                                permitted
 
-                <article class="feature-card">
+                            </span>
 
-                    <span
-                        class="feature-icon"
-                        aria-hidden="true"
-                    >
-                        01
-                    </span>
-
-                    <h3 class="feature-title">
-                        Portfolio
-                    </h3>
-
-                    <p class="feature-text">
-                        Portfolio descriptions, technical
-                        information, project information, and
-                        other materials may be updated as the
-                        portfolio develops.
-                    </p>
-
-                </article>
-
-                <article class="feature-card">
-
-                    <span
-                        class="feature-icon"
-                        aria-hidden="true"
-                    >
-                        02
-                    </span>
-
-                    <h3 class="feature-title">
-                        Accuracy
-                    </h3>
-
-                    <p class="feature-text">
-                        Reasonable effort may be made to keep
-                        published information accurate, but
-                        information may change without prior notice.
-                    </p>
-
-                </article>
-
-                <article class="feature-card">
-
-                    <span
-                        class="feature-icon"
-                        aria-hidden="true"
-                    >
-                        03
-                    </span>
-
-                    <h3 class="feature-title">
-                        Intellectual Property
-                    </h3>
-
-                    <p class="feature-text">
-                        Content may be protected by applicable
-                        intellectual-property laws. Do not copy,
-                        modify, publish, or redistribute protected
-                        material without appropriate permission.
-                    </p>
-
-                </article>
-
-            </div>
-
-        </section>
-
-        <section
-            class="section section-lg"
-            id="security"
-            data-section="security"
-        >
-
-            <div class="section-header">
-
-                <span class="eyebrow">
-                    04 / Security
-                </span>
-
-                <h2 class="section-title">
-                    Security and Responsible Access
-                </h2>
-
-                <p class="section-subtitle">
-                    Security-related activity must always be
-                    authorized, controlled, and performed
-                    responsibly.
-                </p>
 
-            </div>
+                            <span class="terminal-line">
 
-            <div class="card">
-
-                <p class="card-text">
-                    Nothing on this platform grants permission
-                    to access, scan, test, exploit, monitor,
-                    modify, disrupt, or interfere with systems,
-                    accounts, networks, applications, devices,
-                    services, or data that you do not own or
-                    have explicit authorization to assess.
-                </p>
+                                <span class="cn-text-green">
+                                    use:
+                                </span>
 
-                <p class="card-text">
-                    Any security demonstration, assessment, or
-                    testing activity must remain within the
-                    authorized target, scope, method, time
-                    period, and conditions established by the
-                    appropriate owner or authorized party.
-                </p>
+                                responsible
 
-                <p class="card-text">
-                    Users are responsible for obtaining the
-                    permissions required for activities they
-                    perform and for complying with applicable
-                    laws, regulations, contracts, and policies.
-                </p>
+                            </span>
 
-            </div>
 
-        </section>
-
-        <section
-            class="section section-lg"
-            id="availability"
-            data-section="availability"
-        >
-
-            <div class="section-header">
-
-                <span class="eyebrow">
-                    05 / Availability
-                </span>
-
-                <h2 class="section-title">
-                    Service Availability
-                </h2>
-
-                <p class="section-subtitle">
-                    The platform may change, be updated, or
-                    become temporarily unavailable.
-                </p>
-
-            </div>
-
-            <div class="grid-2">
-
-                <article class="card">
+                            <span class="terminal-line">
 
-                    <span class="card-label">
-                        Changes
-                    </span>
+                                <span class="cn-text-cyan">
+                                    security:
+                                </span>
 
-                    <h3 class="card-title">
-                        Platform Updates
-                    </h3>
+                                required
 
-                    <p class="card-text">
-                        Features, interfaces, technical
-                        components, content, and services may
-                        be changed, improved, suspended, or
-                        discontinued when necessary.
-                    </p>
-
-                </article>
-
-                <article class="card">
+                            </span>
 
-                    <span class="card-label">
-                        Availability
-                    </span>
 
-                    <h3 class="card-title">
-                        No Guaranteed Uptime
-                    </h3>
+                        </div>
 
-                    <p class="card-text">
-                        Reasonable effort may be made to maintain
-                        availability, but continuous,
-                        uninterrupted, or error-free operation
-                        cannot be guaranteed.
-                    </p>
-
-                </article>
-
-            </div>
-
-        </section>
 
-        <section
-            class="section section-lg"
-            id="external"
-            data-section="external"
-        >
-
-            <div class="section-header">
+                    </div>
 
-                <span class="eyebrow">
-                    06 / External Services
-                </span>
 
-                <h2 class="section-title">
-                    Third-Party Services and Links
-                </h2>
-
-                <p class="section-subtitle">
-                    The platform may use or link to services
-                    operated by third parties.
-                </p>
-
-            </div>
+                </div>
 
-            <div class="card">
-
-                <p class="card-text">
-                    External services may include hosting,
-                    infrastructure, source-control platforms,
-                    communication services, analytics,
-                    security services, or other third-party
-                    technologies used by a particular deployment.
-                </p>
-
-                <p class="card-text">
-                    Third-party services operate under their own
-                    terms, policies, and conditions. CyberNexus
-                    does not control external services and cannot
-                    guarantee their availability, security,
-                    content, or policies.
-                </p>
-
-                <p class="card-text">
-                    Links to external websites are provided for
-                    convenience and do not necessarily constitute
-                    endorsement of their content or services.
-                </p>
+            </section>
 
-            </div>
-
-        </section>
-
-        <section
-            class="section section-lg"
-            id="limitations"
-            data-section="limitations"
-        >
-
-            <div class="section-header">
 
-                <span class="eyebrow">
-                    07 / Limitations
-                </span>
+            <!-- ==================================================
+                 02 / USE
+                 ================================================== -->
 
-                <h2 class="section-title">
-                    Information and Service Limitations
-                </h2>
-
-                <p class="section-subtitle">
-                    Portfolio information and platform features
-                    should be evaluated according to their
-                    intended purpose.
-                </p>
-
-            </div>
-
-            <div class="grid-3">
-
-                <article class="feature-card">
-
-                    <span
-                        class="feature-icon"
-                        aria-hidden="true"
-                    >
-                        01
-                    </span>
-
-                    <h3 class="feature-title">
-                        Informational
-                    </h3>
-
-                    <p class="feature-text">
-                        Portfolio and technical information is
-                        generally provided for informational,
-                        educational, or professional purposes.
-                    </p>
-
-                </article>
-
-                <article class="feature-card">
-
-                    <span
-                        class="feature-icon"
-                        aria-hidden="true"
-                    >
-                        02
-                    </span>
-
-                    <h3 class="feature-title">
-                        No Guarantee
-                    </h3>
-
-                    <p class="feature-text">
-                        Information and platform functionality
-                        are provided according to the current
-                        deployment and may contain limitations,
-                        interruptions, or errors.
-                    </p>
-
-                </article>
-
-                <article class="feature-card">
-
-                    <span
-                        class="feature-icon"
-                        aria-hidden="true"
-                    >
-                        03
-                    </span>
-
-                    <h3 class="feature-title">
-                        User Responsibility
-                    </h3>
-
-                    <p class="feature-text">
-                        Users are responsible for how they use
-                        information, services, links, and
-                        technical materials made available
-                        through the platform.
-                    </p>
-
-                </article>
-
-            </div>
-
-        </section>
-
-        <section
-            class="section section-lg"
-            id="changes"
-            data-section="changes"
-        >
-
-            <div class="section-header">
-
-                <span class="eyebrow">
-                    08 / Changes
-                </span>
-
-                <h2 class="section-title">
-                    Changes to These Terms
-                </h2>
-
-                <p class="section-subtitle">
-                    These Terms may be updated as the platform,
-                    services, technology, or applicable
-                    requirements change.
-                </p>
-
-            </div>
-
-            <div class="card">
-
-                <p class="card-text">
-                    Updated versions should be published through
-                    this page. The current version displayed on
-                    the platform is intended to describe the
-                    conditions applicable to the current
-                    deployment.
-                </p>
-
-                <p class="card-text">
-                    Continued use of the platform after an updated
-                    version is published may constitute acceptance
-                    of the updated terms to the extent permitted
-                    by applicable law.
-                </p>
-
-            </div>
-
-        </section>
-
-        <section
-            class="section section-lg"
-            id="contact"
-            data-section="contact"
-        >
-
-            <div class="curved-panel">
+            <section
+                class="section section-lg"
+                id="use"
+                data-section="use"
+            >
 
                 <div class="section-header">
 
                     <span class="eyebrow">
-                        09 / Contact
+                        02 / Use
                     </span>
 
                     <h2 class="section-title">
-                        Questions About These Terms?
+                        Acceptable Use
                     </h2>
 
                     <p class="section-subtitle">
-                        Contact CyberNexus for questions about
-                        platform use, published information,
-                        or these Terms of Service.
+                        Use the platform responsibly, lawfully, and
+                        consistently with its intended purpose.
                     </p>
 
                 </div>
 
-                <div class="hero-actions">
 
-                    <a
-                        class="button button-primary"
-                        href="contact.html"
-                    >
-                        Contact CyberNexus
+                <div class="grid-2">
+
+
+                    <article class="card">
+
+                        <span class="card-label">
+                            Permitted
+                        </span>
+
+                        <h3 class="card-title">
+                            Responsible Access
+                        </h3>
+
+                        <p class="card-text">
+                            You may access and use the platform for
+                            legitimate portfolio viewing, professional
+                            communication, project information, and
+                            other functions made available through
+                            the platform.
+                        </p>
+
+                    </article>
+
+
+                    <article class="card">
+
+                        <span class="card-label">
+                            Prohibited
+                        </span>
+
+                        <h3 class="card-title">
+                            Misuse
+                        </h3>
+
+                        <p class="card-text">
+                            You must not use the platform for unlawful
+                            activity, unauthorized access, abuse,
+                            interference, malicious activity, fraud,
+                            harassment, or conduct that violates the
+                            rights of other people or organizations.
+                        </p>
+
+                    </article>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 03 / CONTENT
+                 ================================================== -->
+
+            <section
+                class="section section-lg"
+                id="content"
+                data-section="content"
+            >
+
+                <div class="section-header">
+
+                    <span class="eyebrow">
+                        03 / Content
+                    </span>
+
+                    <h2 class="section-title">
+                        Platform Content
+                    </h2>
+
+                    <p class="section-subtitle">
+                        Portfolio information and project materials
+                        are provided primarily for informational,
+                        educational, and professional purposes.
+                    </p>
+
+                </div>
+
+
+                <div class="grid-3">
+
+
+                    <article class="feature-card">
+
+                        <span
+                            class="feature-icon"
+                            aria-hidden="true"
+                        >
+                            01
+                        </span>
+
+                        <h3 class="feature-title">
+                            Portfolio
+                        </h3>
+
+                        <p class="feature-text">
+                            Portfolio descriptions, technical
+                            information, project information, and
+                            other materials may be updated as the
+                            portfolio develops.
+                        </p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+
+                        <span
+                            class="feature-icon"
+                            aria-hidden="true"
+                        >
+                            02
+                        </span>
+
+                        <h3 class="feature-title">
+                            Accuracy
+                        </h3>
+
+                        <p class="feature-text">
+                            Reasonable effort may be made to keep
+                            published information accurate, but
+                            information may change without prior notice.
+                        </p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+
+                        <span
+                            class="feature-icon"
+                            aria-hidden="true"
+                        >
+                            03
+                        </span>
+
+                        <h3 class="feature-title">
+                            Intellectual Property
+                        </h3>
+
+                        <p class="feature-text">
+                            Content may be protected by applicable
+                            intellectual-property laws. Do not copy,
+                            modify, publish, or redistribute protected
+                            material without appropriate permission.
+                        </p>
+
+                    </article>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 04 / SECURITY
+                 ================================================== -->
+
+            <section
+                class="section section-lg"
+                id="security"
+                data-section="security"
+            >
+
+                <div class="section-header">
+
+                    <span class="eyebrow">
+                        04 / Security
+                    </span>
+
+                    <h2 class="section-title">
+                        Security and Responsible Access
+                    </h2>
+
+                    <p class="section-subtitle">
+                        Security-related activity must always be
+                        authorized, controlled, and performed
+                        responsibly.
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <p class="card-text">
+                        Nothing on this platform grants permission
+                        to access, scan, test, exploit, monitor,
+                        modify, disrupt, or interfere with systems,
+                        accounts, networks, applications, devices,
+                        services, or data that you do not own or
+                        have explicit authorization to assess.
+                    </p>
+
+
+                    <p class="card-text">
+                        Any security demonstration, assessment, or
+                        testing activity must remain within the
+                        authorized target, scope, method, time
+                        period, and conditions established by the
+                        appropriate owner or authorized party.
+                    </p>
+
+
+                    <p class="card-text">
+                        Users are responsible for obtaining the
+                        permissions required for activities they
+                        perform and for complying with applicable
+                        laws, regulations, contracts, and policies.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 05 / AVAILABILITY
+                 ================================================== -->
+
+            <section
+                class="section section-lg"
+                id="availability"
+                data-section="availability"
+            >
+
+                <div class="section-header">
+
+                    <span class="eyebrow">
+                        05 / Availability
+                    </span>
+
+                    <h2 class="section-title">
+                        Service Availability
+                    </h2>
+
+                    <p class="section-subtitle">
+                        The platform may change, be updated, or
+                        become temporarily unavailable.
+                    </p>
+
+                </div>
+
+
+                <div class="grid-2">
+
+
+                    <article class="card">
+
+                        <span class="card-label">
+                            Changes
+                        </span>
+
+                        <h3 class="card-title">
+                            Platform Updates
+                        </h3>
+
+                        <p class="card-text">
+                            Features, interfaces, technical
+                            components, content, and services may
+                            be changed, improved, suspended, or
+                            discontinued when necessary.
+                        </p>
+
+                    </article>
+
+
+                    <article class="card">
+
+                        <span class="card-label">
+                            Availability
+                        </span>
+
+                        <h3 class="card-title">
+                            No Guaranteed Uptime
+                        </h3>
+
+                        <p class="card-text">
+                            Reasonable effort may be made to maintain
+                            availability, but continuous,
+                            uninterrupted, or error-free operation
+                            cannot be guaranteed.
+                        </p>
+
+                    </article>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 06 / EXTERNAL SERVICES
+                 ================================================== -->
+
+            <section
+                class="section section-lg"
+                id="external"
+                data-section="external"
+            >
+
+                <div class="section-header">
+
+                    <span class="eyebrow">
+                        06 / External Services
+                    </span>
+
+                    <h2 class="section-title">
+                        Third-Party Services and Links
+                    </h2>
+
+                    <p class="section-subtitle">
+                        The platform may use or link to services
+                        operated by third parties.
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <p class="card-text">
+                        External services may include hosting,
+                        infrastructure, source-control platforms,
+                        communication services, analytics,
+                        security services, or other third-party
+                        technologies used by a particular deployment.
+                    </p>
+
+
+                    <p class="card-text">
+                        Third-party services operate under their own
+                        terms, policies, and conditions. CyberNexus
+                        does not control external services and cannot
+                        guarantee their availability, security,
+                        content, or policies.
+                    </p>
+
+
+                    <p class="card-text">
+                        Links to external websites are provided for
+                        convenience and do not necessarily constitute
+                        endorsement of their content or services.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 07 / LIMITATIONS
+                 ================================================== -->
+
+            <section
+                class="section section-lg"
+                id="limitations"
+                data-section="limitations"
+            >
+
+                <div class="section-header">
+
+                    <span class="eyebrow">
+                        07 / Limitations
+                    </span>
+
+                    <h2 class="section-title">
+                        Information and Service Limitations
+                    </h2>
+
+                    <p class="section-subtitle">
+                        Portfolio information and platform features
+                        should be evaluated according to their
+                        intended purpose.
+                    </p>
+
+                </div>
+
+
+                <div class="grid-3">
+
+
+                    <article class="feature-card">
+
+                        <span
+                            class="feature-icon"
+                            aria-hidden="true"
+                        >
+                            01
+                        </span>
+
+                        <h3 class="feature-title">
+                            Informational
+                        </h3>
+
+                        <p class="feature-text">
+                            Portfolio and technical information is
+                            generally provided for informational,
+                            educational, or professional purposes.
+                        </p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+
+                        <span
+                            class="feature-icon"
+                            aria-hidden="true"
+                        >
+                            02
+                        </span>
+
+                        <h3 class="feature-title">
+                            No Guarantee
+                        </h3>
+
+                        <p class="feature-text">
+                            Information and platform functionality
+                            are provided according to the current
+                            deployment and may contain limitations,
+                            interruptions, or errors.
+                        </p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+
+                        <span
+                            class="feature-icon"
+                            aria-hidden="true"
+                        >
+                            03
+                        </span>
+
+                        <h3 class="feature-title">
+                            User Responsibility
+                        </h3>
+
+                        <p class="feature-text">
+                            Users are responsible for how they use
+                            information, services, links, and
+                            technical materials made available
+                            through the platform.
+                        </p>
+
+                    </article>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 08 / CHANGES
+                 ================================================== -->
+
+            <section
+                class="section section-lg"
+                id="changes"
+                data-section="changes"
+            >
+
+                <div class="section-header">
+
+                    <span class="eyebrow">
+                        08 / Changes
+                    </span>
+
+                    <h2 class="section-title">
+                        Changes to These Terms
+                    </h2>
+
+                    <p class="section-subtitle">
+                        These Terms may be updated as the platform,
+                        services, technology, or applicable
+                        requirements change.
+                    </p>
+
+                </div>
+
+
+                <div class="card">
+
+                    <p class="card-text">
+                        Updated versions should be published through
+                        this page. The current version displayed on
+                        the platform is intended to describe the
+                        conditions applicable to the current
+                        deployment.
+                    </p>
+
+
+                    <p class="card-text">
+                        Continued use of the platform after an updated
+                        version is published may constitute acceptance
+                        of the updated terms to the extent permitted
+                        by applicable law.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 09 / CONTACT
+                 ================================================== -->
+
+            <section
+                class="section section-lg"
+                id="contact"
+                data-section="contact"
+            >
+
+                <div class="curved-panel">
+
+
+                    <div class="section-header">
+
+                        <span class="eyebrow">
+                            09 / Contact
+                        </span>
+
+                        <h2 class="section-title">
+                            Questions About These Terms?
+                        </h2>
+
+                        <p class="section-subtitle">
+                            Contact CyberNexus for questions about
+                            platform use, published information,
+                            or these Terms of Service.
+                        </p>
+
+                    </div>
+
+
+                    <div class="hero-actions">
+
+
+                        <a
+                            class="button button-primary"
+                            href="contact.html"
+                        >
+                            Contact CyberNexus
+                        </a>
+
+
+                        <a
+                            class="button button-secondary"
+                            href="privacy.html"
+                        >
+                            View Privacy
+                        </a>
+
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+    <!-- ========================================================
+         FOOTER
+         ======================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="footer-inner">
+
+
+            <div class="footer-brand">
+
+                <strong>
+                    CyberNexus PH
+                </strong>
+
+                <span>
+                    CyberNexus IT Portfolio Platform
+                </span>
+
+                <span>
+                    IT Portfolio by Mark C. Pangilinan
+                </span>
+
+            </div>
+
+
+            <div class="footer-meta">
+
+                <span>
+                    Terms of Service
+                </span>
+
+            </div>
+
+
+            <nav
+                class="footer-nav"
+                aria-label="Footer navigation"
+            >
+
+                <div class="footer-links">
+
+                    <a href="privacy.html">
+                        Privacy
                     </a>
 
-                    <a
-                        class="button button-secondary"
-                        href="privacy.html"
-                    >
-                        View Privacy
+                    <a href="contact.html">
+                        Contact
+                    </a>
+
+                    <a href="portfolio.html">
+                        Portfolio
                     </a>
 
                 </div>
 
-            </div>
+            </nav>
 
-        </section>
-
-    </main>
-
-</div>
-
-<footer class="site-footer">
-
-    <div class="footer-inner">
-
-        <div class="footer-brand">
-
-            <strong>
-                CyberNexus PH
-            </strong>
-
-            <span>
-                CyberNexus IT Portfolio Platform
-            </span>
-
-            <span>
-                IT Portfolio by Mark C. Pangilinan
-            </span>
 
         </div>
 
-        <div class="footer-meta">
+    </footer>
 
-            <span>
-                Terms of Service
-            </span>
 
-        </div>
+    <!-- ========================================================
+         CYBERNEXUS JAVASCRIPT CONFIGURATION
+         ======================================================== -->
 
-        <nav
-            class="footer-nav"
-            aria-label="Footer navigation"
-        >
+    <script>
+        window.__CYBERNEXUS_CONFIG__ = {
+            apiBaseUrl: "",
+            apiPrefix: "/api"
+        };
+    </script>
 
-            <div class="footer-links">
 
-                <a href="privacy.html">
-                    Privacy
-                </a>
+    <!-- ========================================================
+         CYBERNEXUS JAVASCRIPT ARCHITECTURE
 
-                <a href="contact.html">
-                    Contact
-                </a>
+         state
+           ↓
+         HTTP
+           ↓
+         API
+           ↓
+         Auth
+           ↓
+         Account
+           ↓
+         Web App
+           ↓
+         Chat / Voice
+         ======================================================== -->
 
-                <a href="portfolio.html">
-                    Portfolio
-                </a>
-
-            </div>
-
-        </nav>
-
-    </div>
-
-</footer>
-
-<script src="js/state.js" defer></script>
-<script src="js/http-user.js" defer></script>
-<script src="js/api-user.js" defer></script>
-<script src="js/auth-user.js" defer></script>
-<script src="js/account-user.js" defer></script>
-<script src="js/web-app.js" defer></script>
-<script src="js/chat.js" defer></script>
-<script src="js/voice.js" defer></script>
+    <script src="js/state.js" defer></script>
+    <script src="js/http-user.js" defer></script>
+    <script src="js/api-user.js" defer></script>
+    <script src="js/auth-user.js" defer></script>
+    <script src="js/account-user.js" defer></script>
+    <script src="js/web-app.js" defer></script>
+    <script src="js/chat.js" defer></script>
+    <script src="js/voice.js" defer></script>
 
 </body>
 
