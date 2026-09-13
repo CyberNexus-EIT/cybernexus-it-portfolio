@@ -14,51 +14,62 @@
  * - Padding values
  * - Gap values
  * - Section spacing
+ * - Page spacing
  * - Container spacing
  * - Stack spacing
  * - Inline spacing
+ * - Component spacing
  * - Spacing utility classes
  *
- * Do not place:
+ * Does NOT own:
  * - Colors
  * - Fonts
  * - Layout positioning
  * - Grid definitions
  * - Flex definitions
  * - Breakpoints
- * - Component-specific visual styling
+ * - Component visual styling
  */
 
 /* ============================================================
-   1. SPACING SYSTEM
+   1. BASE SPACING SYSTEM
    ============================================================ */
 
 :root {
 
-    /* Base Spacing Scale */
+    /* --------------------------------------------------------
+       Core Spacing Scale
+       -------------------------------------------------------- */
 
     --cn-space-0: 0;
+
     --cn-space-1: 0.25rem;
     --cn-space-2: 0.5rem;
     --cn-space-3: 0.75rem;
     --cn-space-4: 1rem;
+
     --cn-space-5: 1.25rem;
     --cn-space-6: 1.5rem;
     --cn-space-7: 1.75rem;
     --cn-space-8: 2rem;
+
     --cn-space-9: 2.25rem;
     --cn-space-10: 2.5rem;
     --cn-space-11: 2.75rem;
     --cn-space-12: 3rem;
+
     --cn-space-14: 3.5rem;
     --cn-space-16: 4rem;
+
     --cn-space-20: 5rem;
     --cn-space-24: 6rem;
     --cn-space-28: 7rem;
     --cn-space-32: 8rem;
 
 
-    /* Semantic Inline Spacing */
+    /* --------------------------------------------------------
+       Inline Spacing
+       -------------------------------------------------------- */
 
     --cn-space-inline-xs: var(--cn-space-1);
     --cn-space-inline-sm: var(--cn-space-2);
@@ -66,7 +77,9 @@
     --cn-space-inline-lg: var(--cn-space-4);
 
 
-    /* Semantic Stack Spacing */
+    /* --------------------------------------------------------
+       Stack Spacing
+       -------------------------------------------------------- */
 
     --cn-space-stack-xs: var(--cn-space-2);
     --cn-space-stack-sm: var(--cn-space-3);
@@ -75,7 +88,9 @@
     --cn-space-stack-xl: var(--cn-space-8);
 
 
-    /* Component Padding */
+    /* --------------------------------------------------------
+       Generic Component Padding
+       -------------------------------------------------------- */
 
     --cn-padding-xs: var(--cn-space-2);
     --cn-padding-sm: var(--cn-space-3);
@@ -84,14 +99,18 @@
     --cn-padding-xl: var(--cn-space-8);
 
 
-    /* Card Padding */
+    /* --------------------------------------------------------
+       Card Padding
+       -------------------------------------------------------- */
 
     --cn-card-padding-sm: var(--cn-space-4);
     --cn-card-padding-md: var(--cn-space-6);
     --cn-card-padding-lg: var(--cn-space-8);
 
 
-    /* Section Padding */
+    /* --------------------------------------------------------
+       Section Padding
+       -------------------------------------------------------- */
 
     --cn-section-padding-y-sm: var(--cn-space-8);
     --cn-section-padding-y-md: var(--cn-space-12);
@@ -103,47 +122,78 @@
     --cn-section-padding-x-lg: var(--cn-space-8);
 
 
-    /* Page Padding */
+    /* --------------------------------------------------------
+       Page Padding
+       -------------------------------------------------------- */
 
     --cn-page-padding-x: var(--cn-space-6);
     --cn-page-padding-y: var(--cn-space-8);
 
 
-    /* Navigation Spacing */
+    /* --------------------------------------------------------
+       Container Spacing
+       -------------------------------------------------------- */
+
+    --cn-container-padding-x: var(--cn-space-6);
+    --cn-container-padding-y: var(--cn-space-6);
+
+    --cn-container-gap: var(--cn-space-8);
+
+
+    /* --------------------------------------------------------
+       Navigation Spacing
+       -------------------------------------------------------- */
 
     --cn-nav-gap: var(--cn-space-2);
+
     --cn-nav-padding-x: var(--cn-space-2);
     --cn-nav-padding-y: var(--cn-space-2);
 
 
-    /* Header Spacing */
+    /* --------------------------------------------------------
+       Header Spacing
+       -------------------------------------------------------- */
 
     --cn-header-padding-x: var(--cn-space-6);
     --cn-header-padding-y: var(--cn-space-3);
 
+    --cn-header-gap: var(--cn-space-4);
 
-    /* Side Panel Spacing */
+
+    /* --------------------------------------------------------
+       Side Panel Spacing
+       -------------------------------------------------------- */
 
     --cn-panel-padding: var(--cn-space-4);
+
     --cn-panel-section-gap: var(--cn-space-6);
     --cn-panel-item-gap: var(--cn-space-2);
 
 
-    /* Form Spacing */
+    /* --------------------------------------------------------
+       Form Spacing
+       -------------------------------------------------------- */
 
     --cn-form-gap: var(--cn-space-5);
     --cn-form-field-gap: var(--cn-space-2);
     --cn-form-actions-gap: var(--cn-space-3);
 
+    --cn-form-label-gap: var(--cn-space-2);
+    --cn-form-help-gap: var(--cn-space-1);
 
-    /* Content Spacing */
+
+    /* --------------------------------------------------------
+       Content Spacing
+       -------------------------------------------------------- */
 
     --cn-content-gap: var(--cn-space-8);
     --cn-content-section-gap: var(--cn-space-12);
     --cn-content-block-gap: var(--cn-space-6);
 
 
-    /* Collection Spacing */
+    /* --------------------------------------------------------
+       Collection Spacing
+       -------------------------------------------------------- */
 
     --cn-grid-gap-xs: var(--cn-space-2);
     --cn-grid-gap-sm: var(--cn-space-4);
@@ -151,7 +201,9 @@
     --cn-grid-gap-lg: var(--cn-space-8);
 
 
-    /* Inline Element Spacing */
+    /* --------------------------------------------------------
+       Inline Element Spacing
+       -------------------------------------------------------- */
 
     --cn-inline-gap-xs: var(--cn-space-1);
     --cn-inline-gap-sm: var(--cn-space-2);
@@ -159,16 +211,22 @@
     --cn-inline-gap-lg: var(--cn-space-4);
 
 
-    /* Divider Spacing */
+    /* --------------------------------------------------------
+       Divider Spacing
+       -------------------------------------------------------- */
 
     --cn-divider-margin-y: var(--cn-space-6);
     --cn-divider-margin-x: 0;
 
 
-    /* Footer Spacing */
+    /* --------------------------------------------------------
+       Footer Spacing
+       -------------------------------------------------------- */
 
     --cn-footer-padding-y: var(--cn-space-8);
     --cn-footer-padding-x: var(--cn-space-6);
+
+    --cn-footer-gap: var(--cn-space-6);
 }
 
 
@@ -216,18 +274,34 @@ select {
 
 
 /* ============================================================
-   4. PAGE CONTENT SPACING
+   4. PAGE SPACING
    ============================================================ */
 
 .page-content {
     padding:
-        var(--cn-space-6)
+        var(--cn-page-padding-y)
         0;
 }
 
 
 /* ============================================================
-   5. SECTION SPACING
+   5. CONTAINER SPACING
+   ============================================================ */
+
+.container {
+    padding:
+        var(--cn-container-padding-y)
+        var(--cn-container-padding-x);
+}
+
+.container-content {
+    gap:
+        var(--cn-container-gap);
+}
+
+
+/* ============================================================
+   6. SECTION SPACING
    ============================================================ */
 
 .section {
@@ -237,99 +311,125 @@ select {
 }
 
 .section-sm {
-    padding-top: var(--cn-section-padding-y-sm);
-    padding-bottom: var(--cn-section-padding-y-sm);
+    padding-top:
+        var(--cn-section-padding-y-sm);
+
+    padding-bottom:
+        var(--cn-section-padding-y-sm);
 }
 
 .section-md {
-    padding-top: var(--cn-section-padding-y-md);
-    padding-bottom: var(--cn-section-padding-y-md);
+    padding-top:
+        var(--cn-section-padding-y-md);
+
+    padding-bottom:
+        var(--cn-section-padding-y-md);
 }
 
 .section-lg {
-    padding-top: var(--cn-section-padding-y-lg);
-    padding-bottom: var(--cn-section-padding-y-lg);
+    padding-top:
+        var(--cn-section-padding-y-lg);
+
+    padding-bottom:
+        var(--cn-section-padding-y-lg);
 }
 
 .section-xl {
-    padding-top: var(--cn-section-padding-y-xl);
-    padding-bottom: var(--cn-section-padding-y-xl);
+    padding-top:
+        var(--cn-section-padding-y-xl);
+
+    padding-bottom:
+        var(--cn-section-padding-y-xl);
 }
 
 
 /* ============================================================
-   6. SECTION CONTENT SPACING
+   7. SECTION CONTENT SPACING
    ============================================================ */
 
 .section-header {
-    margin-bottom: var(--cn-space-8);
+    margin-bottom:
+        var(--cn-space-8);
 }
 
 .section-title {
-    margin-bottom: var(--cn-space-3);
+    margin-bottom:
+        var(--cn-space-3);
 }
 
 .section-subtitle {
-    margin-top: var(--cn-space-2);
+    margin-top:
+        var(--cn-space-2);
 }
 
 .section-content {
-    margin-top: var(--cn-space-8);
+    margin-top:
+        var(--cn-space-8);
 }
 
 
 /* ============================================================
-   7. STACK SPACING
+   8. STACK SPACING
    ============================================================ */
 
 .stack-xs {
-    gap: var(--cn-space-stack-xs);
+    gap:
+        var(--cn-space-stack-xs);
 }
 
 .stack-sm {
-    gap: var(--cn-space-stack-sm);
+    gap:
+        var(--cn-space-stack-sm);
 }
 
 .stack-md {
-    gap: var(--cn-space-stack-md);
+    gap:
+        var(--cn-space-stack-md);
 }
 
 .stack-lg {
-    gap: var(--cn-space-stack-lg);
+    gap:
+        var(--cn-space-stack-lg);
 }
 
 .stack-xl {
-    gap: var(--cn-space-stack-xl);
+    gap:
+        var(--cn-space-stack-xl);
 }
 
 
 /* ============================================================
-   8. INLINE SPACING
+   9. INLINE SPACING
    ============================================================ */
 
 .inline-xs {
-    gap: var(--cn-inline-gap-xs);
+    gap:
+        var(--cn-inline-gap-xs);
 }
 
 .inline-sm {
-    gap: var(--cn-inline-gap-sm);
+    gap:
+        var(--cn-inline-gap-sm);
 }
 
 .inline-md {
-    gap: var(--cn-inline-gap-md);
+    gap:
+        var(--cn-inline-gap-md);
 }
 
 .inline-lg {
-    gap: var(--cn-inline-gap-lg);
+    gap:
+        var(--cn-inline-gap-lg);
 }
 
 
 /* ============================================================
-   9. NAVIGATION SPACING
+   10. NAVIGATION SPACING
    ============================================================ */
 
 .nav-list {
-    gap: var(--cn-nav-gap);
+    gap:
+        var(--cn-nav-gap);
 }
 
 .nav-link {
@@ -340,7 +440,7 @@ select {
 
 
 /* ============================================================
-   10. HEADER SPACING
+   11. HEADER SPACING
    ============================================================ */
 
 .site-header {
@@ -350,101 +450,121 @@ select {
 }
 
 .header-content {
-    gap: var(--cn-space-4);
+    gap:
+        var(--cn-header-gap);
 }
 
 
 /* ============================================================
-   11. SIDE PANEL SPACING
+   12. SIDE PANEL SPACING
    ============================================================ */
 
 .side-panel {
-    padding: var(--cn-panel-padding);
+    padding:
+        var(--cn-panel-padding);
 }
 
 .side-panel-section {
-    margin-bottom: var(--cn-panel-section-gap);
+    margin-bottom:
+        var(--cn-panel-section-gap);
 }
 
 .side-panel-list {
-    gap: var(--cn-panel-item-gap);
+    gap:
+        var(--cn-panel-item-gap);
 }
 
 
 /* ============================================================
-   12. CARD SPACING
+   13. CARD SPACING
    ============================================================ */
 
 .card {
-    padding: var(--cn-card-padding-md);
+    padding:
+        var(--cn-card-padding-md);
 }
 
 .card-sm {
-    padding: var(--cn-card-padding-sm);
+    padding:
+        var(--cn-card-padding-sm);
 }
 
 .card-lg {
-    padding: var(--cn-card-padding-lg);
+    padding:
+        var(--cn-card-padding-lg);
 }
 
 .card-header {
-    margin-bottom: var(--cn-space-4);
+    margin-bottom:
+        var(--cn-space-4);
 }
 
 .card-content {
-    margin-top: var(--cn-space-4);
+    margin-top:
+        var(--cn-space-4);
 }
 
 .card-footer {
-    margin-top: var(--cn-space-6);
+    margin-top:
+        var(--cn-space-6);
 }
 
 
 /* ============================================================
-   13. FORM SPACING
+   14. FORM SPACING
    ============================================================ */
 
 .form {
-    gap: var(--cn-form-gap);
+    gap:
+        var(--cn-form-gap);
 }
 
 .form-field {
-    gap: var(--cn-form-field-gap);
+    gap:
+        var(--cn-form-field-gap);
 }
 
 .form-actions {
-    gap: var(--cn-form-actions-gap);
-    margin-top: var(--cn-space-2);
+    gap:
+        var(--cn-form-actions-gap);
+
+    margin-top:
+        var(--cn-space-2);
 }
 
 
 /* ============================================================
-   14. LABEL / INPUT SPACING
+   15. LABEL / INPUT SPACING
    ============================================================ */
 
 .form-label {
-    margin-bottom: var(--cn-space-2);
+    margin-bottom:
+        var(--cn-form-label-gap);
 }
 
 .form-help {
-    margin-top: var(--cn-space-1);
+    margin-top:
+        var(--cn-form-help-gap);
 }
 
 
 /* ============================================================
-   15. CONTENT BLOCK SPACING
+   16. CONTENT BLOCK SPACING
    ============================================================ */
 
 .content {
-    gap: var(--cn-content-gap);
+    gap:
+        var(--cn-content-gap);
 }
 
 .content-section {
-    margin-bottom: var(--cn-content-section-gap);
+    margin-bottom:
+        var(--cn-content-section-gap);
 }
 
 .content-block {
-    margin-bottom: var(--cn-content-block-gap);
+    margin-bottom:
+        var(--cn-content-block-gap);
 }
 
 .content-block:last-child {
@@ -453,49 +573,57 @@ select {
 
 
 /* ============================================================
-   16. LIST SPACING
+   17. LIST SPACING
    ============================================================ */
 
 .list {
-    gap: var(--cn-space-3);
+    gap:
+        var(--cn-space-3);
 }
 
 .list-tight {
-    gap: var(--cn-space-2);
+    gap:
+        var(--cn-space-2);
 }
 
 .list-relaxed {
-    gap: var(--cn-space-5);
+    gap:
+        var(--cn-space-5);
 }
 
 
 /* ============================================================
-   17. GRID SPACING
+   18. GRID SPACING
    ============================================================ */
 
 .grid {
-    gap: var(--cn-grid-gap-md);
+    gap:
+        var(--cn-grid-gap-md);
 }
 
 .grid-xs {
-    gap: var(--cn-grid-gap-xs);
+    gap:
+        var(--cn-grid-gap-xs);
 }
 
 .grid-sm {
-    gap: var(--cn-grid-gap-sm);
+    gap:
+        var(--cn-grid-gap-sm);
 }
 
 .grid-md {
-    gap: var(--cn-grid-gap-md);
+    gap:
+        var(--cn-grid-gap-md);
 }
 
 .grid-lg {
-    gap: var(--cn-grid-gap-lg);
+    gap:
+        var(--cn-grid-gap-lg);
 }
 
 
 /* ============================================================
-   18. DIVIDER SPACING
+   19. DIVIDER SPACING
    ============================================================ */
 
 .divider {
@@ -506,7 +634,7 @@ select {
 
 
 /* ============================================================
-   19. FOOTER SPACING
+   20. FOOTER SPACING
    ============================================================ */
 
 .site-footer {
@@ -516,152 +644,129 @@ select {
 }
 
 .footer-content {
-    gap: var(--cn-space-6);
+    gap:
+        var(--cn-footer-gap);
 }
 
 
 /* ============================================================
-   20. MARGIN UTILITIES
+   21. MARGIN UTILITIES
    ============================================================ */
 
-.m-0 {
-    margin: var(--cn-space-0);
-}
-
-.m-1 {
-    margin: var(--cn-space-1);
-}
-
-.m-2 {
-    margin: var(--cn-space-2);
-}
-
-.m-3 {
-    margin: var(--cn-space-3);
-}
-
-.m-4 {
-    margin: var(--cn-space-4);
-}
-
-.m-6 {
-    margin: var(--cn-space-6);
-}
-
-.m-8 {
-    margin: var(--cn-space-8);
-}
+.m-0  { margin: var(--cn-space-0); }
+.m-1  { margin: var(--cn-space-1); }
+.m-2  { margin: var(--cn-space-2); }
+.m-3  { margin: var(--cn-space-3); }
+.m-4  { margin: var(--cn-space-4); }
+.m-5  { margin: var(--cn-space-5); }
+.m-6  { margin: var(--cn-space-6); }
+.m-8  { margin: var(--cn-space-8); }
+.m-10 { margin: var(--cn-space-10); }
+.m-12 { margin: var(--cn-space-12); }
+.m-14 { margin: var(--cn-space-14); }
+.m-16 { margin: var(--cn-space-16); }
+.m-20 { margin: var(--cn-space-20); }
+.m-24 { margin: var(--cn-space-24); }
+.m-28 { margin: var(--cn-space-28); }
+.m-32 { margin: var(--cn-space-32); }
 
 
 /* ============================================================
-   21. MARGIN-TOP UTILITIES
+   22. MARGIN-TOP UTILITIES
    ============================================================ */
 
-.mt-0 {
-    margin-top: var(--cn-space-0);
-}
-
-.mt-1 {
-    margin-top: var(--cn-space-1);
-}
-
-.mt-2 {
-    margin-top: var(--cn-space-2);
-}
-
-.mt-3 {
-    margin-top: var(--cn-space-3);
-}
-
-.mt-4 {
-    margin-top: var(--cn-space-4);
-}
-
-.mt-6 {
-    margin-top: var(--cn-space-6);
-}
-
-.mt-8 {
-    margin-top: var(--cn-space-8);
-}
-
-.mt-12 {
-    margin-top: var(--cn-space-12);
-}
+.mt-0  { margin-top: var(--cn-space-0); }
+.mt-1  { margin-top: var(--cn-space-1); }
+.mt-2  { margin-top: var(--cn-space-2); }
+.mt-3  { margin-top: var(--cn-space-3); }
+.mt-4  { margin-top: var(--cn-space-4); }
+.mt-5  { margin-top: var(--cn-space-5); }
+.mt-6  { margin-top: var(--cn-space-6); }
+.mt-8  { margin-top: var(--cn-space-8); }
+.mt-10 { margin-top: var(--cn-space-10); }
+.mt-12 { margin-top: var(--cn-space-12); }
+.mt-14 { margin-top: var(--cn-space-14); }
+.mt-16 { margin-top: var(--cn-space-16); }
+.mt-20 { margin-top: var(--cn-space-20); }
+.mt-24 { margin-top: var(--cn-space-24); }
+.mt-28 { margin-top: var(--cn-space-28); }
+.mt-32 { margin-top: var(--cn-space-32); }
 
 
 /* ============================================================
-   22. MARGIN-BOTTOM UTILITIES
+   23. MARGIN-BOTTOM UTILITIES
    ============================================================ */
 
-.mb-0 {
-    margin-bottom: var(--cn-space-0);
-}
-
-.mb-1 {
-    margin-bottom: var(--cn-space-1);
-}
-
-.mb-2 {
-    margin-bottom: var(--cn-space-2);
-}
-
-.mb-3 {
-    margin-bottom: var(--cn-space-3);
-}
-
-.mb-4 {
-    margin-bottom: var(--cn-space-4);
-}
-
-.mb-6 {
-    margin-bottom: var(--cn-space-6);
-}
-
-.mb-8 {
-    margin-bottom: var(--cn-space-8);
-}
-
-.mb-12 {
-    margin-bottom: var(--cn-space-12);
-}
+.mb-0  { margin-bottom: var(--cn-space-0); }
+.mb-1  { margin-bottom: var(--cn-space-1); }
+.mb-2  { margin-bottom: var(--cn-space-2); }
+.mb-3  { margin-bottom: var(--cn-space-3); }
+.mb-4  { margin-bottom: var(--cn-space-4); }
+.mb-5  { margin-bottom: var(--cn-space-5); }
+.mb-6  { margin-bottom: var(--cn-space-6); }
+.mb-8  { margin-bottom: var(--cn-space-8); }
+.mb-10 { margin-bottom: var(--cn-space-10); }
+.mb-12 { margin-bottom: var(--cn-space-12); }
+.mb-14 { margin-bottom: var(--cn-space-14); }
+.mb-16 { margin-bottom: var(--cn-space-16); }
+.mb-20 { margin-bottom: var(--cn-space-20); }
+.mb-24 { margin-bottom: var(--cn-space-24); }
+.mb-28 { margin-bottom: var(--cn-space-28); }
+.mb-32 { margin-bottom: var(--cn-space-32); }
 
 
 /* ============================================================
-   23. PADDING UTILITIES
+   24. MARGIN-X UTILITIES
    ============================================================ */
 
-.p-0 {
-    padding: var(--cn-space-0);
-}
-
-.p-1 {
-    padding: var(--cn-space-1);
-}
-
-.p-2 {
-    padding: var(--cn-space-2);
-}
-
-.p-3 {
-    padding: var(--cn-space-3);
-}
-
-.p-4 {
-    padding: var(--cn-space-4);
-}
-
-.p-6 {
-    padding: var(--cn-space-6);
-}
-
-.p-8 {
-    padding: var(--cn-space-8);
-}
+.mx-0 { margin-left: var(--cn-space-0); margin-right: var(--cn-space-0); }
+.mx-1 { margin-left: var(--cn-space-1); margin-right: var(--cn-space-1); }
+.mx-2 { margin-left: var(--cn-space-2); margin-right: var(--cn-space-2); }
+.mx-3 { margin-left: var(--cn-space-3); margin-right: var(--cn-space-3); }
+.mx-4 { margin-left: var(--cn-space-4); margin-right: var(--cn-space-4); }
+.mx-6 { margin-left: var(--cn-space-6); margin-right: var(--cn-space-6); }
+.mx-8 { margin-left: var(--cn-space-8); margin-right: var(--cn-space-8); }
+.mx-12 { margin-left: var(--cn-space-12); margin-right: var(--cn-space-12); }
 
 
 /* ============================================================
-   24. PADDING-X UTILITIES
+   25. MARGIN-Y UTILITIES
+   ============================================================ */
+
+.my-0 { margin-top: var(--cn-space-0); margin-bottom: var(--cn-space-0); }
+.my-1 { margin-top: var(--cn-space-1); margin-bottom: var(--cn-space-1); }
+.my-2 { margin-top: var(--cn-space-2); margin-bottom: var(--cn-space-2); }
+.my-3 { margin-top: var(--cn-space-3); margin-bottom: var(--cn-space-3); }
+.my-4 { margin-top: var(--cn-space-4); margin-bottom: var(--cn-space-4); }
+.my-6 { margin-top: var(--cn-space-6); margin-bottom: var(--cn-space-6); }
+.my-8 { margin-top: var(--cn-space-8); margin-bottom: var(--cn-space-8); }
+.my-12 { margin-top: var(--cn-space-12); margin-bottom: var(--cn-space-12); }
+
+
+/* ============================================================
+   26. PADDING UTILITIES
+   ============================================================ */
+
+.p-0  { padding: var(--cn-space-0); }
+.p-1  { padding: var(--cn-space-1); }
+.p-2  { padding: var(--cn-space-2); }
+.p-3  { padding: var(--cn-space-3); }
+.p-4  { padding: var(--cn-space-4); }
+.p-5  { padding: var(--cn-space-5); }
+.p-6  { padding: var(--cn-space-6); }
+.p-8  { padding: var(--cn-space-8); }
+.p-10 { padding: var(--cn-space-10); }
+.p-12 { padding: var(--cn-space-12); }
+.p-14 { padding: var(--cn-space-14); }
+.p-16 { padding: var(--cn-space-16); }
+.p-20 { padding: var(--cn-space-20); }
+.p-24 { padding: var(--cn-space-24); }
+.p-28 { padding: var(--cn-space-28); }
+.p-32 { padding: var(--cn-space-32); }
+
+
+/* ============================================================
+   27. PADDING-X UTILITIES
    ============================================================ */
 
 .px-0 {
@@ -669,9 +774,19 @@ select {
     padding-right: var(--cn-space-0);
 }
 
+.px-1 {
+    padding-left: var(--cn-space-1);
+    padding-right: var(--cn-space-1);
+}
+
 .px-2 {
     padding-left: var(--cn-space-2);
     padding-right: var(--cn-space-2);
+}
+
+.px-3 {
+    padding-left: var(--cn-space-3);
+    padding-right: var(--cn-space-3);
 }
 
 .px-4 {
@@ -689,9 +804,19 @@ select {
     padding-right: var(--cn-space-8);
 }
 
+.px-12 {
+    padding-left: var(--cn-space-12);
+    padding-right: var(--cn-space-12);
+}
+
+.px-16 {
+    padding-left: var(--cn-space-16);
+    padding-right: var(--cn-space-16);
+}
+
 
 /* ============================================================
-   25. PADDING-Y UTILITIES
+   28. PADDING-Y UTILITIES
    ============================================================ */
 
 .py-0 {
@@ -699,9 +824,19 @@ select {
     padding-bottom: var(--cn-space-0);
 }
 
+.py-1 {
+    padding-top: var(--cn-space-1);
+    padding-bottom: var(--cn-space-1);
+}
+
 .py-2 {
     padding-top: var(--cn-space-2);
     padding-bottom: var(--cn-space-2);
+}
+
+.py-3 {
+    padding-top: var(--cn-space-3);
+    padding-bottom: var(--cn-space-3);
 }
 
 .py-4 {
@@ -724,92 +859,173 @@ select {
     padding-bottom: var(--cn-space-12);
 }
 
+.py-16 {
+    padding-top: var(--cn-space-16);
+    padding-bottom: var(--cn-space-16);
+}
+
+.py-20 {
+    padding-top: var(--cn-space-20);
+    padding-bottom: var(--cn-space-20);
+}
+
 
 /* ============================================================
-   26. GAP UTILITIES
+   29. LOGICAL INLINE PADDING
    ============================================================ */
 
-.gap-0 {
-    gap: var(--cn-space-0);
-}
+.pis-0 { padding-inline-start: var(--cn-space-0); }
+.pis-1 { padding-inline-start: var(--cn-space-1); }
+.pis-2 { padding-inline-start: var(--cn-space-2); }
+.pis-4 { padding-inline-start: var(--cn-space-4); }
+.pis-6 { padding-inline-start: var(--cn-space-6); }
+.pis-8 { padding-inline-start: var(--cn-space-8); }
 
-.gap-1 {
-    gap: var(--cn-space-1);
-}
-
-.gap-2 {
-    gap: var(--cn-space-2);
-}
-
-.gap-3 {
-    gap: var(--cn-space-3);
-}
-
-.gap-4 {
-    gap: var(--cn-space-4);
-}
-
-.gap-6 {
-    gap: var(--cn-space-6);
-}
-
-.gap-8 {
-    gap: var(--cn-space-8);
-}
-
-.gap-12 {
-    gap: var(--cn-space-12);
-}
+.pie-0 { padding-inline-end: var(--cn-space-0); }
+.pie-1 { padding-inline-end: var(--cn-space-1); }
+.pie-2 { padding-inline-end: var(--cn-space-2); }
+.pie-4 { padding-inline-end: var(--cn-space-4); }
+.pie-6 { padding-inline-end: var(--cn-space-6); }
+.pie-8 { padding-inline-end: var(--cn-space-8); }
 
 
 /* ============================================================
-   27. INLINE GAP UTILITIES
+   30. GAP UTILITIES
+   ============================================================ */
+
+.gap-0  { gap: var(--cn-space-0); }
+.gap-1  { gap: var(--cn-space-1); }
+.gap-2  { gap: var(--cn-space-2); }
+.gap-3  { gap: var(--cn-space-3); }
+.gap-4  { gap: var(--cn-space-4); }
+.gap-5  { gap: var(--cn-space-5); }
+.gap-6  { gap: var(--cn-space-6); }
+.gap-8  { gap: var(--cn-space-8); }
+.gap-10 { gap: var(--cn-space-10); }
+.gap-12 { gap: var(--cn-space-12); }
+.gap-14 { gap: var(--cn-space-14); }
+.gap-16 { gap: var(--cn-space-16); }
+
+
+/* ============================================================
+   31. COLUMN GAP UTILITIES
    ============================================================ */
 
 .gap-inline-xs {
-    column-gap: var(--cn-inline-gap-xs);
+    column-gap:
+        var(--cn-inline-gap-xs);
 }
 
 .gap-inline-sm {
-    column-gap: var(--cn-inline-gap-sm);
+    column-gap:
+        var(--cn-inline-gap-sm);
 }
 
 .gap-inline-md {
-    column-gap: var(--cn-inline-gap-md);
+    column-gap:
+        var(--cn-inline-gap-md);
 }
 
 .gap-inline-lg {
-    column-gap: var(--cn-inline-gap-lg);
+    column-gap:
+        var(--cn-inline-gap-lg);
 }
 
 
 /* ============================================================
-   28. STACK GAP UTILITIES
+   32. ROW GAP UTILITIES
    ============================================================ */
 
 .gap-stack-xs {
-    row-gap: var(--cn-space-stack-xs);
+    row-gap:
+        var(--cn-space-stack-xs);
 }
 
 .gap-stack-sm {
-    row-gap: var(--cn-space-stack-sm);
+    row-gap:
+        var(--cn-space-stack-sm);
 }
 
 .gap-stack-md {
-    row-gap: var(--cn-space-stack-md);
+    row-gap:
+        var(--cn-space-stack-md);
 }
 
 .gap-stack-lg {
-    row-gap: var(--cn-space-stack-lg);
+    row-gap:
+        var(--cn-space-stack-lg);
 }
 
 .gap-stack-xl {
-    row-gap: var(--cn-space-stack-xl);
+    row-gap:
+        var(--cn-space-stack-xl);
 }
 
 
 /* ============================================================
-   29. AUTO SPACING
+   33. SPACE-Y UTILITIES
+   ============================================================ */
+
+.space-y-1 > * + * {
+    margin-top: var(--cn-space-1);
+}
+
+.space-y-2 > * + * {
+    margin-top: var(--cn-space-2);
+}
+
+.space-y-3 > * + * {
+    margin-top: var(--cn-space-3);
+}
+
+.space-y-4 > * + * {
+    margin-top: var(--cn-space-4);
+}
+
+.space-y-6 > * + * {
+    margin-top: var(--cn-space-6);
+}
+
+.space-y-8 > * + * {
+    margin-top: var(--cn-space-8);
+}
+
+.space-y-12 > * + * {
+    margin-top: var(--cn-space-12);
+}
+
+
+/* ============================================================
+   34. SPACE-X UTILITIES
+   ============================================================ */
+
+.space-x-1 > * + * {
+    margin-inline-start: var(--cn-space-1);
+}
+
+.space-x-2 > * + * {
+    margin-inline-start: var(--cn-space-2);
+}
+
+.space-x-3 > * + * {
+    margin-inline-start: var(--cn-space-3);
+}
+
+.space-x-4 > * + * {
+    margin-inline-start: var(--cn-space-4);
+}
+
+.space-x-6 > * + * {
+    margin-inline-start: var(--cn-space-6);
+}
+
+.space-x-8 > * + * {
+    margin-inline-start: var(--cn-space-8);
+}
+
+
+/* ============================================================
+   35. AUTO SPACING
    ============================================================ */
 
 .mt-auto {
@@ -833,21 +1049,81 @@ select {
     margin-right: auto;
 }
 
+.ms-auto {
+    margin-inline-start: auto;
+}
+
+.me-auto {
+    margin-inline-end: auto;
+
+}
+
 
 /* ============================================================
-   30. FULL SECTION SPACING
+   36. FULL SECTION SPACING
    ============================================================ */
 
 .full-section {
-    padding-left: var(--cn-section-padding-x-md);
-    padding-right: var(--cn-section-padding-x-md);
+    padding-left:
+        var(--cn-section-padding-x-md);
+
+    padding-right:
+        var(--cn-section-padding-x-md);
 }
 
 
 /* ============================================================
-   31. SAFE CONTENT SPACING
+   37. SAFE CONTENT SPACING
    ============================================================ */
 
 .safe-content {
-    padding: var(--cn-space-4);
+    padding:
+        var(--cn-space-4);
 }
+
+
+/* ============================================================
+   38. SPACING RESET UTILITIES
+   ============================================================ */
+
+.m-0-auto {
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.px-safe {
+    padding-left:
+        var(--cn-page-padding-x);
+
+    padding-right:
+        var(--cn-page-padding-x);
+}
+
+
+/* ============================================================
+   39. FIRST / LAST CHILD SPACING HELPERS
+   ============================================================ */
+
+.stack > :first-child,
+.content-block > :first-child {
+    margin-top: 0;
+}
+
+.stack > :last-child,
+.content-block > :last-child {
+    margin-bottom: 0;
+}
+
+
+/* ============================================================
+   40. ACCESSIBILITY / REDUCED MOTION
+   ============================================================ */
+
+/*
+ * No visual or motion rules belong here.
+ *
+ * Responsive and reduced-motion behavior belongs to
+ * responsive.css.
+ */

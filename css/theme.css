@@ -9,16 +9,18 @@
  * Centralized CyberNexus visual theme and design tokens.
  *
  * Responsibility:
- * - Colors
- * - Backgrounds
+ * - Brand colors
+ * - Semantic colors
+ * - Backgrounds and surfaces
  * - Borders
- * - Shadows
- * - Glows
- * - Surface tokens
- * - Interaction-state colors
- * - Theme-level visual variables
+ * - Gradients
+ * - Shadows and glows
+ * - Focus and selection
+ * - Scrollbar theme
+ * - Decorative theme values
+ * - Radius, opacity, transitions, and layers
  *
- * Do not place:
+ * Does NOT own:
  * - Page layouts
  * - Responsive rules
  * - Typography rules
@@ -33,16 +35,12 @@
 :root {
 
     /* --------------------------------------------------------
-       CyberNexus Brand Colors
+       Brand Colors
        -------------------------------------------------------- */
 
     --cn-black: #03070b;
     --cn-deep: #050b10;
     --cn-dark: #071018;
-
-    --cn-surface: #0a151d;
-    --cn-surface-raised: #0d1b25;
-    --cn-surface-bright: #11232f;
 
     --cn-green: #35e58b;
     --cn-green-soft: #72f2ad;
@@ -55,6 +53,15 @@
     --cn-purple: #a98bff;
     --cn-purple-soft: #c7b5ff;
     --cn-purple-dark: #8063e6;
+
+
+    /* --------------------------------------------------------
+       Surface Colors
+       -------------------------------------------------------- */
+
+    --cn-surface: #0a151d;
+    --cn-surface-raised: #0d1b25;
+    --cn-surface-bright: #11232f;
 
 
     /* --------------------------------------------------------
@@ -77,15 +84,35 @@
        Semantic Colors
        -------------------------------------------------------- */
 
-    --cn-success: #35e58b;
-    --cn-info: #55d9ff;
+    --cn-success: var(--cn-green);
+    --cn-info: var(--cn-cyan);
     --cn-warning: #ffd166;
     --cn-danger: #ff667a;
-    --cn-neutral: #8da1aa;
+    --cn-neutral: var(--cn-text-muted);
 
 
     /* --------------------------------------------------------
-       System Status Colors
+       Semantic Backgrounds
+       -------------------------------------------------------- */
+
+    --cn-success-bg:
+        rgba(53, 229, 139, 0.10);
+
+    --cn-info-bg:
+        rgba(85, 217, 255, 0.10);
+
+    --cn-warning-bg:
+        rgba(255, 209, 102, 0.10);
+
+    --cn-danger-bg:
+        rgba(255, 102, 122, 0.10);
+
+    --cn-neutral-bg:
+        rgba(141, 161, 170, 0.08);
+
+
+    /* --------------------------------------------------------
+       System Status
        -------------------------------------------------------- */
 
     --cn-status-online: var(--cn-success);
@@ -102,13 +129,23 @@
     --cn-bg-secondary: var(--cn-dark);
     --cn-bg-tertiary: var(--cn-surface);
 
-    --cn-bg-header: rgba(3, 7, 11, 0.92);
-    --cn-bg-panel: rgba(7, 16, 24, 0.94);
-    --cn-bg-card: rgba(10, 21, 29, 0.88);
-    --cn-bg-card-hover: rgba(17, 35, 47, 0.94);
+    --cn-bg-header:
+        rgba(3, 7, 11, 0.92);
 
-    --cn-bg-input: rgba(5, 11, 16, 0.92);
-    --cn-bg-overlay: rgba(3, 7, 11, 0.78);
+    --cn-bg-panel:
+        rgba(7, 16, 24, 0.94);
+
+    --cn-bg-card:
+        rgba(10, 21, 29, 0.88);
+
+    --cn-bg-card-hover:
+        rgba(17, 35, 47, 0.94);
+
+    --cn-bg-input:
+        rgba(5, 11, 16, 0.92);
+
+    --cn-bg-overlay:
+        rgba(3, 7, 11, 0.78);
 
 
     /* --------------------------------------------------------
@@ -116,10 +153,24 @@
        -------------------------------------------------------- */
 
     --cn-border-default: var(--cn-border);
+    --cn-border-subtle: var(--cn-border-soft);
     --cn-border-hover: var(--cn-border-strong);
     --cn-border-active: var(--cn-green);
     --cn-border-focus: var(--cn-cyan);
     --cn-border-danger: var(--cn-danger);
+
+
+    /* --------------------------------------------------------
+       Interaction Colors
+       -------------------------------------------------------- */
+
+    --cn-hover-color: var(--cn-green);
+    --cn-active-color: var(--cn-cyan);
+    --cn-focus-color: var(--cn-cyan);
+    --cn-disabled-color: var(--cn-text-dim);
+
+    --cn-link-color: var(--cn-cyan);
+    --cn-link-hover: var(--cn-green);
 
 
     /* --------------------------------------------------------
@@ -162,11 +213,6 @@
             rgba(85, 217, 255, 0.07),
             transparent 70%
         );
-
-
-    /* --------------------------------------------------------
-       Text Gradient
-       -------------------------------------------------------- */
 
     --cn-gradient-text:
         linear-gradient(
@@ -220,28 +266,43 @@
 
 
     /* --------------------------------------------------------
-       Focus
+       Focus System
        -------------------------------------------------------- */
 
     --cn-focus-ring:
         0 0 0 3px rgba(85, 217, 255, 0.16);
+
+    --cn-focus-outline:
+        2px solid var(--cn-focus-color);
+
+    --cn-focus-offset: 2px;
 
 
     /* --------------------------------------------------------
        Selection
        -------------------------------------------------------- */
 
-    --cn-selection-bg: rgba(53, 229, 139, 0.25);
-    --cn-selection-text: var(--cn-white);
+    --cn-selection-bg:
+        rgba(53, 229, 139, 0.25);
+
+    --cn-selection-text:
+        var(--cn-white);
 
 
     /* --------------------------------------------------------
        Scrollbar
        -------------------------------------------------------- */
 
-    --cn-scrollbar-track: var(--cn-black);
-    --cn-scrollbar-thumb: var(--cn-border-strong);
-    --cn-scrollbar-thumb-hover: var(--cn-green);
+    --cn-scrollbar-size: 10px;
+
+    --cn-scrollbar-track:
+        var(--cn-black);
+
+    --cn-scrollbar-thumb:
+        var(--cn-border-strong);
+
+    --cn-scrollbar-thumb-hover:
+        var(--cn-green);
 
 
     /* --------------------------------------------------------
@@ -255,7 +316,7 @@
 
 
     /* --------------------------------------------------------
-       Decorative Lines
+       Decorative Line
        -------------------------------------------------------- */
 
     --cn-line:
@@ -343,8 +404,7 @@ html {
    ============================================================ */
 
 body {
-    background:
-        var(--cn-gradient-dark);
+    background: var(--cn-gradient-dark);
     color: var(--cn-text);
 }
 
@@ -364,8 +424,8 @@ body {
    ============================================================ */
 
 :focus-visible {
-    outline: 2px solid var(--cn-cyan);
-    outline-offset: 2px;
+    outline: var(--cn-focus-outline);
+    outline-offset: var(--cn-focus-offset);
     box-shadow: var(--cn-focus-ring);
 }
 
@@ -383,8 +443,8 @@ body {
 }
 
 ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: var(--cn-scrollbar-size);
+    height: var(--cn-scrollbar-size);
 }
 
 ::-webkit-scrollbar-track {
@@ -393,17 +453,21 @@ body {
 
 ::-webkit-scrollbar-thumb {
     background: var(--cn-scrollbar-thumb);
-    border: 2px solid var(--cn-scrollbar-track);
-    border-radius: var(--cn-radius-pill);
+    border:
+        2px solid
+        var(--cn-scrollbar-track);
+    border-radius:
+        var(--cn-radius-pill);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--cn-scrollbar-thumb-hover);
+    background:
+        var(--cn-scrollbar-thumb-hover);
 }
 
 
 /* ============================================================
-   7. CYBERNEXUS TEXT THEME UTILITIES
+   7. CYBERNEXUS TEXT UTILITIES
    ============================================================ */
 
 .cn-text-green {
@@ -440,9 +504,12 @@ body {
    ============================================================ */
 
 .cn-gradient-text {
-    background: var(--cn-gradient-text);
+    background:
+        var(--cn-gradient-text);
+
     background-clip: text;
     -webkit-background-clip: text;
+
     color: transparent;
 }
 
@@ -452,14 +519,24 @@ body {
    ============================================================ */
 
 .cn-surface {
-    background: var(--cn-bg-card);
-    border: 1px solid var(--cn-border-default);
+    background:
+        var(--cn-bg-card);
+
+    border:
+        1px solid
+        var(--cn-border-default);
 }
 
 .cn-surface-raised {
-    background: var(--cn-surface-raised);
-    border: 1px solid var(--cn-border-default);
-    box-shadow: var(--cn-shadow-sm);
+    background:
+        var(--cn-surface-raised);
+
+    border:
+        1px solid
+        var(--cn-border-default);
+
+    box-shadow:
+        var(--cn-shadow-sm);
 }
 
 
@@ -468,15 +545,18 @@ body {
    ============================================================ */
 
 .cn-glow-green {
-    box-shadow: var(--cn-glow-green);
+    box-shadow:
+        var(--cn-glow-green);
 }
 
 .cn-glow-cyan {
-    box-shadow: var(--cn-glow-cyan);
+    box-shadow:
+        var(--cn-glow-cyan);
 }
 
 .cn-glow-purple {
-    box-shadow: var(--cn-glow-purple);
+    box-shadow:
+        var(--cn-glow-purple);
 }
 
 

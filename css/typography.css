@@ -6,8 +6,8 @@
  *
  * File: typography.css
  * Purpose:
- * Centralized typography system for the entire CyberNexus
- * IT Portfolio.
+ * Centralized typography system for the CyberNexus
+ * IT Portfolio Platform.
  *
  * Responsibility:
  * - Font families
@@ -17,27 +17,32 @@
  * - Letter spacing
  * - Text hierarchy
  * - Heading hierarchy
- * - Navigation text
- * - Labels
- * - Form text
- * - Code/technical text
+ * - Navigation typography
+ * - Form typography
+ * - Status and label typography
+ * - Technical/code typography
+ * - Typography-only utilities
  *
- * Do not place:
+ * Does NOT own:
  * - Colors
  * - Margins
  * - Padding
- * - Layout rules
- * - Breakpoints
- * - Component positioning
+ * - Layout
+ * - Positioning
+ * - Responsive rules
+ * - Component dimensions
  */
 
 /* ============================================================
-   1. FONT FAMILY SYSTEM
+   1. TYPOGRAPHY TOKENS
    ============================================================ */
 
 :root {
 
-    /* Primary Interface Font */
+    /* --------------------------------------------------------
+       Font Families
+       -------------------------------------------------------- */
+
     --cn-font-sans:
         "Inter",
         "Segoe UI",
@@ -46,7 +51,6 @@
         Arial,
         sans-serif;
 
-    /* Technical / Monospace Font */
     --cn-font-mono:
         "JetBrains Mono",
         "Fira Code",
@@ -56,18 +60,25 @@
         "Liberation Mono",
         monospace;
 
-    /* Display Font */
     --cn-font-display:
         var(--cn-font-sans);
 
-    /* Font Weight System */
+
+    /* --------------------------------------------------------
+       Font Weights
+       -------------------------------------------------------- */
+
     --cn-weight-regular: 400;
     --cn-weight-medium: 500;
     --cn-weight-semibold: 600;
     --cn-weight-bold: 700;
     --cn-weight-extrabold: 800;
 
-    /* Base Font System */
+
+    /* --------------------------------------------------------
+       Root / Base Typography
+       -------------------------------------------------------- */
+
     --cn-font-size-root: 16px;
     --cn-font-size-base: 1rem;
 
@@ -76,14 +87,22 @@
     --cn-line-height-normal: 1.5;
     --cn-line-height-relaxed: 1.7;
 
-    /* Letter Spacing */
+
+    /* --------------------------------------------------------
+       Letter Spacing
+       -------------------------------------------------------- */
+
     --cn-letter-tight: -0.025em;
     --cn-letter-normal: 0;
     --cn-letter-wide: 0.025em;
     --cn-letter-wider: 0.06em;
     --cn-letter-caps: 0.08em;
 
-    /* Text Scale */
+
+    /* --------------------------------------------------------
+       Text Scale
+       -------------------------------------------------------- */
+
     --cn-text-xs: 0.75rem;
     --cn-text-sm: 0.875rem;
     --cn-text-md: 1rem;
@@ -95,31 +114,70 @@
     --cn-text-5xl: 3rem;
     --cn-text-6xl: 3.75rem;
 
-    /* Heading Scale */
-    --cn-heading-1: 3rem;
-    --cn-heading-2: 2.25rem;
-    --cn-heading-3: 1.875rem;
-    --cn-heading-4: 1.5rem;
-    --cn-heading-5: 1.25rem;
-    --cn-heading-6: 1.125rem;
 
-    /* Navigation Typography */
+    /* --------------------------------------------------------
+       Heading Scale
+       -------------------------------------------------------- */
+
+    --cn-heading-1: var(--cn-text-5xl);
+    --cn-heading-2: var(--cn-text-4xl);
+    --cn-heading-3: var(--cn-text-3xl);
+    --cn-heading-4: var(--cn-text-2xl);
+    --cn-heading-5: var(--cn-text-xl);
+    --cn-heading-6: var(--cn-text-lg);
+
+
+    /* --------------------------------------------------------
+       Navigation Typography
+       -------------------------------------------------------- */
+
     --cn-nav-size: 0.9rem;
     --cn-nav-weight: var(--cn-weight-semibold);
-    --cn-nav-spacing: 0.025em;
+    --cn-nav-spacing: var(--cn-letter-wide);
 
-    /* Label Typography */
-    --cn-label-size: 0.75rem;
+
+    /* --------------------------------------------------------
+       Label Typography
+       -------------------------------------------------------- */
+
+    --cn-label-size: var(--cn-text-xs);
     --cn-label-weight: var(--cn-weight-semibold);
     --cn-label-spacing: var(--cn-letter-wide);
+    --cn-label-line-height: 1.4;
 
-    /* Caption / System Typography */
-    --cn-caption-size: 0.75rem;
+
+    /* --------------------------------------------------------
+       Caption / Metadata
+       -------------------------------------------------------- */
+
+    --cn-caption-size: var(--cn-text-xs);
     --cn-caption-line-height: 1.4;
 
-    /* Code Typography */
-    --cn-code-size: 0.875rem;
+
+    /* --------------------------------------------------------
+       Code / Technical Typography
+       -------------------------------------------------------- */
+
+    --cn-code-size: var(--cn-text-sm);
     --cn-code-line-height: 1.6;
+    --cn-code-weight: var(--cn-weight-regular);
+
+
+    /* --------------------------------------------------------
+       Button Typography
+       -------------------------------------------------------- */
+
+    --cn-button-size: var(--cn-text-sm);
+    --cn-button-weight: var(--cn-weight-semibold);
+    --cn-button-line-height: 1.2;
+
+
+    /* --------------------------------------------------------
+       Table Typography
+       -------------------------------------------------------- */
+
+    --cn-table-size: var(--cn-text-sm);
+    --cn-table-line-height: var(--cn-line-height-normal);
 }
 
 
@@ -129,14 +187,24 @@
 
 html {
     font-family: var(--cn-font-sans);
-    font-size: var(--cn-font-size-root);
-    font-weight: var(--cn-weight-regular);
-    line-height: var(--cn-line-height-normal);
 
-    text-rendering: optimizeLegibility;
+    font-size:
+        var(--cn-font-size-root);
 
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    font-weight:
+        var(--cn-weight-regular);
+
+    line-height:
+        var(--cn-line-height-normal);
+
+    text-rendering:
+        optimizeLegibility;
+
+    -webkit-font-smoothing:
+        antialiased;
+
+    -moz-osx-font-smoothing:
+        grayscale;
 }
 
 
@@ -145,10 +213,17 @@ html {
    ============================================================ */
 
 body {
-    font-size: var(--cn-text-md);
-    font-weight: var(--cn-weight-regular);
-    line-height: var(--cn-line-height-normal);
-    letter-spacing: var(--cn-letter-normal);
+    font-size:
+        var(--cn-font-size-base);
+
+    font-weight:
+        var(--cn-weight-regular);
+
+    line-height:
+        var(--cn-line-height-normal);
+
+    letter-spacing:
+        var(--cn-letter-normal);
 }
 
 
@@ -162,39 +237,62 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: var(--cn-font-display);
-    font-weight: var(--cn-weight-bold);
-    line-height: var(--cn-line-height-heading);
-    letter-spacing: var(--cn-letter-tight);
-    text-wrap: balance;
+    font-family:
+        var(--cn-font-display);
+
+    font-weight:
+        var(--cn-weight-bold);
+
+    line-height:
+        var(--cn-line-height-heading);
+
+    letter-spacing:
+        var(--cn-letter-tight);
+
+    text-wrap:
+        balance;
 }
 
 h1 {
-    font-size: var(--cn-heading-1);
-    font-weight: var(--cn-weight-extrabold);
+    font-size:
+        var(--cn-heading-1);
+
+    font-weight:
+        var(--cn-weight-extrabold);
 }
 
 h2 {
-    font-size: var(--cn-heading-2);
+    font-size:
+        var(--cn-heading-2);
 }
 
 h3 {
-    font-size: var(--cn-heading-3);
+    font-size:
+        var(--cn-heading-3);
 }
 
 h4 {
-    font-size: var(--cn-heading-4);
-    font-weight: var(--cn-weight-semibold);
+    font-size:
+        var(--cn-heading-4);
+
+    font-weight:
+        var(--cn-weight-semibold);
 }
 
 h5 {
-    font-size: var(--cn-heading-5);
-    font-weight: var(--cn-weight-semibold);
+    font-size:
+        var(--cn-heading-5);
+
+    font-weight:
+        var(--cn-weight-semibold);
 }
 
 h6 {
-    font-size: var(--cn-heading-6);
-    font-weight: var(--cn-weight-semibold);
+    font-size:
+        var(--cn-heading-6);
+
+    font-weight:
+        var(--cn-weight-semibold);
 }
 
 
@@ -203,9 +301,14 @@ h6 {
    ============================================================ */
 
 p {
-    font-size: var(--cn-text-md);
-    font-weight: var(--cn-weight-regular);
-    line-height: var(--cn-line-height-relaxed);
+    font-size:
+        var(--cn-text-md);
+
+    font-weight:
+        var(--cn-weight-regular);
+
+    line-height:
+        var(--cn-line-height-relaxed);
 }
 
 
@@ -218,8 +321,11 @@ a {
     font-weight: inherit;
     line-height: inherit;
 
-    text-decoration-thickness: 0.08em;
-    text-underline-offset: 0.2em;
+    text-decoration-thickness:
+        0.08em;
+
+    text-underline-offset:
+        0.2em;
 }
 
 
@@ -230,9 +336,14 @@ a {
 nav,
 .nav,
 .navigation {
-    font-size: var(--cn-nav-size);
-    font-weight: var(--cn-nav-weight);
-    letter-spacing: var(--cn-nav-spacing);
+    font-size:
+        var(--cn-nav-size);
+
+    font-weight:
+        var(--cn-nav-weight);
+
+    letter-spacing:
+        var(--cn-nav-spacing);
 }
 
 nav a,
@@ -240,6 +351,7 @@ nav a,
 .navigation a {
     font-size: inherit;
     font-weight: inherit;
+    line-height: inherit;
     letter-spacing: inherit;
 }
 
@@ -252,11 +364,20 @@ button,
 input[type="button"],
 input[type="submit"],
 input[type="reset"] {
-    font-family: var(--cn-font-sans);
-    font-size: var(--cn-text-sm);
-    font-weight: var(--cn-weight-semibold);
-    line-height: 1.2;
-    letter-spacing: var(--cn-letter-normal);
+    font-family:
+        var(--cn-font-sans);
+
+    font-size:
+        var(--cn-button-size);
+
+    font-weight:
+        var(--cn-button-weight);
+
+    line-height:
+        var(--cn-button-line-height);
+
+    letter-spacing:
+        var(--cn-letter-normal);
 }
 
 
@@ -267,41 +388,70 @@ input[type="reset"] {
 input,
 textarea,
 select {
-    font-family: var(--cn-font-sans);
-    font-size: var(--cn-text-md);
-    font-weight: var(--cn-weight-regular);
-    line-height: var(--cn-line-height-normal);
+    font-family:
+        var(--cn-font-sans);
+
+    font-size:
+        var(--cn-text-md);
+
+    font-weight:
+        var(--cn-weight-regular);
+
+    line-height:
+        var(--cn-line-height-normal);
 }
 
 label {
-    font-family: var(--cn-font-sans);
-    font-size: var(--cn-label-size);
-    font-weight: var(--cn-label-weight);
-    line-height: 1.4;
-    letter-spacing: var(--cn-label-spacing);
+    font-family:
+        var(--cn-font-sans);
+
+    font-size:
+        var(--cn-label-size);
+
+    font-weight:
+        var(--cn-label-weight);
+
+    line-height:
+        var(--cn-label-line-height);
+
+    letter-spacing:
+        var(--cn-label-spacing);
 }
 
 ::placeholder {
     font-family: inherit;
     font-size: inherit;
-    font-weight: var(--cn-weight-regular);
+
+    font-weight:
+        var(--cn-weight-regular);
+
+    line-height: inherit;
     letter-spacing: normal;
 }
 
 
 /* ============================================================
-   10. STATUS TYPOGRAPHY
+   10. STATUS / BADGE TYPOGRAPHY
    ============================================================ */
 
 .status,
 .status-label,
 .badge,
 .sticker-status {
-    font-family: var(--cn-font-sans);
-    font-size: var(--cn-text-xs);
-    font-weight: var(--cn-weight-semibold);
-    line-height: 1.2;
-    letter-spacing: var(--cn-letter-wide);
+    font-family:
+        var(--cn-font-sans);
+
+    font-size:
+        var(--cn-text-xs);
+
+    font-weight:
+        var(--cn-weight-semibold);
+
+    line-height:
+        var(--cn-line-height-tight);
+
+    letter-spacing:
+        var(--cn-letter-wide);
 }
 
 
@@ -312,18 +462,32 @@ label {
 .brand,
 .brand-name,
 .logo-text {
-    font-family: var(--cn-font-display);
-    font-weight: var(--cn-weight-extrabold);
-    line-height: 1;
-    letter-spacing: -0.02em;
+    font-family:
+        var(--cn-font-display);
+
+    font-weight:
+        var(--cn-weight-extrabold);
+
+    line-height:
+        1;
+
+    letter-spacing:
+        -0.02em;
 }
 
 .brand-mark,
 .logo-mark {
-    font-family: var(--cn-font-mono);
-    font-weight: var(--cn-weight-bold);
-    line-height: 1;
-    letter-spacing: -0.04em;
+    font-family:
+        var(--cn-font-mono);
+
+    font-weight:
+        var(--cn-weight-bold);
+
+    line-height:
+        1;
+
+    letter-spacing:
+        -0.04em;
 }
 
 
@@ -332,18 +496,37 @@ label {
    ============================================================ */
 
 .section-title {
-    font-family: var(--cn-font-display);
-    font-size: var(--cn-heading-2);
-    font-weight: var(--cn-weight-bold);
-    line-height: var(--cn-line-height-heading);
-    letter-spacing: var(--cn-letter-tight);
+    font-family:
+        var(--cn-font-display);
+
+    font-size:
+        var(--cn-heading-2);
+
+    font-weight:
+        var(--cn-weight-bold);
+
+    line-height:
+        var(--cn-line-height-heading);
+
+    letter-spacing:
+        var(--cn-letter-tight);
+
+    text-wrap:
+        balance;
 }
 
 .section-subtitle {
-    font-family: var(--cn-font-sans);
-    font-size: var(--cn-text-lg);
-    font-weight: var(--cn-weight-regular);
-    line-height: var(--cn-line-height-relaxed);
+    font-family:
+        var(--cn-font-sans);
+
+    font-size:
+        var(--cn-text-lg);
+
+    font-weight:
+        var(--cn-weight-regular);
+
+    line-height:
+        var(--cn-line-height-relaxed);
 }
 
 
@@ -353,26 +536,44 @@ label {
 
 .eyebrow,
 .overline {
-    font-family: var(--cn-font-sans);
-    font-size: var(--cn-text-xs);
-    font-weight: var(--cn-weight-bold);
-    line-height: 1.3;
-    letter-spacing: var(--cn-letter-caps);
-    text-transform: uppercase;
+    font-family:
+        var(--cn-font-sans);
+
+    font-size:
+        var(--cn-text-xs);
+
+    font-weight:
+        var(--cn-weight-bold);
+
+    line-height:
+        var(--cn-line-height-normal);
+
+    letter-spacing:
+        var(--cn-letter-caps);
+
+    text-transform:
+        uppercase;
 }
 
 
 /* ============================================================
-   14. CAPTION TYPOGRAPHY
+   14. CAPTION / HELPER / META TYPOGRAPHY
    ============================================================ */
 
 .caption,
 .helper-text,
 .meta-text {
-    font-family: var(--cn-font-sans);
-    font-size: var(--cn-caption-size);
-    font-weight: var(--cn-weight-regular);
-    line-height: var(--cn-caption-line-height);
+    font-family:
+        var(--cn-font-sans);
+
+    font-size:
+        var(--cn-caption-size);
+
+    font-weight:
+        var(--cn-weight-regular);
+
+    line-height:
+        var(--cn-caption-line-height);
 }
 
 
@@ -384,20 +585,31 @@ code,
 kbd,
 pre,
 samp {
-    font-family: var(--cn-font-mono);
-    font-size: var(--cn-code-size);
-    line-height: var(--cn-code-line-height);
+    font-family:
+        var(--cn-font-mono);
+
+    font-size:
+        var(--cn-code-size);
+
+    line-height:
+        var(--cn-code-line-height);
 }
 
 code,
 kbd {
-    font-weight: var(--cn-weight-medium);
+    font-weight:
+        var(--cn-weight-medium);
 }
 
 pre {
-    font-weight: var(--cn-weight-regular);
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
+    font-weight:
+        var(--cn-code-weight);
+
+    white-space:
+        pre-wrap;
+
+    overflow-wrap:
+        anywhere;
 }
 
 
@@ -414,9 +626,14 @@ pre {
 .version,
 .ip-address,
 .endpoint {
-    font-family: var(--cn-font-mono);
-    font-size: var(--cn-code-size);
-    line-height: var(--cn-code-line-height);
+    font-family:
+        var(--cn-font-mono);
+
+    font-size:
+        var(--cn-code-size);
+
+    line-height:
+        var(--cn-code-line-height);
 }
 
 
@@ -425,18 +642,27 @@ pre {
    ============================================================ */
 
 table {
-    font-family: var(--cn-font-sans);
-    font-size: var(--cn-text-sm);
-    line-height: var(--cn-line-height-normal);
+    font-family:
+        var(--cn-font-sans);
+
+    font-size:
+        var(--cn-table-size);
+
+    line-height:
+        var(--cn-table-line-height);
 }
 
 th {
-    font-weight: var(--cn-weight-semibold);
-    letter-spacing: var(--cn-letter-wide);
+    font-weight:
+        var(--cn-weight-semibold);
+
+    letter-spacing:
+        var(--cn-letter-wide);
 }
 
 td {
-    font-weight: var(--cn-weight-regular);
+    font-weight:
+        var(--cn-weight-regular);
 }
 
 
@@ -446,8 +672,11 @@ td {
 
 ul,
 ol {
-    font-size: var(--cn-text-md);
-    line-height: var(--cn-line-height-relaxed);
+    font-size:
+        var(--cn-text-md);
+
+    line-height:
+        var(--cn-line-height-relaxed);
 }
 
 
@@ -456,25 +685,34 @@ ol {
    ============================================================ */
 
 blockquote {
-    font-size: var(--cn-text-lg);
-    font-weight: var(--cn-weight-medium);
-    line-height: var(--cn-line-height-relaxed);
-    letter-spacing: var(--cn-letter-normal);
+    font-size:
+        var(--cn-text-lg);
+
+    font-weight:
+        var(--cn-weight-medium);
+
+    line-height:
+        var(--cn-line-height-relaxed);
+
+    letter-spacing:
+        var(--cn-letter-normal);
 }
 
 
 /* ============================================================
-   20. STRONG / EMPHASIS
+   20. EMPHASIS
    ============================================================ */
 
 strong,
 b {
-    font-weight: var(--cn-weight-bold);
+    font-weight:
+        var(--cn-weight-bold);
 }
 
 em,
 i {
-    font-style: italic;
+    font-style:
+        italic;
 }
 
 
@@ -483,8 +721,11 @@ i {
    ============================================================ */
 
 small {
-    font-size: var(--cn-text-sm);
-    line-height: 1.4;
+    font-size:
+        var(--cn-text-sm);
+
+    line-height:
+        var(--cn-line-height-normal);
 }
 
 
@@ -538,23 +779,28 @@ small {
    ============================================================ */
 
 .font-regular {
-    font-weight: var(--cn-weight-regular);
+    font-weight:
+        var(--cn-weight-regular);
 }
 
 .font-medium {
-    font-weight: var(--cn-weight-medium);
+    font-weight:
+        var(--cn-weight-medium);
 }
 
 .font-semibold {
-    font-weight: var(--cn-weight-semibold);
+    font-weight:
+        var(--cn-weight-semibold);
 }
 
 .font-bold {
-    font-weight: var(--cn-weight-bold);
+    font-weight:
+        var(--cn-weight-bold);
 }
 
 .font-extrabold {
-    font-weight: var(--cn-weight-extrabold);
+    font-weight:
+        var(--cn-weight-extrabold);
 }
 
 
@@ -563,15 +809,18 @@ small {
    ============================================================ */
 
 .font-sans {
-    font-family: var(--cn-font-sans);
+    font-family:
+        var(--cn-font-sans);
 }
 
 .font-mono {
-    font-family: var(--cn-font-mono);
+    font-family:
+        var(--cn-font-mono);
 }
 
 .font-display {
-    font-family: var(--cn-font-display);
+    font-family:
+        var(--cn-font-display);
 }
 
 
@@ -580,27 +829,33 @@ small {
    ============================================================ */
 
 .text-uppercase {
-    text-transform: uppercase;
+    text-transform:
+        uppercase;
 }
 
 .text-lowercase {
-    text-transform: lowercase;
+    text-transform:
+        lowercase;
 }
 
 .text-capitalize {
-    text-transform: capitalize;
+    text-transform:
+        capitalize;
 }
 
 .text-nowrap {
-    white-space: nowrap;
+    white-space:
+        nowrap;
 }
 
 .text-balance {
-    text-wrap: balance;
+    text-wrap:
+        balance;
 }
 
 .text-pretty {
-    text-wrap: pretty;
+    text-wrap:
+        pretty;
 }
 
 
