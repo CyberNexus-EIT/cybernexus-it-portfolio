@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="CyberNexus IT Portfolio Platform — selected projects, systems, technical work, academic project contributions, technical archive, and ADSTOM development methodology."
+    >
+
+    <meta
+        name="author"
+        content="Mark C. Pangilinan"
+    >
+
+    <meta
+        name="theme-color"
+        content="#03070b"
+    >
+
+    <title>Projects | CyberNexus IT Portfolio Platform</title>
+
+    <!-- CyberNexus CSS Architecture
+         theme → typography → spacing → layout → style → responsive
+    -->
+
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/typography.css">
+    <link rel="stylesheet" href="css/spacing.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+
+<body
+    class="app-shell"
+    data-page="projects"
+    data-section="overview"
+>
+
+
+    <!-- ========================================================
+         STICKER / HEADER
+         ======================================================== -->
+
+    <header
+        class="site-header sticker"
+        data-header
+    >
+
+        <div class="header-inner">
+
+            <a
+                class="brand"
+                href="portfolio.html"
+                aria-label="CyberNexus Portfolio"
+            >
+
+                <span
+                    class="brand-mark"
+                    aria-hidden="true"
+                >
+                    CN
+                </span>
+
+                <span class="brand-text">
+
+                    <span class="brand-name">
+                        CyberNexus
+                    </span>
+
+                    <span class="brand-subtitle">
+                        IT Portfolio Platform
+                    </span>
+
+                </span>
+
+            </a>
+
+
+            <!-- Exactly one system status -->
+
+            <div
+                class="status status-online"
+                data-status
+                data-status-value="online"
+                aria-label="System status: Online"
+            >
+
+                <span
+                    class="status-indicator"
+                    aria-hidden="true"
+                ></span>
+
+                <span class="status-label">
+                    Online
+                </span>
+
+            </div>
+
+
+            <!-- Main page navigation -->
+
+            <nav
+                class="page-nav"
+                aria-label="Main navigation"
+            >
+
+                <ul class="page-nav-list">
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link"
+                            href="portfolio.html"
+                            data-page="portfolio"
+                        >
+                            Portfolio
+                        </a>
+
+                    </li>
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link is-current"
+                            href="projects.html"
+                            data-page="projects"
+                            aria-current="page"
+                        >
+                            Projects
+                        </a>
+
+                    </li>
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link"
+                            href="skills.html"
+                            data-page="skills"
+                        >
+                            Skills
+                        </a>
+
+                    </li>
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link"
+                            href="experience.html"
+                            data-page="experience"
+                        >
+                            Experience
+                        </a>
+
+                    </li>
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link"
+                            href="contact.html"
+                            data-page="contact"
+                        >
+                            Contact
+                        </a>
+
+                    </li>
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link"
+                            href="privacy.html"
+                            data-page="privacy"
+                        >
+                            Privacy
+                        </a>
+
+                    </li>
+
+                    <li class="page-nav-item">
+
+                        <a
+                            class="page-nav-link"
+                            href="terms.html"
+                            data-page="terms"
+                        >
+                            Terms
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+            <!-- Side panel controller -->
+
+            <button
+                class="button button-icon side-panel-toggle"
+                type="button"
+                data-side-panel-toggle
+                aria-label="Toggle section panel"
+                aria-controls="projects-side-panel"
+                aria-expanded="true"
+            >
+
+                <span aria-hidden="true">
+                    ☰
+                </span>
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- ========================================================
+         APPLICATION BODY
+         ======================================================== -->
+
+    <div class="app-body">
+
+
+        <!-- ====================================================
+             SIDE PANEL
+             ==================================================== -->
+
+        <aside
+            class="side-panel"
+            id="projects-side-panel"
+            data-side-panel
+            data-open="true"
+            aria-label="Project sections"
+        >
+
+            <div class="side-panel-header">
+
+                <div>
+
+                    <span class="eyebrow">
+                        Projects
+                    </span>
+
+                    <h2 class="side-panel-title">
+                        Sections
+                    </h2>
+
+                </div>
+
+                <button
+                    class="button button-icon"
+                    type="button"
+                    data-side-panel-toggle
+                    aria-label="Hide section panel"
+                    aria-controls="projects-side-panel"
+                    aria-expanded="true"
+                >
+
+                    <span aria-hidden="true">
+                        ×
+                    </span>
+
+                </button>
+
+            </div>
+
+
+            <nav
+                class="side-nav"
+                aria-label="Project section navigation"
+            >
+
+                <ul class="side-nav-list">
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link is-current"
+                            href="#overview"
+                            data-section-link="overview"
+                            aria-current="location"
+                        >
+
+                            <span class="side-nav-index">
+                                01
+                            </span>
+
+                            <span>
+                                Overview
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#portfolio-platform"
+                            data-section-link="portfolio-platform"
+                        >
+
+                            <span class="side-nav-index">
+                                02
+                            </span>
+
+                            <span>
+                                Portfolio Platform
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#arsenal"
+                            data-section-link="arsenal"
+                        >
+
+                            <span class="side-nav-index">
+                                03
+                            </span>
+
+                            <span>
+                                Arsenal
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#veraville"
+                            data-section-link="veraville"
+                        >
+
+                            <span class="side-nav-index">
+                                04
+                            </span>
+
+                            <span>
+                                Veraville I
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#technical-archive"
+                            data-section-link="technical-archive"
+                        >
+
+                            <span class="side-nav-index">
+                                05
+                            </span>
+
+                            <span>
+                                Technical Archive
+                            </span>
+
+                        </a>
+
+                    </li>
+
+
+                    <li class="side-nav-item">
+
+                        <a
+                            class="side-nav-link"
+                            href="#development"
+                            data-section-link="development"
+                        >
+
+                            <span class="side-nav-index">
+                                06
+                            </span>
+
+                            <span>
+                                Development
+                            </span>
+
+                        </a>
+
+                    </li>
+
+                </ul>
+
+            </nav>
+
+        </aside>
+
+
+        <!-- ====================================================
+             MAIN CONTENT
+             ==================================================== -->
+
+        <main class="main-content">
+
+
+            <!-- ==================================================
+                 OVERVIEW / HERO
+                 ================================================== -->
+
+            <section
+                class="hero section section-xl"
+                id="overview"
+                data-section="overview"
+            >
+
+                <div class="hero-content">
+
+                    <span class="eyebrow">
+                        CyberNexus Projects
+                    </span>
+
+                    <h1 class="hero-title">
+
+                        Systems,
+
+                        <span class="cn-gradient-text">
+                            Projects
+                        </span>
+
+                        &amp; Development
+
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        A technical project space documenting
+                        applications, systems, security platforms,
+                        academic project contributions, technical
+                        work, and ongoing development activities.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a
+                            class="button button-primary"
+                            href="#portfolio-platform"
+                        >
+                            View Projects
+                        </a>
+
+                        <a
+                            class="button button-secondary"
+                            href="#technical-archive"
+                        >
+                            View Archive
+                        </a>
+
+                        <a
+                            class="button button-secondary"
+                            href="contact.html"
+                        >
+                            Contact
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="hero-visual"
+                    aria-hidden="true"
+                >
+
+                    <div class="hero-orb hero-orb-green"></div>
+
+                    <div class="hero-orb hero-orb-cyan"></div>
+
+                    <div class="hero-orb hero-orb-purple"></div>
+
+                    <div class="hero-grid"></div>
+
+                    <div class="hero-terminal">
+
+                        <div class="terminal-header">
+
+                            <span></span>
+                            <span></span>
+                            <span></span>
+
+                        </div>
+
+                        <div class="terminal-body">
+
+                            <span class="terminal-line">
+
+                                <span class="cn-text-green">
+                                    $
+                                </span>
+
+                                project list
+
+                            </span>
+
+
+                            <span class="terminal-line">
+
+                                <span class="cn-text-cyan">
+                                    portfolio:
+                                </span>
+
+                                active
+
+                            </span>
+
+
+                            <span class="terminal-line">
+
+                                <span class="cn-text-purple">
+                                    security:
+                                </span>
+
+                                in development
+
+                            </span>
+
+
+                            <span class="terminal-line">
+
+                                <span class="cn-text-cyan">
+                                    veraville:
+                                </span>
+
+                                completed contribution
+
+                            </span>
+
+
+                            <span class="terminal-line">
+
+                                <span class="cn-text-green">
+                                    archive:
+                                </span>
+
+                                available
+
+                            </span>
+
+
+                            <span class="terminal-line">
+
+                                <span class="cn-text-green">
+                                    methodology:
+                                </span>
+
+                                ADSTOM
+
+                            </span>
+
+
+                            <span class="terminal-line">
+
+                                <span class="cn-text-cyan">
+                                    mode:
+                                </span>
+
+                                learning &amp; applying
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ==================================================
+                 PROJECT 01
+                 ================================================== -->
+
+            <section
+                class="section section-lg"
+                id="portfolio-platform"
+                data-section="portfolio-platform"
+            >
+
+                <div class="section-header">
+
+                    <span class="eyebrow">
+                        Project 01
+                    </span>
+
+                    <h2 class="section-title">
+                        CyberNexus IT Portfolio Platform
+                    </h2>
+
+                    <p class="section-subtitle">
+                        A responsive portfolio system for presenting
+                        professional information, technical skills,
+                        projects, experience, and ongoing technical
+                        development.
+                    </p>
+
+                </div>
+
+
+                <article class="project-card project-card-featured">
+
+                    <div class="project-card-header">
+
+                        <span class="project-status">
+                            Active Development
+                        </span>
+
+                        <span class="project-index">
+                            01
+                        </span>
+
+                    </div>
+
+
+                    <h3 class="project-title">
+                        IT Portfolio Platform
+                    </h3>
+
+
+                    <p class="project-text">
+                        A responsive portfolio platform being
+                        developed as a personal IT project to
+                        document learning, practical application,
+                        technical development, projects, experience,
+                        and supporting technical work.
+                    </p>
+
+
+                    <div class="grid-2">
+
+
+                        <div class="card">
+
+                            <span class="card-label">
+                                Frontend
+                            </span>
+
+                            <h4 class="card-title">
+                                Web Interface
+                            </h4>
+
+                            <p class="card-text">
+                                Structured HTML, shared CSS architecture,
+                                responsive layouts, navigation, forms,
+                                visual components, and frontend behavior.
+                            </p>
+
+                            <div class="tag-list">
+
+                                <span class="tag">
+                                    HTML
+                                </span>
+
+                                <span class="tag">
+                                    CSS
+                                </span>
+
+                                <span class="tag">
+                                    JavaScript
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="card">
+
+                            <span class="card-label">
+                                Backend
+                            </span>
+
+                            <h4 class="card-title">
+                                Application Services
+                            </h4>
+
+                            <p class="card-text">
+                                Planned and developing backend services,
+                                sessions, APIs, automation, database
+                                operations, and application logic.
+                            </p>
+
+                            <div class="tag-list">
+
+                                <span class="tag">
+                                    Python
+                                </span>
+
+                                <span class="tag">
+                                    SQLite
+                                </span>
+
+                                <span class="tag">
+                                    API
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- ==================================================
+                 PROJECT 02
+                 ================================================== -->
+
+            <section
+                class="section section-lg"
+                id="arsenal"
+                data-section="arsenal"
+            >
+
+                <div class="section-header">
+
+                    <span class="eyebrow">
+                        Project 02
+                    </span>
+
+                    <h2 class="section-title">
+                        CyberNexus Arsenal
+                    </h2>
+
+                    <p class="section-subtitle">
+                        An Information Security Testing AI System
+                        and Security Testing AI Platform under
+                        active development.
+                    </p>
+
+                </div>
+
+
+                <article class="project-card project-card-featured">
+
+                    <div class="project-card-header">
+
+                        <span class="project-status">
+                            In Development
+                        </span>
+
+                        <span class="project-index">
+                            02
+                        </span>
+
+                    </div>
+
+
+                    <h3 class="project-title">
+                        Information Security Testing AI System
+                    </h3>
+
+
+                    <p class="project-text">
+                        A security-focused platform project for
+                        learning and developing automated and
+                        interactive information security testing
+                        workflows across authorized web applications,
+                        mobile applications, APIs, networks, and
+                        related systems.
+                    </p>
+
+
+                    <div class="grid-3">
+
+
+                        <div class="card">
+
+                            <span class="card-label">
+                                Testing
+                            </span>
+
+                            <h4 class="card-title">
+                                Security Testing
+                            </h4>
+
+                            <p class="card-text">
+                                Structured security testing workflows,
+                                assessment activities, monitoring,
+                                findings, and results for authorized
+                                testing activities.
+                            </p>
+
+                        </div>
+
+
+                        <div class="card">
+
+                            <span class="card-label">
+                                Automation
+                            </span>
+
+                            <h4 class="card-title">
+                                Automated Operations
+                            </h4>
+
+                            <p class="card-text">
+                                Developing automated workflows for
+                                setup, execution, monitoring,
+                                processing, and reporting.
+                            </p>
+
+                        </div>
+
+
+                        <div class="card">
+
+                            <span class="card-label">
+                                AI
+                            </span>
+
+                            <h4 class="card-title">
+                                Interactive Assistance
+                            </h4>
+
+                            <p class="card-text">
+                                Developing interactive AI capabilities
+                                for guidance, communication, navigation,
+                                and authorized security testing
+                                workflows.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="tag-list">
+
+                        <span class="tag">
+                            Information Security
+                        </span>
+
+                        <span class="tag">
+                            AI
+                        </span>
+
+                        <span class="tag">
+                            Python
+                        </span>
+
+                        <span class="tag">
+                            SQLite
+                        </span>
+
+                        <span class="tag">
+                            Web
+                        </span>
+
+                        <span class="tag">
+                            Mobile
+                        </span>
+
+                        <span class="tag">
+                            DevSecOps
+                        </span>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- ==================================================
+                 PROJECT 03
+                 ================================================== -->
+
+            <section
+                class="section section-lg"
+                id="veraville"
+                data-section="veraville"
+            >
+
+                <div class="section-header">
+
+                    <span class="eyebrow">
+                        Project 03
+                    </span>
+
+                    <h2 class="section-title">
+                        Veraville I Web Community Management System
+                    </h2>
+
+                    <p class="section-subtitle">
+                        A thesis and capstone web system developed
+                        as part of a collaborative academic project.
+                    </p>
+
+                </div>
+
+
+                <article class="project-card project-card-featured">
+
+                    <div class="project-card-header">
+
+                        <span class="project-status">
+                            Completed Contribution
+                        </span>
+
+                        <span class="project-index">
+                            03
+                        </span>
+
+                    </div>
+
+
+                    <h3 class="project-title">
+                        Veraville I Web Community Management System
+                    </h3>
+
+
+                    <p class="project-text">
+                        A web-based community management system
+                        developed for a group's thesis and capstone
+                        project. I assisted the group with the system
+                        implementation and developed most of the
+                        project's source code.
+                    </p>
+
+
+                    <div class="grid-3">
+
+
+                        <div class="card">
+
+                            <span class="card-label">
+                                Project Type
+                            </span>
+
+                            <h4 class="card-title">
+                                Thesis &amp; Capstone
+                            </h4>
+
+                            <p class="card-text">
+                                A collaborative academic software
+                                project developed as part of a thesis
+                                and capstone requirement.
+                            </p>
+
+                        </div>
+
+
+                        <div class="card">
+
+                            <span class="card-label">
+                                Contribution
+                            </span>
+
+                            <h4 class="card-title">
+                                Software Development
+                            </h4>
+
+                            <p class="card-text">
+                                Assisted the project group with system
+                                development and implemented most of
+                                the project's source code.
+                            </p>
+
+                        </div>
+
+
+                        <div class="card">
+
+                            <span class="card-label">
+                                Recognition
+                            </span>
+
+                            <h4 class="card-title">
+                                Best in Thesis
+                            </h4>
+
+                            <p class="card-text">
+                                The project group received Best in
+                                Thesis recognition for their academic
+                                project.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hero-actions">
+
+                        <a
+                            class="button button-primary"
+                            href="https://docs.google.com/document/d/10pqZdx5aXeEGLcu57_Ue9OrhtFIIFoCcvY-z3t0HXTo/edit?usp=drivesdk"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="View Veraville I project documentation"
+                        >
+                            View Project Documentation
+                        </a>
+
+                    </div>
+
+
+                    <div class="tag-list">
+
+                        <span class="tag">
+                            Veraville I
+                        </span>
+
+                        <span class="tag">
+                            Web System
+                        </span>
+
+                        <span class="tag">
+                            Community Management
+                        </span>
+
+                        <span class="tag">
+                            Thesis
+                        </span>
+
+                        <span class="tag">
+                            Capstone
+                        </span>
+
+                        <span class="tag">
+                            Software Development
+                        </span>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- ==================================================
+                 TECHNICAL ARCHIVE
+                 ================================================== -->
+
+            <section
+                class="section section-lg"
+                id="technical-archive"
+                data-section="technical-archive"
+            >
+
+                <div class="section-header">
+
+                    <span class="eyebrow">
+                        Technical Archive
+                    </span>
+
+                    <h2 class="section-title">
+                        YouTube Project &amp; Technical Archive
+                    </h2>
+
+                    <p class="section-subtitle">
+                        A small collection of academic, programming,
+                        virtualization, and technical demonstration
+                        videos.
+                    </p>
+
+                </div>
+
+
+                <article class="project-card project-card-featured">
+
+                    <div class="project-card-header">
+
+                        <span class="project-status">
+                            External Archive
+                        </span>
+
+                        <span class="project-index">
+                            04
+                        </span>
+
+                    </div>
+
+
+                    <h3 class="project-title">
+                        Technical &amp; Academic Video Work
+                    </h3>
+
+
+                    <p class="project-text">
+                        A small YouTube archive containing selected
+                        academic, programming, virtualization, and
+                        technical demonstration videos. The archive
+                        documents earlier academic and technical work
+                        and is not presented as a cybersecurity portfolio.
+                    </p>
+
+
+                    <div class="grid-2">
+
+
+                        <div class="card">
+
+                            <span class="card-label">
+                                Academic
+                            </span>
+
+                            <h4 class="card-title">
+                                Physics
+                            </h4>
+
+                            <p class="card-text">
+                                Two videos covering Physics-related
+                                academic content.
+                            </p>
+
+                            <div class="tag-list">
+
+                                <span class="tag">
+                                    Physics
+                                </span>
+
+                                <span class="tag">
+                                    Academic
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="card">
+
+                            <span class="card-label">
+                                Software
+                            </span>
+
+                            <h4 class="card-title">
+                                VB.NET &amp; MS Access
+                            </h4>
+
+                            <p class="card-text">
+                                One video demonstrating a project
+                                built using Visual Basic .NET and
+                                Microsoft Access.
+                            </p>
+
+                            <div class="tag-list">
+
+                                <span class="tag">
+                                    VB.NET
+                                </span>
+
+                                <span class="tag">
+                                    MS Access
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="card">
+
+                            <span class="card-label">
+                                Virtualization
+                            </span>
+
+                            <h4 class="card-title">
+                                VMware &amp; OS Installation
+                            </h4>
+
+                            <p class="card-text">
+                                One video demonstrating VMware
+                                download and installation followed
+                                by operating system installation
+                                inside the virtual machine.
+                            </p>
+
+                            <div class="tag-list">
+
+                                <span class="tag">
+                                    VMware
+                                </span>
+
+                                <span class="tag">
+                                    Virtualization
+                                </span>
+
+                                <span class="tag">
+                                    Operating Systems
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="card">
+
+                            <span class="card-label">
+                                Collection
+                            </span>
+
+                            <h4 class="card-title">
+                                Four Videos
+                            </h4>
+
+                            <p class="card-text">
+                                A compact record of selected academic,
+                                programming, and technical activities.
+                            </p>
+
+                            <div class="tag-list">
+
+                                <span class="tag">
+                                    Technical Work
+                                </span>
+
+                                <span class="tag">
+                                    Video Archive
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hero-actions">
+
+                        <a
+                            class="button button-primary"
+                            href="https://youtube.com/@cyber-phys.sec.engineer?si=LbhvQvdXzTLgIwU6"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="View YouTube technical and academic archive"
+                        >
+                            View YouTube Archive
+                        </a>
+
+                    </div>
+
+                </article>
+
+            </section>
+
+
+            <!-- ==================================================
+                 DEVELOPMENT METHODOLOGY
+                 ================================================== -->
+
+            <section
+                class="section section-lg"
+                id="development"
+                data-section="development"
+            >
+
+                <div class="section-header">
+
+                    <span class="eyebrow">
+                        ADSTOM
+                    </span>
+
+                    <h2 class="section-title">
+                        Development Methodology
+                    </h2>
+
+                    <p class="section-subtitle">
+                        CyberNexus projects are developed using
+                        ADSTOM: Analyze, Develop, Secure, Test,
+                        Operate, and Maintain.
+                    </p>
+
+                </div>
+
+
+                <div class="grid-3">
+
+
+                    <article class="feature-card">
+
+                        <span class="feature-icon">
+                            01
+                        </span>
+
+                        <h3 class="feature-title">
+                            Analyze
+                        </h3>
+
+                        <p class="feature-text">
+                            Define the system, requirements, scope,
+                            users, architecture, resources, and
+                            technical direction.
+                        </p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+
+                        <span class="feature-icon">
+                            02
+                        </span>
+
+                        <h3 class="feature-title">
+                            Develop
+                        </h3>
+
+                        <p class="feature-text">
+                            Build the application, frontend, backend,
+                            database, infrastructure, automation, and
+                            supporting components.
+                        </p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+
+                        <span class="feature-icon">
+                            03
+                        </span>
+
+                        <h3 class="feature-title">
+                            Secure
+                        </h3>
+
+                        <p class="feature-text">
+                            Apply secure design, secure coding, access
+                            controls, dependency checks, secret
+                            protection, and security controls.
+                        </p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+
+                        <span class="feature-icon">
+                            04
+                        </span>
+
+                        <h3 class="feature-title">
+                            Test
+                        </h3>
+
+                        <p class="feature-text">
+                            Verify functionality, quality,
+                            compatibility, reliability, performance,
+                            and security before operation.
+                        </p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+
+                        <span class="feature-icon">
+                            05
+                        </span>
+
+                        <h3 class="feature-title">
+                            Operate
+                        </h3>
+
+                        <p class="feature-text">
+                            Deploy, configure, connect, monitor,
+                            and run the system in its intended
+                            operating environment.
+                        </p>
+
+                    </article>
+
+
+                    <article class="feature-card">
+
+                        <span class="feature-icon">
+                            06
+                        </span>
+
+                        <h3 class="feature-title">
+                            Maintain
+                        </h3>
+
+                        <p class="feature-text">
+                            Monitor the system, resolve issues,
+                            update components, improve reliability,
+                            and continuously evolve the project.
+                        </p>
+
+                    </article>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+
+    <!-- ========================================================
+         FOOTER
+         ======================================================== -->
+
+    <footer class="site-footer">
+
+        <div class="footer-inner">
+
+            <div class="footer-brand">
+
+                <strong>
+                    CyberNexus PH
+                </strong>
+
+                <span>
+                    CyberNexus IT Portfolio Platform
+                </span>
+
+            </div>
+
+
+            <div class="footer-meta">
+
+                <span>
+                    IT Portfolio by Mark C. Pangilinan
+                </span>
+
+            </div>
+
+
+            <nav
+                class="footer-links"
+                aria-label="Footer navigation"
+            >
+
+                <a href="privacy.html">
+                    Privacy
+                </a>
+
+                <a href="terms.html">
+                    Terms
+                </a>
+
+                <a href="contact.html">
+                    Contact
+                </a>
+
+            </nav>
+
+        </div>
+
+    </footer>
+
+
+    <!-- ========================================================
+         CYBERNEXUS JAVASCRIPT CONFIGURATION
+         ======================================================== -->
+
+    <script>
+        window.__CYBERNEXUS_CONFIG__ = {
+            apiBaseUrl: "",
+            apiPrefix: "/api"
+        };
+    </script>
+
+
+    <!-- ========================================================
+         CYBERNEXUS JAVASCRIPT ARCHITECTURE
+
+         state
+           ↓
+         HTTP
+           ↓
+         API
+           ↓
+         Auth
+           ↓
+         Account
+           ↓
+         Web App
+           ↓
+         Chat / Voice
+         ======================================================== -->
+
+    <script src="js/state.js" defer></script>
+    <script src="js/http-user.js" defer></script>
+    <script src="js/api-user.js" defer></script>
+    <script src="js/auth-user.js" defer></script>
+    <script src="js/account-user.js" defer></script>
+    <script src="js/web-app.js" defer></script>
+    <script src="js/chat.js" defer></script>
+    <script src="js/voice.js" defer></script>
+
+</body>
+
+</html>
