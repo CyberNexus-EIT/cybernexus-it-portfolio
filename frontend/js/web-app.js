@@ -5,8 +5,10 @@
    Responsibility:
    - Main frontend application lifecycle
    - Page navigation synchronization
+   - Section navigation synchronization
    - Side-panel behavior
    - Frontend form interception
+   - Resume button behavior
    - Keyboard interaction
    - External-link safety
    - Responsive synchronization
@@ -25,17 +27,17 @@
 (function (window, document) {
     "use strict";
 
-    /* =======================================================
+    /* ==========================================================================
        NAMESPACE
-    ======================================================= */
+       ========================================================================== */
 
     const CyberNexus =
         (window.CyberNexus =
             window.CyberNexus || {});
 
-    /* =======================================================
+    /* ==========================================================================
        DEPENDENCIES
-    ======================================================= */
+       ========================================================================== */
 
     const State =
         CyberNexus.State ||
@@ -49,21 +51,25 @@
         CyberNexus.Account ||
         window.CyberNexusAccount;
 
-    /* =======================================================
+    /* ==========================================================================
        APPLICATION STATE
-    ======================================================= */
+       ========================================================================== */
 
     const APP = {
         initialized: false,
+
         listeners: [],
+
         stateSubscription: null,
+
         responsiveInitialized: false,
+
         keyboardInitialized: false
     };
 
-    /* =======================================================
+    /* ==========================================================================
        DOM HELPERS
-    ======================================================= */
+       ========================================================================== */
 
     function query(
         selector,
@@ -85,9 +91,9 @@
         );
     }
 
-    /* =======================================================
+    /* ==========================================================================
        PAGE
-    ======================================================= */
+       ========================================================================== */
 
     function getPageName() {
         const path =
@@ -116,24 +122,42 @@
 
     function setCurrentPage() {
         if (
-            State &&
-            typeof State.setPage ===
+            !State ||
+            typeof State.setPage !==
                 "function"
         ) {
-            State.setPage(
-                getPageName(),
-                "web-app-page"
-            );
+            return;
         }
+
+        const currentSection =
+            State &&
+            typeof State.getCurrentSection ===
+                "function"
+                ? State.getCurrentSection()
+                : "";
+
+        /*
+         * State.setPage(page, options)
+         *
+         * The section belongs inside the
+         * options object.
+         */
+        State.setPage(
+            getPageName(),
+            {
+                section:
+                    currentSection
+            }
+        );
     }
 
-    /* =======================================================
-       NAVIGATION
-    ======================================================= */
+    /* ==========================================================================
+       PAGE NAVIGATION
+       ========================================================================== */
 
     function getPageNavigationLinks() {
         return queryAll(
-            'a[data-page][href]'
+            "a[data-page][href]"
         );
     }
 
@@ -222,14 +246,17 @@
 
                         /*
                          * Keep the current page link
-                         * keyboard-focusable and clickable,
-                         * but avoid unnecessary reloads.
+                         * focusable and accessible.
+                         *
+                         * Only prevent an unnecessary
+                         * reload of the same page.
                          */
                         if (
                             page ===
                             currentPage
                         ) {
                             event.preventDefault();
+
                             return;
                         }
 
@@ -240,7 +267,146 @@
                         ) {
                             State.setPage(
                                 page,
-                                "web-app-navigation"
+                                {
+                                    section:
+                                        ""
+                                }
+                            );
+                        }
+
+                        /*
+                         * Allow the browser to follow
+                         * the actual page URL.
+                         */
+                        if (
+                            isMobile()
+                        ) {
+                            closeSidePanel();
+                        }
+                    }
+                );
+            }
+        );
+
+        updateNavigation();
+    }
+
+    /* ==========================================================================
+       SECTION NAVIGATION
+       ========================================================================== */
+
+    function getSectionNavigationLinks() {
+        return queryAll(
+            "a[data-section-link][href]"
+        );
+    }
+
+    function getSectionFromLink(
+        link
+    ) {
+        if (!link) {
+            return "";
+        }
+
+        const configured =
+            link.dataset.sectionLink;
+
+        if (
+            typeof configured ===
+                "string" &&
+            configured.trim()
+        ) {
+            return configured
+                .trim()
+                .replace(/^#/, "");
+        }
+
+        const href =
+            link.getAttribute(
+                "href"
+            );
+
+        if (
+            typeof href ===
+                "string" &&
+            href.includes("#")
+        ) {
+            return href
+                .split("#")
+                .pop()
+                .trim();
+        }
+
+        return "";
+    }
+
+    function updateSectionNavigation() {
+        const currentSection =
+            State &&
+            typeof State.getCurrentSection ===
+                "function"
+                ? State.getCurrentSection()
+                : "";
+
+        getSectionNavigationLinks().forEach(
+            function (link) {
+                const section =
+                    getSectionFromLink(
+                        link
+                    );
+
+                const current =
+                    section ===
+                    currentSection;
+
+                link.classList.toggle(
+                    "is-current",
+                    current
+                );
+
+                if (current) {
+                    link.setAttribute(
+                        "aria-current",
+                        "location"
+                    );
+                } else {
+                    link.removeAttribute(
+                        "aria-current"
+                    );
+                }
+            }
+        );
+    }
+
+    function initializeSectionNavigation() {
+        getSectionNavigationLinks().forEach(
+            function (link) {
+                if (
+                    link.dataset.sectionBound ===
+                    "true"
+                ) {
+                    return;
+                }
+
+                link.dataset.sectionBound =
+                    "true";
+
+                link.addEventListener(
+                    "click",
+                    function () {
+                        const section =
+                            getSectionFromLink(
+                                link
+                            );
+
+                        if (
+                            State &&
+                            typeof State.setSection ===
+                                "function" &&
+                            section
+                        ) {
+                            State.setSection(
+                                section
                             );
                         }
 
@@ -253,11 +419,13 @@
                 );
             }
         );
+
+        updateSectionNavigation();
     }
 
-    /* =======================================================
+    /* ==========================================================================
        RESPONSIVE
-    ======================================================= */
+       ========================================================================== */
 
     function isMobile() {
         if (
@@ -272,9 +440,9 @@
         ).matches;
     }
 
-    /* =======================================================
+    /* ==========================================================================
        SIDE PANEL STATE
-    ======================================================= */
+       ========================================================================== */
 
     function getSidePanelState() {
         if (
@@ -302,18 +470,13 @@
             typeof State.openSidePanel ===
                 "function"
         ) {
-            State.openSidePanel(
-                "web-app-open-side-panel"
-            );
+            State.openSidePanel();
         } else if (
             State &&
             typeof State.setSidePanelOpen ===
                 "function"
         ) {
-            State.setSidePanelOpen(
-                true,
-                "web-app-open-side-panel"
-            );
+            State.setSidePanelOpen(true);
         }
 
         syncSidePanel();
@@ -325,18 +488,13 @@
             typeof State.closeSidePanel ===
                 "function"
         ) {
-            State.closeSidePanel(
-                "web-app-close-side-panel"
-            );
+            State.closeSidePanel();
         } else if (
             State &&
             typeof State.setSidePanelOpen ===
                 "function"
         ) {
-            State.setSidePanelOpen(
-                false,
-                "web-app-close-side-panel"
-            );
+            State.setSidePanelOpen(false);
         }
 
         syncSidePanel();
@@ -353,9 +511,58 @@
         }
     }
 
-    /* =======================================================
+    function collapseSidePanel() {
+        if (!State) {
+            return;
+        }
+
+        if (
+            typeof State.collapseSidePanel ===
+            "function"
+        ) {
+            State.collapseSidePanel();
+        } else if (
+            typeof State.setSidePanelCollapsed ===
+            "function"
+        ) {
+            State.setSidePanelCollapsed(
+                true
+            );
+        }
+
+        syncSidePanel();
+    }
+
+    function restoreSidePanel() {
+        if (!State) {
+            return;
+        }
+
+        if (
+            typeof State.restoreSidePanel ===
+            "function"
+        ) {
+            State.restoreSidePanel();
+        } else if (
+            typeof State.expandSidePanel ===
+            "function"
+        ) {
+            State.expandSidePanel();
+        } else if (
+            typeof State.setSidePanelCollapsed ===
+            "function"
+        ) {
+            State.setSidePanelCollapsed(
+                false
+            );
+        }
+
+        syncSidePanel();
+    }
+
+    /* ==========================================================================
        SIDE PANEL DOM
-    ======================================================= */
+       ========================================================================== */
 
     function syncSidePanel() {
         const panel =
@@ -536,7 +743,8 @@
                 );
 
                 button.disabled =
-                    !open || !collapsed;
+                    !open ||
+                    !collapsed;
             }
         );
 
@@ -563,21 +771,6 @@
 
             backdrop.hidden =
                 !open;
-
-            backdrop.style.pointerEvents =
-                open
-                    ? "auto"
-                    : "none";
-
-            backdrop.style.visibility =
-                open
-                    ? "visible"
-                    : "hidden";
-
-            backdrop.style.opacity =
-                open
-                    ? "1"
-                    : "0";
         }
 
         document.body.classList.toggle(
@@ -610,9 +803,9 @@
         );
     }
 
-    /* =======================================================
+    /* ==========================================================================
        SIDE PANEL INITIALIZATION
-    ======================================================= */
+       ========================================================================== */
 
     function initializeSidePanel() {
         queryAll(
@@ -713,28 +906,7 @@
                         event.preventDefault();
                         event.stopPropagation();
 
-                        if (!State) {
-                            return;
-                        }
-
-                        if (
-                            typeof State.collapseSidePanel ===
-                            "function"
-                        ) {
-                            State.collapseSidePanel(
-                                "web-app-collapse-side-panel"
-                            );
-                        } else if (
-                            typeof State.setSidePanelCollapsed ===
-                            "function"
-                        ) {
-                            State.setSidePanelCollapsed(
-                                true,
-                                "web-app-collapse-side-panel"
-                            );
-                        }
-
-                        syncSidePanel();
+                        collapseSidePanel();
                     }
                 );
             }
@@ -760,35 +932,7 @@
                         event.preventDefault();
                         event.stopPropagation();
 
-                        if (!State) {
-                            return;
-                        }
-
-                        if (
-                            typeof State.restoreSidePanel ===
-                            "function"
-                        ) {
-                            State.restoreSidePanel(
-                                "web-app-restore-side-panel"
-                            );
-                        } else if (
-                            typeof State.expandSidePanel ===
-                            "function"
-                        ) {
-                            State.expandSidePanel(
-                                "web-app-restore-side-panel"
-                            );
-                        } else if (
-                            typeof State.setSidePanelCollapsed ===
-                            "function"
-                        ) {
-                            State.setSidePanelCollapsed(
-                                false,
-                                "web-app-restore-side-panel"
-                            );
-                        }
-
-                        syncSidePanel();
+                        restoreSidePanel();
                     }
                 );
             }
@@ -818,39 +962,12 @@
             );
         }
 
-        queryAll(
-            "[data-side-panel] a[data-section]"
-        ).forEach(
-            function (link) {
-                if (
-                    link.dataset.sidePanelSectionBound ===
-                    "true"
-                ) {
-                    return;
-                }
-
-                link.dataset.sidePanelSectionBound =
-                    "true";
-
-                link.addEventListener(
-                    "click",
-                    function () {
-                        if (
-                            isMobile()
-                        ) {
-                            closeSidePanel();
-                        }
-                    }
-                );
-            }
-        );
-
         syncSidePanel();
     }
 
-    /* =======================================================
+    /* ==========================================================================
        STATE SUBSCRIPTION
-    ======================================================= */
+       ========================================================================== */
 
     function initializeStateSubscription() {
         if (
@@ -871,14 +988,17 @@
             State.subscribe(
                 function () {
                     updateNavigation();
+
+                    updateSectionNavigation();
+
                     syncSidePanel();
                 }
             );
     }
 
-    /* =======================================================
+    /* ==========================================================================
        FORMS
-    ======================================================= */
+       ========================================================================== */
 
     function initializeForms() {
         queryAll(
@@ -915,8 +1035,7 @@
                                         true,
 
                                     detail: {
-                                        form:
-                                            form,
+                                        form,
 
                                         data:
                                             new FormData(
@@ -932,9 +1051,47 @@
         );
     }
 
-    /* =======================================================
+    /* ==========================================================================
+       RESUME BUTTONS
+       ========================================================================== */
+
+    function initializeResumeButtons() {
+        queryAll(
+            '[data-action="resume-view"], [data-action="resume-download"]'
+        ).forEach(
+            function (button) {
+                if (
+                    button.dataset.resumeBound ===
+                    "true"
+                ) {
+                    return;
+                }
+
+                button.dataset.resumeBound =
+                    "true";
+
+                button.setAttribute(
+                    "type",
+                    "button"
+                );
+
+                button.addEventListener(
+                    "click",
+                    function (event) {
+                        event.preventDefault();
+
+                        alert(
+                            "Resume not yet available."
+                        );
+                    }
+                );
+            }
+        );
+    }
+
+    /* ==========================================================================
        KEYBOARD
-    ======================================================= */
+       ========================================================================== */
 
     function initializeNavigationKeys() {
         if (
@@ -963,13 +1120,10 @@
                     panelState.open
                 ) {
                     closeSidePanel();
+
                     return;
                 }
 
-                /*
-                 * Let the component that owns a modal
-                 * decide how its state should be closed.
-                 */
                 const modal =
                     query(
                         "[data-modal].is-open"
@@ -995,9 +1149,9 @@
         );
     }
 
-    /* =======================================================
+    /* ==========================================================================
        EXTERNAL LINKS
-    ======================================================= */
+       ========================================================================== */
 
     function initializeExternalLinks() {
         queryAll(
@@ -1042,9 +1196,9 @@
         );
     }
 
-    /* =======================================================
+    /* ==========================================================================
        RESPONSIVE EVENTS
-    ======================================================= */
+       ========================================================================== */
 
     function initializeResponsiveEvents() {
         if (
@@ -1110,58 +1264,9 @@
         );
     }
 
-    /* =======================================================
-       READY STATE
-    ======================================================= */
-
-    function setReady() {
-        if (
-            APP.initialized
-        ) {
-            return;
-        }
-
-        APP.initialized =
-            true;
-
-        if (
-            State &&
-            typeof State.setInitialized ===
-                "function"
-        ) {
-            State.setInitialized(
-                true,
-                "web-app-ready"
-            );
-        }
-
-        if (
-            State &&
-            typeof State.setReady ===
-                "function"
-        ) {
-            State.setReady(
-                true,
-                "web-app-ready"
-            );
-        }
-
-        document.documentElement.classList.add(
-            "cn-app-ready"
-        );
-
-        emit(
-            "cybernexus:ready",
-            {
-                page:
-                    getPageName()
-            }
-        );
-    }
-
-    /* =======================================================
+    /* ==========================================================================
        AUTHENTICATION
-    ======================================================= */
+       ========================================================================== */
 
     async function initializeAuthentication() {
         if (!Auth) {
@@ -1173,9 +1278,7 @@
                 typeof Auth.initialize ===
                 "function"
             ) {
-                await Promise.resolve(
-                    Auth.initialize()
-                );
+                await Auth.initialize();
             }
 
             /*
@@ -1206,9 +1309,9 @@
         }
     }
 
-    /* =======================================================
+    /* ==========================================================================
        ACCOUNT
-    ======================================================= */
+       ========================================================================== */
 
     async function initializeAccount(
         authenticated
@@ -1230,16 +1333,74 @@
         } catch (error) {
             /*
              * Account initialization failure must
-             * not prevent public frontend pages
-             * from becoming ready.
+             * not block public pages.
              */
             return null;
         }
     }
 
-    /* =======================================================
+    /* ==========================================================================
+       READY STATE
+       ========================================================================== */
+
+    function setReady() {
+        if (
+            APP.initialized
+        ) {
+            return;
+        }
+
+        APP.initialized =
+            true;
+
+        /*
+         * Use the state methods only when they
+         * exist so web-app.js remains compatible
+         * with the state module.
+         */
+        if (
+            State &&
+            typeof State.setInitialized ===
+                "function"
+        ) {
+            State.setInitialized(
+                true
+            );
+        }
+
+        if (
+            State &&
+            typeof State.setReady ===
+                "function"
+        ) {
+            State.setReady(
+                true
+            );
+        }
+
+        document.documentElement.classList.add(
+            "cn-app-ready"
+        );
+
+        emit(
+            "cybernexus:ready",
+            {
+                page:
+                    getPageName(),
+
+                authenticated:
+                    Auth &&
+                    typeof Auth.isAuthenticated ===
+                        "function"
+                        ? Auth.isAuthenticated()
+                        : false
+            }
+        );
+    }
+
+    /* ==========================================================================
        APPLICATION INITIALIZATION
-    ======================================================= */
+       ========================================================================== */
 
     async function initialize() {
         if (
@@ -1248,19 +1409,45 @@
             return;
         }
 
+        /*
+         * Establish the current page first.
+         */
         setCurrentPage();
 
+        /*
+         * Bind frontend behavior.
+         */
         initializeNavigation();
+
+        initializeSectionNavigation();
+
         initializeSidePanel();
+
         initializeStateSubscription();
+
         initializeForms();
+
+        initializeResumeButtons();
+
         initializeNavigationKeys();
+
         initializeExternalLinks();
+
         initializeResponsiveEvents();
 
+        /*
+         * Synchronize the initial DOM.
+         */
         syncSidePanel();
+
         updateNavigation();
 
+        updateSectionNavigation();
+
+        /*
+         * Authentication and account state
+         * initialize after the frontend controls.
+         */
         const authenticated =
             await initializeAuthentication();
 
@@ -1271,9 +1458,9 @@
         setReady();
     }
 
-    /* =======================================================
+    /* ==========================================================================
        EVENTS
-    ======================================================= */
+       ========================================================================== */
 
     function on(
         eventName,
@@ -1306,11 +1493,9 @@
             eventName:
                 name,
 
-            callback:
-                callback,
+            callback,
 
-            handler:
-                handler
+            handler
         });
 
         return function () {
@@ -1369,9 +1554,9 @@
         );
     }
 
-    /* =======================================================
+    /* ==========================================================================
        PUBLIC API
-    ======================================================= */
+       ========================================================================== */
 
     const WebApp =
         Object.freeze({
@@ -1383,22 +1568,33 @@
                 },
 
             on,
+
             emit,
 
             getPageName,
 
             updateNavigation,
 
+            updateSectionNavigation,
+
             getSidePanelState,
+
             syncSidePanel,
+
             openSidePanel,
+
             closeSidePanel,
-            toggleSidePanel
+
+            toggleSidePanel,
+
+            collapseSidePanel,
+
+            restoreSidePanel
         });
 
-    /* =======================================================
+    /* ==========================================================================
        GLOBAL EXPORT
-    ======================================================= */
+       ========================================================================== */
 
     CyberNexus.WebApp =
         WebApp;
@@ -1406,9 +1602,9 @@
     window.CyberNexusWebApp =
         WebApp;
 
-    /* =======================================================
+    /* ==========================================================================
        START APPLICATION
-    ======================================================= */
+       ========================================================================== */
 
     if (
         document.readyState ===
