@@ -1,14 +1,18 @@
 /*
  * CyberNexus IT Portfolio Platform
+ * Project: IT Portfolio
+ * Brand: CyberNexus PH
+ * Engineer: Mark C. Pangilinan
+ *
  * File: frontend/css/layout.css
  *
  * Responsibility:
  * - Full-screen application structure
- * - Header / Sticker structure
+ * - Header / sticker structure
  * - Page navigation structure
  * - Side panel structure
  * - Main content structure
- * - Flexbox / Grid layout
+ * - Flexbox / Grid structure
  * - Footer structural alignment
  * - Structural curves and shapes
  * - Overlay / drawer / modal structure
@@ -22,22 +26,72 @@
  * - Responsive breakpoints
  * - Application behavior
  * - Print styling
+ * - Component visual styling
  */
 
-/* =========================================================
-   STRUCTURAL TOKENS
-   ========================================================= */
+
+/* ============================================================
+   1. STRUCTURAL TOKENS
+   ============================================================ */
 
 :root {
+
+    /* --------------------------------------------------------
+       Application
+       -------------------------------------------------------- */
+
     --cn-header-height: 70px;
     --cn-header-min-height: 60px;
+
+
+    /* --------------------------------------------------------
+       Side Panel
+       -------------------------------------------------------- */
 
     --cn-side-panel-width: 280px;
     --cn-side-panel-min-width: 240px;
     --cn-side-panel-collapsed-width: 72px;
 
+
+    /* --------------------------------------------------------
+       Content Widths
+       -------------------------------------------------------- */
+
     --cn-content-max-width: 1440px;
     --cn-content-wide-width: 1680px;
+
+    --cn-content-narrow-width: 960px;
+    --cn-content-readable-width: 780px;
+
+
+    /* --------------------------------------------------------
+       Grid Minimums
+       -------------------------------------------------------- */
+
+    --cn-grid-min-sm: 180px;
+    --cn-grid-min-md: 240px;
+    --cn-grid-min-lg: 320px;
+
+
+    /* --------------------------------------------------------
+       Split Layout
+       -------------------------------------------------------- */
+
+    --cn-split-side-width: 380px;
+    --cn-split-side-min-width: 280px;
+
+
+    /* --------------------------------------------------------
+       Overlay Components
+       -------------------------------------------------------- */
+
+    --cn-drawer-width: 420px;
+    --cn-modal-width: 640px;
+
+
+    /* --------------------------------------------------------
+       Structural Layers
+       -------------------------------------------------------- */
 
     --cn-layer-base: 1;
     --cn-layer-content: 10;
@@ -46,9 +100,10 @@
     --cn-layer-overlay: 200;
 }
 
-/* =========================================================
-   GLOBAL STRUCTURAL BOX MODEL
-   ========================================================= */
+
+/* ============================================================
+   2. GLOBAL STRUCTURAL BOX MODEL
+   ============================================================ */
 
 html,
 body,
@@ -67,9 +122,10 @@ body,
     box-sizing: inherit;
 }
 
-/* =========================================================
-   ROOT APPLICATION
-   ========================================================= */
+
+/* ============================================================
+   3. ROOT DOCUMENT STRUCTURE
+   ============================================================ */
 
 html {
     width: 100%;
@@ -88,6 +144,11 @@ body {
     overflow-x: hidden;
 }
 
+
+/* ============================================================
+   4. APPLICATION SHELL
+   ============================================================ */
+
 #app,
 .app,
 .application,
@@ -99,13 +160,15 @@ body {
 
     width: 100%;
     min-width: 0;
+
     min-height: 100vh;
     min-height: 100dvh;
 }
 
-/* =========================================================
-   GENERIC PAGE SHELL
-   ========================================================= */
+
+/* ============================================================
+   5. GENERIC PAGE SHELL
+   ============================================================ */
 
 .page,
 .page-shell {
@@ -116,50 +179,41 @@ body {
 
     width: 100%;
     min-width: 0;
+
     min-height: 100vh;
     min-height: 100dvh;
 }
 
-/* =========================================================
-   APPLICATION BODY
-   =========================================================
+
+/* ============================================================
+   6. APPLICATION BODY
+   ============================================================
 
    Canonical structure:
 
    .app-shell
-       │
-       ├── .site-header
-       │
-       ├── .app-body
-       │      ├── .side-panel
-       │      └── .main-content
-       │
-       └── .site-footer
+       |
+       +-- .site-header
+       |
+       +-- .app-body
+       |      |
+       |      +-- .side-panel
+       |      |
+       |      +-- .main-content
+       |
+       +-- .site-footer
 
    The side panel and main content remain siblings.
-   ========================================================= */
+   ============================================================ */
 
-.app-body {
-    position: relative;
-
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: row;
-    align-items: stretch;
-
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-}
-
-/* Generic aliases */
-
+.app-body,
 .page-body,
 .page-layout {
     position: relative;
 
     display: flex;
     flex: 1 1 auto;
+
     flex-direction: row;
     align-items: stretch;
 
@@ -168,20 +222,27 @@ body {
     min-height: 0;
 }
 
-/* =========================================================
-   GENERIC PAGE MAIN
-   ========================================================= */
 
-.page-main {
+/* ============================================================
+   7. PAGE MAIN STRUCTURE
+   ============================================================ */
+
+.page-main,
+.main-area,
+.content-area,
+.main-content {
     position: relative;
 
     display: flex;
     flex: 1 1 auto;
+
     flex-direction: column;
 
     width: auto;
     min-width: 0;
     min-height: 0;
+
+    overflow-x: hidden;
 }
 
 .page-content {
@@ -194,9 +255,21 @@ body {
     min-height: 0;
 }
 
-/* =========================================================
-   CONTENT CONTAINERS
-   ========================================================= */
+.main-inner {
+    position: relative;
+
+    display: block;
+    flex: 1 1 auto;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+
+
+/* ============================================================
+   8. CONTENT CONTAINERS
+   ============================================================ */
 
 .container,
 .container-wide,
@@ -211,13 +284,15 @@ body {
 }
 
 .container {
-    max-width: var(--cn-content-max-width);
+    max-width:
+        var(--cn-content-max-width);
 
     margin-inline: auto;
 }
 
 .container-wide {
-    max-width: var(--cn-content-wide-width);
+    max-width:
+        var(--cn-content-wide-width);
 
     margin-inline: auto;
 }
@@ -227,39 +302,50 @@ body {
 }
 
 .content-narrow {
-    max-width: 960px;
+    max-width:
+        var(--cn-content-narrow-width);
 
     margin-inline: auto;
 }
 
 .content-readable {
-    max-width: 780px;
+    max-width:
+        var(--cn-content-readable-width);
 
     margin-inline: auto;
 }
 
-/* =========================================================
-   HEADER / STICKER
-   ========================================================= */
+
+/* ============================================================
+   9. HEADER / STICKER STRUCTURE
+   ============================================================ */
 
 .site-header,
 .app-header,
 .cn-header {
     position: sticky;
+
     top: 0;
 
-    z-index: var(--cn-layer-header);
+    z-index:
+        var(--cn-layer-header);
 
     display: flex;
     flex: 0 0 var(--cn-header-height);
+
     align-items: center;
 
     width: 100%;
     min-width: 0;
 
-    height: var(--cn-header-height);
-    min-height: var(--cn-header-height);
-    max-height: var(--cn-header-height);
+    height:
+        var(--cn-header-height);
+
+    min-height:
+        var(--cn-header-height);
+
+    max-height:
+        var(--cn-header-height);
 }
 
 .header-inner,
@@ -267,6 +353,7 @@ body {
 .app-header-inner,
 .cn-header-inner {
     display: flex;
+
     align-items: center;
 
     width: 100%;
@@ -274,19 +361,19 @@ body {
     min-height: 0;
 }
 
-/*
- * Common header regions.
- *
- * The exact visual spacing belongs to style.css / spacing.css.
- * Layout only controls how regions consume available width.
- */
+
+/* ============================================================
+   10. HEADER REGIONS
+   ============================================================ */
 
 .header-brand,
 .app-brand,
 .cn-brand,
 .brand {
     display: inline-flex;
+
     flex: 0 1 auto;
+
     align-items: center;
 
     min-width: 0;
@@ -296,7 +383,9 @@ body {
 .primary-nav,
 .page-nav {
     display: flex;
+
     flex: 1 1 auto;
+
     align-items: center;
 
     min-width: 0;
@@ -308,7 +397,9 @@ body {
 .system-status,
 .status {
     display: inline-flex;
+
     flex: 0 0 auto;
+
     align-items: center;
 
     min-width: max-content;
@@ -316,14 +407,17 @@ body {
 
 .side-panel-toggle {
     display: inline-flex;
+
     flex: 0 0 auto;
+
     align-items: center;
     justify-content: center;
 }
 
-/* =========================================================
-   HEADER BRAND
-   ========================================================= */
+
+/* ============================================================
+   11. HEADER BRAND STRUCTURE
+   ============================================================ */
 
 .header-brand a,
 .app-brand a,
@@ -334,7 +428,9 @@ body {
 
 .brand-mark {
     display: inline-flex;
+
     flex: 0 0 auto;
+
     align-items: center;
     justify-content: center;
 
@@ -347,6 +443,7 @@ body {
 .brand-text,
 .brand-content {
     display: flex;
+
     flex-direction: column;
 
     min-width: 0;
@@ -360,22 +457,16 @@ body {
     min-width: 0;
 
     overflow: hidden;
+
     text-overflow: ellipsis;
+
     white-space: nowrap;
 }
 
-/* =========================================================
-   HEADER STATUS
-   =========================================================
 
-   Status is intentionally atomic.
-
-   "Active Development" must remain a single visible unit.
-   It must not become an ellipsis or disappear because another
-   header element consumes available width.
-
-   Responsive width adjustments belong to responsive.css.
-   ========================================================= */
+/* ============================================================
+   12. HEADER STATUS STRUCTURE
+   ============================================================ */
 
 .status,
 .header-status,
@@ -393,7 +484,9 @@ body {
 
 .status-indicator {
     display: inline-flex;
+
     flex: 0 0 auto;
+
     align-items: center;
     justify-content: center;
 
@@ -405,7 +498,9 @@ body {
 
 .status-content {
     display: inline-flex;
+
     flex: 0 0 auto;
+
     align-items: center;
 
     width: max-content;
@@ -417,6 +512,7 @@ body {
 
 .status-label {
     display: inline-block;
+
     flex: 0 0 auto;
 
     width: auto;
@@ -426,18 +522,22 @@ body {
     overflow: visible;
 
     text-overflow: clip;
+
     white-space: nowrap;
 }
 
-/* =========================================================
-   PRIMARY PAGE NAVIGATION
-   ========================================================= */
+
+/* ============================================================
+   13. PRIMARY NAVIGATION STRUCTURE
+   ============================================================ */
 
 .header-nav-list,
 .primary-nav-list,
 .page-nav-list {
     display: flex;
+
     flex: 1 1 auto;
+
     align-items: stretch;
     justify-content: space-evenly;
 
@@ -454,6 +554,7 @@ body {
 .primary-nav-item,
 .page-nav-item {
     display: flex;
+
     flex: 1 1 0;
 
     min-width: 0;
@@ -463,6 +564,7 @@ body {
 .primary-nav-link,
 .page-nav-link {
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -471,12 +573,14 @@ body {
     min-height: 44px;
 
     text-align: center;
+
     white-space: nowrap;
 }
 
-/* =========================================================
-   SCROLL STRUCTURE
-   ========================================================= */
+
+/* ============================================================
+   14. SCROLL STRUCTURE
+   ============================================================ */
 
 .app-body,
 .page-layout,
@@ -485,7 +589,8 @@ body {
 .main-area,
 .content-area,
 .main-content {
-    scroll-padding-top: var(--cn-header-height);
+    scroll-padding-top:
+        var(--cn-header-height);
 }
 
 .app-body [id],
@@ -496,29 +601,44 @@ body {
 .content-area [id],
 .main-content [id],
 .section[id] {
-    scroll-margin-top: var(--cn-header-height);
+    scroll-margin-top:
+        var(--cn-header-height);
 }
 
-/* =========================================================
-   SIDE PANEL
-   ========================================================= */
+
+/* ============================================================
+   15. SIDE PANEL
+   ============================================================ */
 
 .side-panel {
     position: sticky;
-    top: var(--cn-header-height);
 
-    z-index: var(--cn-layer-side-panel);
+    top:
+        var(--cn-header-height);
+
+    z-index:
+        var(--cn-layer-side-panel);
 
     display: flex;
+
     flex: 0 0 var(--cn-side-panel-width);
+
     flex-direction: column;
 
-    width: var(--cn-side-panel-width);
-    min-width: var(--cn-side-panel-min-width);
-    max-width: var(--cn-side-panel-width);
+    width:
+        var(--cn-side-panel-width);
 
-    height: calc(100vh - var(--cn-header-height));
-    height: calc(100dvh - var(--cn-header-height));
+    min-width:
+        var(--cn-side-panel-min-width);
+
+    max-width:
+        var(--cn-side-panel-width);
+
+    height:
+        calc(100vh - var(--cn-header-height));
+
+    height:
+        calc(100dvh - var(--cn-header-height));
 
     min-height: 0;
 
@@ -529,7 +649,9 @@ body {
 
 .side-panel-inner {
     display: flex;
+
     flex: 1 1 auto;
+
     flex-direction: column;
 
     width: 100%;
@@ -539,7 +661,9 @@ body {
 
 .side-panel-header {
     display: flex;
+
     flex: 0 0 auto;
+
     align-items: center;
     justify-content: space-between;
 
@@ -560,19 +684,23 @@ body {
 
 .side-panel-footer {
     display: flex;
+
     flex: 0 0 auto;
+
     align-items: center;
 
     width: 100%;
     min-width: 0;
 }
 
-/* =========================================================
-   SIDE NAVIGATION
-   ========================================================= */
+
+/* ============================================================
+   16. SIDE NAVIGATION
+   ============================================================ */
 
 .side-nav {
     display: flex;
+
     flex-direction: column;
 
     width: 100%;
@@ -581,6 +709,7 @@ body {
 
 .side-nav-list {
     display: flex;
+
     flex-direction: column;
 
     width: 100%;
@@ -601,6 +730,7 @@ body {
 
 .side-nav-link {
     display: flex;
+
     align-items: center;
 
     width: 100%;
@@ -610,7 +740,9 @@ body {
 .side-nav-index,
 .side-nav-icon {
     display: inline-flex;
+
     flex: 0 0 auto;
+
     align-items: center;
     justify-content: center;
 }
@@ -619,21 +751,30 @@ body {
     min-width: 0;
 
     overflow: hidden;
+
     text-overflow: ellipsis;
+
     white-space: nowrap;
 }
 
-/* =========================================================
-   SIDE PANEL STATES
-   ========================================================= */
+
+/* ============================================================
+   17. SIDE PANEL STATES
+   ============================================================ */
 
 .side-panel.is-collapsed,
 .side-panel.collapsed {
-    flex-basis: var(--cn-side-panel-collapsed-width);
+    flex-basis:
+        var(--cn-side-panel-collapsed-width);
 
-    width: var(--cn-side-panel-collapsed-width);
-    min-width: var(--cn-side-panel-collapsed-width);
-    max-width: var(--cn-side-panel-collapsed-width);
+    width:
+        var(--cn-side-panel-collapsed-width);
+
+    min-width:
+        var(--cn-side-panel-collapsed-width);
+
+    max-width:
+        var(--cn-side-panel-collapsed-width);
 }
 
 .side-panel.is-collapsed .side-panel-header,
@@ -665,43 +806,10 @@ body {
     visibility: hidden;
 }
 
-/* =========================================================
-   MAIN CONTENT
-   ========================================================= */
 
-.main-area,
-.content-area,
-.main-content {
-    position: relative;
-
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-
-    width: auto;
-    min-width: 0;
-    min-height: 0;
-
-    margin: 0;
-    padding-block-start: 0;
-
-    overflow-x: hidden;
-}
-
-.main-inner {
-    position: relative;
-
-    display: block;
-    flex: 1 1 auto;
-
-    width: 100%;
-    min-width: 0;
-    min-height: 0;
-}
-
-/* =========================================================
-   SECTIONS
-   ========================================================= */
+/* ============================================================
+   18. SECTION STRUCTURE
+   ============================================================ */
 
 .section {
     position: relative;
@@ -711,7 +819,8 @@ body {
     width: 100%;
     min-width: 0;
 
-    scroll-margin-top: var(--cn-header-height);
+    scroll-margin-top:
+        var(--cn-header-height);
 }
 
 .section-inner {
@@ -725,6 +834,7 @@ body {
 
 .section-header {
     display: flex;
+
     flex-direction: column;
 
     width: 100%;
@@ -733,6 +843,7 @@ body {
 
 .section-heading {
     display: flex;
+
     align-items: flex-start;
     justify-content: space-between;
 
@@ -747,7 +858,9 @@ body {
 
 .section-actions {
     display: flex;
+
     flex: 0 0 auto;
+
     align-items: center;
 }
 
@@ -758,6 +871,7 @@ body {
 
 .section-footer {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
 
@@ -765,45 +879,52 @@ body {
     min-width: 0;
 }
 
-/* =========================================================
-   HERO
-   ========================================================= */
+
+/* ============================================================
+   19. HERO STRUCTURE
+   ============================================================ */
 
 .hero {
     position: relative;
 
     display: flex;
+
     flex-direction: column;
     justify-content: center;
 
     width: 100%;
     min-width: 0;
 
-    min-height: min(
-        760px,
-        calc(100vh - var(--cn-header-height))
-    );
+    min-height:
+        min(
+            760px,
+            calc(100vh - var(--cn-header-height))
+        );
 
-    min-height: min(
-        760px,
-        calc(100dvh - var(--cn-header-height))
-    );
+    min-height:
+        min(
+            760px,
+            calc(100dvh - var(--cn-header-height))
+        );
 
     overflow: hidden;
 
-    scroll-margin-top: var(--cn-header-height);
+    scroll-margin-top:
+        var(--cn-header-height);
 }
 
 .hero-inner {
     position: relative;
 
     display: flex;
+
     flex-direction: column;
 
     width: 100%;
     min-width: 0;
 
-    z-index: var(--cn-layer-content);
+    z-index:
+        var(--cn-layer-content);
 }
 
 .hero-content {
@@ -816,14 +937,16 @@ body {
 
 .hero-actions {
     display: flex;
+
     align-items: center;
 
     flex-wrap: wrap;
 }
 
-/* =========================================================
-   GENERAL GRIDS
-   ========================================================= */
+
+/* ============================================================
+   20. GENERAL GRID STRUCTURE
+   ============================================================ */
 
 .grid {
     display: grid;
@@ -834,24 +957,36 @@ body {
 
 .grid-2 {
     grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
 }
 
 .grid-3 {
     grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
 }
 
 .grid-4 {
     grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
 }
 
 .grid-auto {
     grid-template-columns:
         repeat(
             auto-fit,
-            minmax(240px, 1fr)
+            minmax(
+                var(--cn-grid-min-md),
+                1fr
+            )
         );
 }
 
@@ -859,7 +994,10 @@ body {
     grid-template-columns:
         repeat(
             auto-fit,
-            minmax(180px, 1fr)
+            minmax(
+                var(--cn-grid-min-sm),
+                1fr
+            )
         );
 }
 
@@ -867,13 +1005,17 @@ body {
     grid-template-columns:
         repeat(
             auto-fit,
-            minmax(320px, 1fr)
+            minmax(
+                var(--cn-grid-min-lg),
+                1fr
+            )
         );
 }
 
-/* =========================================================
-   TECHNOLOGY / TOOL GROUPING
-   ========================================================= */
+
+/* ============================================================
+   21. TECHNOLOGY / TOOL GROUPING
+   ============================================================ */
 
 .technology-grid,
 .tech-grid,
@@ -885,7 +1027,10 @@ body {
     min-width: 0;
 
     grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
 }
 
 .technology-group,
@@ -895,6 +1040,7 @@ body {
     position: relative;
 
     display: flex;
+
     flex-direction: column;
 
     width: 100%;
@@ -906,6 +1052,7 @@ body {
 .tool-group-header,
 .stack-group-header {
     display: flex;
+
     align-items: flex-start;
 
     width: 100%;
@@ -941,6 +1088,7 @@ body {
 .tool-group .tag-list,
 .stack-group .tag-list {
     display: flex;
+
     flex-wrap: wrap;
 
     width: 100%;
@@ -965,9 +1113,10 @@ body {
     overflow-wrap: anywhere;
 }
 
-/* =========================================================
-   CARDS
-   ========================================================= */
+
+/* ============================================================
+   22. CARD STRUCTURE
+   ============================================================ */
 
 .card-grid {
     display: grid;
@@ -978,7 +1127,10 @@ body {
     grid-template-columns:
         repeat(
             auto-fit,
-            minmax(260px, 1fr)
+            minmax(
+                var(--cn-grid-min-md),
+                1fr
+            )
         );
 }
 
@@ -991,6 +1143,7 @@ body {
 
 .card-header {
     display: flex;
+
     align-items: flex-start;
     justify-content: space-between;
 
@@ -1005,6 +1158,7 @@ body {
 
 .card-footer {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
 
@@ -1012,9 +1166,10 @@ body {
     min-width: 0;
 }
 
-/* =========================================================
-   SPLIT LAYOUT
-   ========================================================= */
+
+/* ============================================================
+   23. SPLIT LAYOUT
+   ============================================================ */
 
 .split-layout {
     display: grid;
@@ -1024,105 +1179,29 @@ body {
 
     grid-template-columns:
         minmax(0, 1fr)
-        minmax(280px, 380px);
+        minmax(
+            var(--cn-split-side-min-width),
+            var(--cn-split-side-width)
+        );
 }
 
 .split-layout.reverse {
     grid-template-columns:
-        minmax(280px, 380px)
+        minmax(
+            var(--cn-split-side-min-width),
+            var(--cn-split-side-width)
+        )
         minmax(0, 1fr);
 }
 
-/* =========================================================
-   FLEX UTILITIES
-   ========================================================= */
 
-.flex {
-    display: flex;
-}
-
-.inline-flex {
-    display: inline-flex;
-}
-
-.flex-row {
-    flex-direction: row;
-}
-
-.flex-column {
-    flex-direction: column;
-}
-
-.flex-wrap {
-    flex-wrap: wrap;
-}
-
-.flex-nowrap {
-    flex-wrap: nowrap;
-}
-
-.align-start {
-    align-items: flex-start;
-}
-
-.align-center {
-    align-items: center;
-}
-
-.align-end {
-    align-items: flex-end;
-}
-
-.justify-start {
-    justify-content: flex-start;
-}
-
-.justify-center {
-    justify-content: center;
-}
-
-.justify-end {
-    justify-content: flex-end;
-}
-
-.justify-between {
-    justify-content: space-between;
-}
-
-.justify-around {
-    justify-content: space-around;
-}
-
-.justify-evenly {
-    justify-content: space-evenly;
-}
-
-.flex-1 {
-    flex: 1 1 auto;
-}
-
-.flex-none {
-    flex: none;
-}
-
-.min-width-0 {
-    min-width: 0;
-}
-
-.width-full {
-    width: 100%;
-}
-
-.height-full {
-    height: 100%;
-}
-
-/* =========================================================
-   FORMS
-   ========================================================= */
+/* ============================================================
+   24. FORM STRUCTURE
+   ============================================================ */
 
 .form {
     display: flex;
+
     flex-direction: column;
 
     width: 100%;
@@ -1136,11 +1215,15 @@ body {
     min-width: 0;
 
     grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
 }
 
 .form-group {
     display: flex;
+
     flex-direction: column;
 
     min-width: 0;
@@ -1148,15 +1231,17 @@ body {
 
 .form-actions {
     display: flex;
+
     align-items: center;
     justify-content: flex-end;
 
     flex-wrap: wrap;
 }
 
-/* =========================================================
-   TABLES
-   ========================================================= */
+
+/* ============================================================
+   25. TABLE STRUCTURE
+   ============================================================ */
 
 .table-wrapper {
     width: 100%;
@@ -1168,6 +1253,7 @@ body {
 
 .table {
     width: 100%;
+
     min-width: 640px;
 
     border-collapse: collapse;
@@ -1178,9 +1264,10 @@ body {
     vertical-align: middle;
 }
 
-/* =========================================================
-   FOOTER
-   ========================================================= */
+
+/* ============================================================
+   26. FOOTER STRUCTURE
+   ============================================================ */
 
 .site-footer,
 .app-footer,
@@ -1195,20 +1282,24 @@ body {
 
 .footer-inner {
     display: grid;
+
     align-items: center;
 
     width: 100%;
     min-width: 0;
 
     grid-template-columns:
-        minmax(0, 1fr)
-        minmax(0, 1fr)
-        minmax(0, 1fr);
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
 }
 
 .footer-brand {
     display: flex;
+
     flex-direction: column;
+
     align-items: flex-start;
     justify-content: center;
 
@@ -1222,6 +1313,7 @@ body {
 
 .footer-meta {
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -1237,6 +1329,7 @@ body {
 
 .footer-nav {
     display: flex;
+
     align-items: center;
     justify-content: flex-end;
 
@@ -1245,6 +1338,7 @@ body {
 
 .footer-links {
     display: flex;
+
     align-items: center;
     justify-content: flex-end;
 
@@ -1259,7 +1353,9 @@ body {
 
 .footer-links > a {
     display: inline-flex;
+
     flex: 0 0 auto;
+
     align-items: center;
     justify-content: center;
 
@@ -1268,15 +1364,18 @@ body {
     white-space: nowrap;
 }
 
-/* =========================================================
-   DECORATIVE STRUCTURAL LAYERS
-   ========================================================= */
+
+/* ============================================================
+   27. STRUCTURAL DECORATIVE LAYERS
+   ============================================================ */
 
 .shape-layer {
     position: absolute;
+
     inset: 0;
 
-    z-index: 0;
+    z-index:
+        var(--cn-layer-base);
 
     overflow: hidden;
 
@@ -1335,43 +1434,59 @@ body {
     left: 0;
 }
 
-/* =========================================================
-   STRUCTURAL CURVES
-   ========================================================= */
+
+/* ============================================================
+   28. STRUCTURAL CURVES
+   ============================================================ */
 
 .curve-top {
-    border-radius: 0 0 48px 48px;
+    border-radius:
+        0
+        0
+        48px
+        48px;
 }
 
 .curve-bottom {
-    border-radius: 48px 48px 0 0;
+    border-radius:
+        48px
+        48px
+        0
+        0;
 }
 
 .curve-all {
-    border-radius: 48px;
+    border-radius:
+        48px;
 }
 
 .curve-soft {
-    border-radius: 28px;
+    border-radius:
+        28px;
 }
 
 .clip-curve {
     overflow: hidden;
 
-    border-radius: 48px;
+    border-radius:
+        48px;
 }
 
-/* =========================================================
-   OVERLAY / DRAWER
-   ========================================================= */
+
+/* ============================================================
+   29. OVERLAY STRUCTURE
+   ============================================================ */
 
 .overlay {
     position: fixed;
+
     inset: 0;
 
-    z-index: var(--cn-layer-overlay);
+    z-index:
+        var(--cn-layer-overlay);
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -1379,17 +1494,30 @@ body {
     height: 100%;
 }
 
+
+/* ============================================================
+   30. DRAWER STRUCTURE
+   ============================================================ */
+
 .drawer {
     position: fixed;
+
     top: 0;
     bottom: 0;
 
-    z-index: var(--cn-layer-overlay);
+    z-index:
+        var(--cn-layer-overlay);
 
     display: flex;
+
     flex-direction: column;
 
-    width: min(420px, 92vw);
+    width:
+        min(
+            var(--cn-drawer-width),
+            92vw
+        );
+
     height: 100%;
 
     min-width: 0;
@@ -1405,21 +1533,40 @@ body {
     right: 0;
 }
 
+
+/* ============================================================
+   31. MODAL STRUCTURE
+   ============================================================ */
+
 .modal {
     position: relative;
 
-    width: min(640px, 92vw);
+    width:
+        min(
+            var(--cn-modal-width),
+            92vw
+        );
 
-    max-height: min(840px, 90vh);
-    max-height: min(840px, 90dvh);
+    max-height:
+        min(
+            840px,
+            90vh
+        );
+
+    max-height:
+        min(
+            840px,
+            90dvh
+        );
 
     overflow-x: hidden;
     overflow-y: auto;
 }
 
-/* =========================================================
-   STRUCTURAL VISIBILITY
-   ========================================================= */
+
+/* ============================================================
+   32. STRUCTURAL VISIBILITY
+   ============================================================ */
 
 .is-hidden {
     display: none !important;
