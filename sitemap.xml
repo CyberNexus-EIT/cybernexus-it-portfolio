@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <url>
+        <loc>/</loc>
+    </url>
+
+    <url>
+        <loc>/portfolio.html</loc>
+    </url>
+
+    <url>
+        <loc>/projects.html</loc>
+    </url>
+
+    <url>
+        <loc>/skills.html</loc>
+    </url>
+
+    <url>
+        <loc>/experience.html</loc>
+    </url>
+
+    <url>
+        <loc>/contact.html</loc>
+    </url>
+
+    <url>
+        <loc>/privacy.html</loc>
+    </url>
+
+    <url>
+        <loc>/terms.html</loc>
+    </url>
+
+</urlset>
