@@ -1,122 +1,242 @@
-<!DOCTYPE html>
-<html lang="en-US">
+<!DOCTYPE html><html lang="en-US"><head><meta charset="UTF-8">
 
-<head>
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <meta charset="UTF-8">
+<meta
+    name="description"
+    content="CyberNexus IT Portfolio by Mark C. Pangilinan — the IT Portfolio project of CyberNexus PH."
+>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
+<meta
+    name="author"
+    content="Mark C. Pangilinan"
+>
+
+<meta
+    name="robots"
+    content="index, follow"
+>
+
+<meta
+    name="theme-color"
+    content="#03070b"
+>
+
+<meta
+    name="google-site-verification"
+    content="TIvTlrKXnAudoWpCJgAIB_r_IdA-8z25pWSYooOTakU"
+>
+
+<link
+    rel="canonical"
+    href="https://cybernexus-it-portfolio.onrender.com/"
+>
+
+<title>
+    CyberNexus IT Portfolio | Mark C. Pangilinan
+</title>
+
+
+<!-- =====================================================
+     CYBERNEXUS RUNTIME CONFIGURATION
+     ===================================================== -->
+
+<script>
+
+    window.__CYBERNEXUS_CONFIG__ = {
+
+        apiBaseUrl: "",
+
+        apiPrefix: "/api",
+
+        entryPage: "index.html",
+
+        portfolioPage: "portfolio.html"
+
+    };
+
+</script>
+
+
+<!-- =====================================================
+     CYBERNEXUS ENTRY REDIRECT
+
+     CyberNexus PH
+          ↓
+     CyberNexus
+          ↓
+     CyberNexus Platform
+          ↓
+     IT Portfolio
+          ↓
+     Portfolio Interface
+     ===================================================== -->
+
+<script>
+
+    (function () {
+
+        "use strict";
+
+        var portfolioPage =
+            window.__CYBERNEXUS_CONFIG__.portfolioPage;
+
+        if (
+            window.location.pathname.endsWith(
+                "/index.html"
+            ) ||
+            window.location.pathname.endsWith("/")
+        ) {
+
+            window.location.replace(
+                portfolioPage
+            );
+
+        }
+
+    })();
+
+</script>
+
+</head><body
+    class="app-shell"
+    data-page="index"
+    data-entry="true"
+><!-- =====================================================
+     MAIN ENTRY CONTENT
+
+     This page is intentionally kept as an entry point.
+     It is not a primary portfolio content page.
+
+     The visible content also serves as a fallback when
+     automatic navigation is unavailable.
+     ===================================================== -->
+
+<main
+    id="main-content"
+    class="page"
+>
+
+    <section
+        class="section section-lg"
+        aria-labelledby="entry-title"
     >
 
-    <meta
-        name="description"
-        content="CyberNexus IT Portfolio Platform by Mark C. Pangilinan — IT portfolio featuring projects, technical skills, experience, technology development, and practical IT work."
-    >
+        <div class="container">
 
-    <meta
-        name="author"
-        content="Mark C. Pangilinan"
-    >
 
-    <meta
-        name="theme-color"
-        content="#03070b"
-    >
+            <!-- =================================================
+                 BRAND
+                 ================================================= -->
 
-    <meta
-        name="robots"
-        content="index, follow"
-    >
+            <p class="eyebrow">
+                CyberNexus PH
+            </p>
 
-    <meta
-        name="google-site-verification"
-        content="TIvTlrKXnAudoWpCJgAIB_r_IdA-8z25pWSYooOTakU"
-    >
 
-    <link
-        rel="canonical"
-        href="https://cybernexus-it-portfolio.onrender.com/"
-    >
+            <!-- =================================================
+                 PLATFORM
+                 ================================================= -->
 
-    <title>
-        CyberNexus IT Portfolio Platform | Mark C. Pangilinan
-    </title>
+            <h1 id="entry-title">
+                CyberNexus
+            </h1>
 
-    <script>
-        window.__CYBERNEXUS_CONFIG__ = {
-            apiBaseUrl: "",
-            apiPrefix: "/api"
-        };
 
-        window.location.replace(
-            "portfolio.html"
-        );
-    </script>
+            <!-- =================================================
+                 PROJECT
+                 ================================================= -->
 
-</head>
+            <p>
+                IT Portfolio
+            </p>
 
-<body>
 
-    <main
-        id="main-content"
-        class="page"
-        data-page="index"
-    >
+            <!-- =================================================
+                 DESCRIPTION
+                 ================================================= -->
 
-        <section
-            class="section section-lg"
-            aria-labelledby="entry-title"
-        >
+            <p>
+                CyberNexus is the platform name.
+                This website contains the IT Portfolio project
+                of CyberNexus PH.
+            </p>
 
-            <div class="container">
 
-                <h1 id="entry-title">
-                    CyberNexus IT Portfolio Platform
-                </h1>
+            <!-- =================================================
+                 CREATOR
+                 ================================================= -->
+
+            <p>
+
+                <strong>
+                    Author / Creator / Developer / Engineer / Owner:
+                </strong>
+
+                Mark C. Pangilinan
+
+            </p>
+
+
+            <!-- =================================================
+                 REDIRECT STATUS
+                 ================================================= -->
+
+            <p
+                aria-live="polite"
+                role="status"
+            >
+                Redirecting to the IT Portfolio...
+            </p>
+
+
+            <!-- =================================================
+                 FALLBACK NAVIGATION
+                 ================================================= -->
+
+            <p>
+
+                <a
+                    href="portfolio.html"
+                    aria-label="Open the CyberNexus IT Portfolio"
+                >
+                    Open IT Portfolio
+                </a>
+
+            </p>
+
+
+            <!-- =================================================
+                 NO-JAVASCRIPT FALLBACK
+                 ================================================= -->
+
+            <noscript>
 
                 <p>
-                    Mark C. Pangilinan's IT portfolio featuring
-                    projects, technical skills, experience,
-                    technology development, and practical IT work.
+                    JavaScript is disabled.
+                    Use the link below to continue.
                 </p>
 
                 <p>
-                    Redirecting to the portfolio...
-                </p>
 
-                <p>
                     <a
                         href="portfolio.html"
-                        aria-label="Open CyberNexus IT Portfolio"
+                        aria-label="Continue to the CyberNexus IT Portfolio"
                     >
-                        Open Portfolio
+                        Continue to IT Portfolio
                     </a>
+
                 </p>
 
-                <noscript>
+            </noscript>
 
-                    <p>
-                        JavaScript is disabled.
-                        Use the
-                        <a
-                            href="portfolio.html"
-                            aria-label="Open CyberNexus IT Portfolio"
-                        >
-                            Open Portfolio
-                        </a>
-                        link to continue.
-                    </p>
+        </div>
 
-                </noscript>
+    </section>
 
-            </div>
+</main>
 
-        </section>
-
-    </main>
-
-</body>
-
-</html>
+</body></html>
