@@ -58,7 +58,6 @@ svg,
 video,
 canvas,
 iframe {
-    display: block;
     max-width: 100%;
 }
 
@@ -73,11 +72,9 @@ iframe {
 }
 
 pre {
-    width: 100%;
     max-width: 100%;
     min-width: 0;
     overflow-x: auto;
-    white-space: pre;
 }
 
 table {
@@ -85,19 +82,7 @@ table {
 }
 
 /* =========================================================
-   SCROLL OFFSET
-   ========================================================= */
-
-[id] {
-    scroll-margin-top:
-        calc(
-            var(--cn-header-height) +
-            var(--cn-space-3)
-        );
-}
-
-/* =========================================================
-   MAIN CONTENT SAFETY
+   RESPONSIVE WIDTH SAFETY
    ========================================================= */
 
 .app-body,
@@ -106,7 +91,13 @@ table {
 .content-area,
 .main-content,
 .page-main,
-.page-content {
+.page-content,
+.container,
+.container-wide,
+.container-fluid,
+.content,
+.content-narrow,
+.content-readable {
     min-width: 0;
     max-width: 100%;
 }
@@ -120,14 +111,16 @@ table {
     max-width: 100%;
 }
 
-.container,
-.container-wide,
-.container-fluid,
-.content,
-.content-narrow,
-.content-readable {
-    min-width: 0;
-    max-width: 100%;
+/* =========================================================
+   ANCHOR SCROLL OFFSET
+   ========================================================= */
+
+[id] {
+    scroll-margin-top:
+        calc(
+            var(--cn-header-height) +
+            var(--cn-space-3)
+        );
 }
 
 /* =========================================================
@@ -154,20 +147,6 @@ table {
         max-width: none;
     }
 
-    .hero {
-        min-height:
-            min(
-                820px,
-                calc(100vh - var(--cn-header-height))
-            );
-
-        min-height:
-            min(
-                820px,
-                calc(100dvh - var(--cn-header-height))
-            );
-    }
-
     .grid-auto {
         grid-template-columns:
             repeat(4, minmax(0, 1fr));
@@ -191,55 +170,6 @@ table {
             repeat(2, minmax(0, 1fr));
     }
 
-    .technology-group,
-    .tech-group,
-    .tool-group,
-    .stack-group {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    .technology-group-header,
-    .tech-group-header,
-    .tool-group-header,
-    .stack-group-header,
-    .technology-group .tag-list,
-    .tech-group .tag-list,
-    .tool-group .tag-list,
-    .stack-group .tag-list {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    .technology-group-header > *,
-    .tech-group-header > *,
-    .tool-group-header > *,
-    .stack-group-header > * {
-        min-width: 0;
-        max-width: 100%;
-    }
-
-    .technology-group .tag,
-    .technology-group .chip,
-    .technology-group .badge,
-    .tech-group .tag,
-    .tech-group .chip,
-    .tech-group .badge,
-    .tool-group .tag,
-    .tool-group .chip,
-    .tool-group .badge,
-    .stack-group .tag,
-    .stack-group .chip,
-    .stack-group .badge {
-        min-width: 0;
-        max-width: 100%;
-        white-space: normal;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-    }
-
     .footer-inner {
         grid-template-columns:
             minmax(0, 1.2fr)
@@ -248,14 +178,12 @@ table {
     }
 
     .footer-links {
-        width: 100%;
-        flex-wrap: wrap;
         justify-content: flex-end;
+        flex-wrap: wrap;
     }
 
     .footer-links > a {
         flex: 0 1 auto;
-        min-width: 0;
         white-space: nowrap;
     }
 }
@@ -270,13 +198,6 @@ table {
     :root {
         --cn-side-panel-width: 260px;
         --cn-side-panel-min-width: 240px;
-    }
-
-    .app-body,
-    .page-layout {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
     }
 
     .main-content,
@@ -375,50 +296,6 @@ table {
             repeat(2, minmax(0, 1fr));
     }
 
-    .technology-group,
-    .tech-group,
-    .tool-group,
-    .stack-group,
-    .technology-group-header,
-    .tech-group-header,
-    .tool-group-header,
-    .stack-group-header,
-    .technology-group .tag-list,
-    .tech-group .tag-list,
-    .tool-group .tag-list,
-    .stack-group .tag-list {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    .technology-group-header > *,
-    .tech-group-header > *,
-    .tool-group-header > *,
-    .stack-group-header > * {
-        min-width: 0;
-        max-width: 100%;
-    }
-
-    .technology-group .tag,
-    .technology-group .chip,
-    .technology-group .badge,
-    .tech-group .tag,
-    .tech-group .chip,
-    .tech-group .badge,
-    .tool-group .tag,
-    .tool-group .chip,
-    .tool-group .badge,
-    .stack-group .tag,
-    .stack-group .chip,
-    .stack-group .badge {
-        min-width: 0;
-        max-width: 100%;
-        white-space: normal;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-    }
-
     .footer-inner {
         grid-template-columns:
             minmax(0, 1.2fr)
@@ -427,9 +304,8 @@ table {
     }
 
     .footer-links {
-        width: 100%;
-        flex-wrap: wrap;
         justify-content: flex-end;
+        flex-wrap: wrap;
     }
 
     .footer-links > a {
@@ -451,13 +327,6 @@ table {
         --cn-side-panel-min-width: 210px;
     }
 
-    .app-body,
-    .page-layout {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-
     .main-content,
     .main-area,
     .content-area,
@@ -474,11 +343,6 @@ table {
     .cn-header-inner {
         width: 100%;
         max-width: 100%;
-        min-width: 0;
-    }
-
-    .brand {
-        flex: 0 1 auto;
         min-width: 0;
     }
 
@@ -542,40 +406,6 @@ table {
             repeat(2, minmax(0, 1fr));
     }
 
-    .technology-group,
-    .tech-group,
-    .tool-group,
-    .stack-group,
-    .technology-group-header,
-    .tech-group-header,
-    .tool-group-header,
-    .stack-group-header,
-    .technology-group .tag-list,
-    .tech-group .tag-list,
-    .tool-group .tag-list,
-    .stack-group .tag-list {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    .technology-group .tag,
-    .technology-group .chip,
-    .technology-group .badge,
-    .tech-group .tag,
-    .tech-group .chip,
-    .tech-group .badge,
-    .tool-group .tag,
-    .tool-group .chip,
-    .tool-group .badge,
-    .stack-group .tag,
-    .stack-group .chip,
-    .stack-group .badge {
-        white-space: normal;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-    }
-
     .split-layout,
     .split-layout.reverse {
         grid-template-columns:
@@ -588,14 +418,11 @@ table {
             minmax(0, 1.1fr)
             minmax(0, 0.8fr)
             minmax(0, 1.3fr);
-
-        gap: var(--cn-space-3);
     }
 
     .footer-links {
-        width: 100%;
-        flex-wrap: wrap;
         justify-content: flex-end;
+        flex-wrap: wrap;
     }
 }
 
@@ -613,27 +440,9 @@ table {
         --cn-side-panel-collapsed-width: 64px;
     }
 
-    .app-body,
-    .page-layout {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    .main-content,
-    .main-area,
-    .content-area,
-    .page-main,
-    .page-content {
-        flex: 1 1 0%;
-        width: 0;
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    /* =====================================================
+    /* -----------------------------------------------------
        TABLET HEADER
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .site-header,
     .app-header,
@@ -703,14 +512,6 @@ table {
     }
 
     .status-label {
-        display: inline-block;
-        width: auto;
-        max-width: none;
-        min-width: 0;
-
-        overflow: visible;
-        text-overflow: clip;
-
         white-space: nowrap;
     }
 
@@ -730,9 +531,9 @@ table {
         min-height: 44px;
     }
 
-    .page-nav,
     .header-nav,
-    .primary-nav {
+    .primary-nav,
+    .page-nav {
         grid-area: nav;
 
         display: flex;
@@ -747,19 +548,20 @@ table {
         overflow-y: hidden;
 
         scrollbar-width: none;
+
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-x: contain;
     }
 
-    .page-nav::-webkit-scrollbar,
     .header-nav::-webkit-scrollbar,
-    .primary-nav::-webkit-scrollbar {
+    .primary-nav::-webkit-scrollbar,
+    .page-nav::-webkit-scrollbar {
         display: none;
     }
 
-    .page-nav-list,
     .header-nav-list,
-    .primary-nav-list {
+    .primary-nav-list,
+    .page-nav-list {
         display: flex;
         align-items: center;
 
@@ -776,16 +578,16 @@ table {
         margin: 0;
     }
 
-    .page-nav-item,
     .header-nav-item,
-    .primary-nav-item {
+    .primary-nav-item,
+    .page-nav-item {
         flex: 0 0 auto;
         min-width: max-content;
     }
 
-    .page-nav-link,
     .header-nav-link,
-    .primary-nav-link {
+    .primary-nav-link,
+    .page-nav-link {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -812,9 +614,9 @@ table {
         white-space: nowrap;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        TABLET SIDE PANEL
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .side-panel {
         top: var(--cn-header-height);
@@ -824,10 +626,14 @@ table {
         max-width: var(--cn-side-panel-width);
 
         height:
-            calc(100vh - var(--cn-header-height));
+            calc(
+                100vh - var(--cn-header-height)
+            );
 
         height:
-            calc(100dvh - var(--cn-header-height));
+            calc(
+                100dvh - var(--cn-header-height)
+            );
     }
 
     .side-panel.is-collapsed,
@@ -838,9 +644,9 @@ table {
         max-width: var(--cn-side-panel-collapsed-width);
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        TABLET CONTENT
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .grid-4,
     .grid-3,
@@ -857,23 +663,6 @@ table {
     .stack-grid {
         grid-template-columns:
             repeat(2, minmax(0, 1fr));
-    }
-
-    .technology-group,
-    .tech-group,
-    .tool-group,
-    .stack-group,
-    .technology-group-header,
-    .tech-group-header,
-    .tool-group-header,
-    .stack-group-header,
-    .technology-group .tag-list,
-    .tech-group .tag-list,
-    .tool-group .tag-list,
-    .stack-group .tag-list {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
     }
 
     .technology-group-header,
@@ -905,8 +694,9 @@ table {
     .stack-group .tag,
     .stack-group .chip,
     .stack-group .badge {
-        min-width: 0;
         max-width: 100%;
+        min-width: 0;
+
         white-space: normal;
         overflow-wrap: anywhere;
         word-break: break-word;
@@ -917,6 +707,10 @@ table {
         grid-template-columns:
             minmax(0, 1fr);
     }
+
+    /* -----------------------------------------------------
+       TABLET HERO
+       ----------------------------------------------------- */
 
     .hero {
         min-height:
@@ -932,12 +726,23 @@ table {
             );
     }
 
+    .hero-profile {
+        justify-content: center;
+    }
+
+    .profile-photo {
+        width: 190px;
+        height: 190px;
+    }
+
+    /* -----------------------------------------------------
+       TABLET FOOTER
+       ----------------------------------------------------- */
+
     .footer-inner {
         grid-template-columns:
             minmax(0, 1fr)
             minmax(0, 1fr);
-
-        gap: var(--cn-space-4);
     }
 
     .footer-meta {
@@ -950,7 +755,6 @@ table {
     }
 
     .footer-links {
-        width: 100%;
         justify-content: flex-start;
         flex-wrap: wrap;
     }
@@ -963,27 +767,11 @@ table {
 
 @media (max-width: 767px) {
 
-    /*
-     * Mobile header:
-     *
-     * Row 1 = Brand + Menu
-     * Row 2 = Auto-fit Status
-     * Row 3 = Navigation
-     */
-
     :root {
         --cn-header-height: 152px;
         --cn-side-panel-width: min(300px, 86vw);
         --cn-side-panel-min-width: 0;
         --cn-side-panel-collapsed-width: 60px;
-    }
-
-    html,
-    body {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        overflow-x: hidden;
     }
 
     html {
@@ -994,10 +782,6 @@ table {
             );
     }
 
-    body {
-        position: relative;
-    }
-
     [id] {
         scroll-margin-top:
             calc(
@@ -1006,13 +790,12 @@ table {
             );
     }
 
-    /* =====================================================
-       MOBILE APP BODY
-       ===================================================== */
+    /* -----------------------------------------------------
+       MOBILE BODY
+       ----------------------------------------------------- */
 
     .app-body {
         display: block;
-
         width: 100%;
         max-width: 100%;
         min-width: 0;
@@ -1020,7 +803,6 @@ table {
 
     .page-layout {
         display: block;
-
         width: 100%;
         max-width: 100%;
         min-width: 0;
@@ -1046,19 +828,9 @@ table {
         overflow-x: hidden;
     }
 
-    .main-content > *,
-    .main-area > *,
-    .content-area > *,
-    .page-main > *,
-    .page-content > * {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE HEADER
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .site-header,
     .app-header,
@@ -1105,9 +877,9 @@ table {
         overflow: visible;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE BRAND
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .brand {
         grid-area: brand;
@@ -1125,7 +897,6 @@ table {
     .brand-mark {
         width: 38px;
         height: 38px;
-
         flex: 0 0 auto;
     }
 
@@ -1154,9 +925,9 @@ table {
         display: none;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE STATUS
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .status,
     .header-status,
@@ -1169,19 +940,13 @@ table {
         align-items: center;
         justify-content: flex-start;
 
-        /*
-         * Auto-fit:
-         * the status takes only the space it needs,
-         * while remaining responsive inside the row.
-         */
         width: fit-content;
         max-width: 100%;
         min-width: 0;
 
         min-height: 48px;
 
-        padding-inline:
-            var(--cn-space-2);
+        padding-inline: var(--cn-space-2);
 
         overflow: visible;
 
@@ -1221,9 +986,9 @@ table {
         flex: 0 0 auto;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE HEADER TOGGLE
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .side-panel-toggle {
         grid-area: toggle;
@@ -1240,9 +1005,9 @@ table {
         justify-self: end;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE NAVIGATION
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .header-nav,
     .primary-nav,
@@ -1313,9 +1078,9 @@ table {
         text-align: center;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE SIDE PANEL
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .side-panel {
         position: fixed;
@@ -1342,8 +1107,7 @@ table {
         overscroll-behavior: contain;
         -webkit-overflow-scrolling: touch;
 
-        transform:
-            translate3d(-105%, 0, 0);
+        transform: translate3d(-105%, 0, 0);
 
         visibility: hidden;
         pointer-events: none;
@@ -1364,13 +1128,7 @@ table {
 
     .side-panel.is-closed,
     .side-panel.closed,
-    .side-panel[data-open="false"] {
-        transform: translate3d(-105%, 0, 0);
-
-        visibility: hidden;
-        pointer-events: none;
-    }
-
+    .side-panel[data-open="false"],
     .side-panel.is-collapsed,
     .side-panel.collapsed,
     .side-panel[data-collapsed="true"] {
@@ -1388,8 +1146,6 @@ table {
         width: 100%;
         max-width: 100%;
         min-width: 0;
-
-        gap: var(--cn-space-2);
     }
 
     .side-panel-header > * {
@@ -1407,7 +1163,8 @@ table {
 
     .side-nav,
     .side-nav-list,
-    .side-nav-item {
+    .side-nav-item,
+    .side-nav-link {
         width: 100%;
         max-width: 100%;
         min-width: 0;
@@ -1417,10 +1174,6 @@ table {
         display: flex;
         align-items: center;
 
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-
         overflow: hidden;
     }
 
@@ -1429,9 +1182,9 @@ table {
         max-width: 100%;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE CONTENT
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .container,
     .container-wide,
@@ -1476,9 +1229,9 @@ table {
         flex-wrap: wrap;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE HERO
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .hero {
         width: 100%;
@@ -1502,6 +1255,15 @@ table {
         min-width: 0;
     }
 
+    .hero-profile {
+        justify-content: center;
+    }
+
+    .profile-photo {
+        width: 180px;
+        height: 180px;
+    }
+
     .hero-title,
     .hero-subtitle {
         max-width: 100%;
@@ -1523,9 +1285,9 @@ table {
         max-width: 100%;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE GRIDS
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .grid-4,
     .grid-3,
@@ -1546,9 +1308,9 @@ table {
             minmax(0, 1fr);
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE TECHNOLOGY GROUPS
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .technology-group,
     .tech-group,
@@ -1617,9 +1379,9 @@ table {
         word-break: break-word;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE SPLIT LAYOUT
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .split-layout,
     .split-layout.reverse {
@@ -1631,9 +1393,9 @@ table {
             minmax(0, 1fr);
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE CARDS
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .card,
     .feature-card,
@@ -1660,9 +1422,9 @@ table {
         word-break: break-word;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE TAGS
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .tag-list {
         display: flex;
@@ -1684,9 +1446,9 @@ table {
         word-break: break-word;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE FORMS
-       ===================================================== */
+       ----------------------------------------------------- */
 
     form,
     .form {
@@ -1724,17 +1486,15 @@ table {
         width: 100%;
         max-width: 100%;
         min-width: 0;
-
-        box-sizing: border-box;
     }
 
     textarea {
         resize: vertical;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE CODE / TERMINAL
-       ===================================================== */
+       ----------------------------------------------------- */
 
     pre,
     .code-block,
@@ -1746,13 +1506,11 @@ table {
 
         overflow-x: auto;
         overflow-y: auto;
-
-        box-sizing: border-box;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE TABLES
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .table-wrapper,
     .table-container {
@@ -1770,9 +1528,9 @@ table {
         min-width: 560px;
     }
 
-    /* =====================================================
+    /* -----------------------------------------------------
        MOBILE FOOTER
-       ===================================================== */
+       ----------------------------------------------------- */
 
     .site-footer,
     .app-footer,
@@ -1793,8 +1551,6 @@ table {
 
         flex-direction: column;
         align-items: stretch;
-
-        gap: var(--cn-space-3);
     }
 
     .footer-brand,
@@ -1826,11 +1582,6 @@ table {
 
         width: 100%;
 
-        margin: 0;
-        padding: 0;
-
-        gap: var(--cn-space-1);
-
         flex-wrap: wrap;
     }
 
@@ -1858,7 +1609,6 @@ table {
 
     :root {
         --cn-header-height: 144px;
-
         --cn-side-panel-width: min(290px, 90vw);
         --cn-side-panel-collapsed-width: 56px;
     }
@@ -1920,68 +1670,37 @@ table {
         font-size: 0.7rem;
     }
 
-    /* =====================================================
-       SMALL MOBILE STATUS
-       ===================================================== */
-
     .status,
     .header-status,
     .app-status,
     .cn-status,
     .system-status {
-        display: inline-flex;
-
-        width: fit-content;
-        max-width: 100%;
-        min-width: 0;
-
         min-height: 44px;
-
-        padding-inline:
-            var(--cn-space-2);
-
-        overflow: visible;
-        white-space: nowrap;
-    }
-
-    .status-content {
-        display: inline-flex;
-        align-items: center;
-
-        width: fit-content;
-        max-width: 100%;
-        min-width: 0;
+        padding-inline: var(--cn-space-2);
     }
 
     .status-label {
-        display: inline-block;
-
-        width: auto;
-        max-width: none;
-        min-width: 0;
-
         font-size: 0.74rem;
-        line-height: 1.2;
-
-        overflow: visible;
-        text-overflow: clip;
-        white-space: nowrap;
-
-        flex: 0 1 auto;
     }
 
     .status-indicator {
         width: 7px;
         height: 7px;
-
-        flex: 0 0 auto;
     }
 
     .header-nav-link,
     .primary-nav-link,
     .page-nav-link {
-        min-width: max-content;
         min-height: 44px;
+    }
+
+    .hero-profile {
+        justify-content: center;
+    }
+
+    .profile-photo {
+        width: 160px;
+        height: 160px;
     }
 
     .technology-grid,
@@ -1990,23 +1709,6 @@ table {
     .stack-grid {
         grid-template-columns:
             minmax(0, 1fr);
-    }
-
-    .technology-group,
-    .tech-group,
-    .tool-group,
-    .stack-group,
-    .technology-group-header,
-    .tech-group-header,
-    .tool-group-header,
-    .stack-group-header,
-    .technology-group .tag-list,
-    .tech-group .tag-list,
-    .tool-group .tag-list,
-    .stack-group .tag-list {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
     }
 
     .technology-group .tag,
@@ -2061,7 +1763,6 @@ table {
 
     :root {
         --cn-header-height: 136px;
-
         --cn-side-panel-width: 88vw;
         --cn-side-panel-collapsed-width: 52px;
     }
@@ -2119,66 +1820,40 @@ table {
         display: none;
     }
 
-    /* =====================================================
-       VERY SMALL MOBILE STATUS
-       ===================================================== */
-
     .status,
     .header-status,
     .app-status,
     .cn-status,
     .system-status {
-        display: inline-flex;
-
-        width: fit-content;
-        max-width: 100%;
-        min-width: 0;
-
         min-height: 42px;
-
-        padding-inline:
-            var(--cn-space-2);
-
-        overflow: visible;
-        white-space: nowrap;
-    }
-
-    .status-content {
-        display: inline-flex;
-        align-items: center;
-
-        width: fit-content;
-        max-width: 100%;
-        min-width: 0;
+        padding-inline: var(--cn-space-2);
     }
 
     .status-label {
-        display: inline-block;
-
-        width: auto;
-        max-width: none;
-        min-width: 0;
-
         font-size: 0.68rem;
-        line-height: 1.2;
-
-        overflow: visible;
-        text-overflow: clip;
-        white-space: nowrap;
-
-        flex: 0 1 auto;
     }
 
     .status-indicator {
         width: 6px;
         height: 6px;
-
-        flex: 0 0 auto;
     }
 
     .side-panel {
         width: 88vw;
         max-width: 88vw;
+    }
+
+    .hero {
+        min-height:
+            calc(100vh - var(--cn-header-height));
+
+        min-height:
+            calc(100dvh - var(--cn-header-height));
+    }
+
+    .profile-photo {
+        width: 140px;
+        height: 140px;
     }
 
     .technology-grid,
@@ -2187,44 +1862,6 @@ table {
     .stack-grid {
         grid-template-columns:
             minmax(0, 1fr);
-    }
-
-    .technology-group,
-    .tech-group,
-    .tool-group,
-    .stack-group,
-    .technology-group-header,
-    .tech-group-header,
-    .tool-group-header,
-    .stack-group-header,
-    .technology-group .tag-list,
-    .tech-group .tag-list,
-    .tool-group .tag-list,
-    .stack-group .tag-list {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-    }
-
-    .technology-group .tag,
-    .technology-group .chip,
-    .technology-group .badge,
-    .tech-group .tag,
-    .tech-group .chip,
-    .tech-group .badge,
-    .tool-group .tag,
-    .tool-group .chip,
-    .tool-group .badge,
-    .stack-group .tag,
-    .stack-group .chip,
-    .stack-group .badge {
-        white-space: normal;
-        overflow-wrap: anywhere;
-        word-break: break-word;
-    }
-
-    .footer-links {
-        gap: var(--cn-space-1);
     }
 
     .footer-links > a {
@@ -2243,14 +1880,6 @@ table {
 
 @media (orientation: portrait) {
 
-    .hero {
-        min-height:
-            calc(100vh - var(--cn-header-height));
-
-        min-height:
-            calc(100dvh - var(--cn-header-height));
-    }
-
     .hero-actions {
         flex-wrap: wrap;
     }
@@ -2266,14 +1895,6 @@ table {
    ========================================================= */
 
 @media (orientation: landscape) {
-
-    .hero {
-        min-height:
-            calc(100vh - var(--cn-header-height));
-
-        min-height:
-            calc(100dvh - var(--cn-header-height));
-    }
 
     .hero-inner {
         justify-content: center;
@@ -2321,36 +1942,12 @@ table {
     .app-status,
     .cn-status,
     .system-status {
-        display: inline-flex;
-
-        width: fit-content;
-        max-width: 100%;
-        min-width: 0;
-
         min-height: 36px;
-
-        padding-inline:
-            var(--cn-space-2);
-
-        overflow: visible;
-        white-space: nowrap;
-    }
-
-    .status-content {
-        width: fit-content;
-        max-width: 100%;
-        min-width: 0;
+        padding-inline: var(--cn-space-2);
     }
 
     .status-label {
         font-size: 0.7rem;
-
-        width: auto;
-        max-width: none;
-
-        overflow: visible;
-        text-overflow: clip;
-        white-space: nowrap;
     }
 
     .header-nav,
@@ -2367,6 +1964,15 @@ table {
 
     .hero {
         min-height: auto;
+    }
+
+    .hero-profile {
+        justify-content: flex-start;
+    }
+
+    .profile-photo {
+        width: 140px;
+        height: 140px;
     }
 
     .hero-actions {
@@ -2421,10 +2027,7 @@ table {
         min-height: 44px;
     }
 
-    .side-panel {
-        -webkit-overflow-scrolling: touch;
-    }
-
+    .side-panel,
     .table-wrapper,
     .table-container {
         -webkit-overflow-scrolling: touch;
@@ -2432,7 +2035,7 @@ table {
 }
 
 /* =========================================================
-   POINTER DEVICES
+   FINE POINTER DEVICES
    ========================================================= */
 
 @media (hover: hover) and (pointer: fine) {
@@ -2549,9 +2152,7 @@ table {
 
     .footer-links {
         display: flex;
-
         width: 100%;
-
         flex-wrap: wrap;
     }
 }

@@ -70,8 +70,8 @@
 .status-card,
 .chat-panel,
 .curved-panel,
-.terminal,
 .code-block,
+.terminal,
 .technical-block {
     min-width: 0;
     max-width: 100%;
@@ -239,6 +239,7 @@
     max-width: 100%;
 
     overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .brand-name {
@@ -266,6 +267,7 @@
     flex: 0 0 auto;
 
     min-width: 0;
+    max-width: 100%;
 
     gap: var(--cn-space-2);
 
@@ -305,6 +307,7 @@
 
 .status-content {
     min-width: 0;
+    max-width: 100%;
 
     gap: var(--cn-space-1);
 }
@@ -319,6 +322,7 @@
     font-weight: var(--cn-weight-semibold);
 
     overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 
@@ -394,6 +398,7 @@
     text-decoration: none;
 
     overflow-wrap: anywhere;
+    word-break: break-word;
 
     transition:
         color var(--cn-transition-fast),
@@ -509,6 +514,7 @@
 .side-panel-header,
 .side-panel-footer {
     min-width: 0;
+    max-width: 100%;
 }
 
 .side-panel-inner {
@@ -533,6 +539,7 @@
     max-width: 100%;
 
     overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .side-panel-title {
@@ -634,6 +641,7 @@
     text-decoration: none;
 
     overflow-wrap: anywhere;
+    word-break: break-word;
 
     transition:
         color var(--cn-transition-fast),
@@ -744,6 +752,7 @@
 .section-heading,
 .section-actions {
     min-width: 0;
+    max-width: 100%;
 }
 
 .section-header {
@@ -764,6 +773,7 @@
     max-width: 100%;
 
     overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .section-title {
@@ -863,6 +873,33 @@
     gap: var(--cn-space-3);
 }
 
+/* =========================================================
+   PROFILE PHOTO
+   ========================================================= */
+
+.hero-profile {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.profile-photo {
+    display: block;
+
+    width: 220px;
+    height: 220px;
+
+    object-fit: cover;
+
+    border: 1px solid var(--cn-border-soft);
+    border-radius: 50%;
+
+    background: var(--cn-surface);
+
+    box-shadow:
+        0 0 0 6px rgba(53, 229, 139, 0.06),
+        0 0 32px rgba(53, 229, 139, 0.14);
+}
 
 /* =========================================================
    BUTTONS / CONTROLS
@@ -893,6 +930,7 @@ button,
     text-decoration: none;
 
     overflow-wrap: anywhere;
+    word-break: break-word;
 
     transition:
         color var(--cn-transition-fast),
@@ -1128,6 +1166,7 @@ button:disabled,
 .card-body,
 .card-footer {
     min-width: 0;
+    max-width: 100%;
 }
 
 .card-header {
@@ -1229,8 +1268,6 @@ button:disabled,
 }
 
 .project-card a {
-    max-width: 100%;
-
     white-space: normal;
 }
 
@@ -1357,7 +1394,10 @@ button:disabled,
 
     background: rgba(255, 255, 255, 0.025);
 
-    white-space: nowrap;
+    white-space: normal;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
 
     transition:
         color var(--cn-transition-fast),
@@ -1408,6 +1448,7 @@ button:disabled,
 
 .form-group {
     min-width: 0;
+    max-width: 100%;
 
     gap: var(--cn-space-2);
 }
@@ -1474,6 +1515,7 @@ textarea::placeholder {
 
 .form-actions {
     min-width: 0;
+    max-width: 100%;
 
     gap: var(--cn-space-3);
 }
@@ -1522,6 +1564,7 @@ input[type="radio"] {
         );
 
     overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .alert-success {
@@ -1582,6 +1625,7 @@ input[type="radio"] {
 
 .metric {
     min-width: 0;
+    max-width: 100%;
 
     gap: var(--cn-space-1);
 }
@@ -1592,6 +1636,7 @@ input[type="radio"] {
     max-width: 100%;
 
     overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .metric-value {
@@ -1615,6 +1660,7 @@ input[type="radio"] {
 .progress {
     width: 100%;
     min-width: 0;
+    max-width: 100%;
 
     height: 8px;
 
@@ -1680,8 +1726,6 @@ input[type="radio"] {
     max-width: 100%;
 
     overflow: auto;
-
-    padding: var(--cn-space-5);
 
     border: 1px solid var(--cn-border);
     border-radius: var(--cn-radius-lg);
@@ -1771,6 +1815,7 @@ input[type="radio"] {
     color: var(--cn-text-soft);
 
     overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 
@@ -2040,6 +2085,7 @@ input[type="radio"] {
     color: var(--cn-text-muted);
 
     overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .footer-links {
@@ -2068,7 +2114,9 @@ input[type="radio"] {
 
     text-decoration: none;
 
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 
     transition:
         color var(--cn-transition-fast),
@@ -2131,6 +2179,9 @@ input[type="radio"] {
 
     opacity: 0;
     visibility: hidden;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
 
     transform: translate(-50%, 4px);
 
@@ -2243,6 +2294,7 @@ input[type="radio"] {
 
 .chat-messages {
     min-width: 0;
+    max-width: 100%;
     min-height: 240px;
     max-height: 560px;
 
@@ -2297,6 +2349,7 @@ input[type="radio"] {
 
 .chat-input {
     min-width: 0;
+    max-width: 100%;
 
     gap: var(--cn-space-2);
 
