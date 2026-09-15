@@ -62,23 +62,45 @@
         null;
 
     /* =========================================================
+       APPLICATION CONFIGURATION
+       ========================================================= */
+
+    const CONFIG = Object.freeze({
+        mobileBreakpoint:
+            767,
+
+        defaultResumePath:
+            "assets/Mark_Pangilinan_Resume.pdf",
+
+        contactStatusSelector:
+            "[data-contact-status], [data-form-status]"
+    });
+
+    /* =========================================================
        APPLICATION STATE
        ========================================================= */
 
     const APP = {
-        initialized: false,
+        initialized:
+            false,
 
-        initializing: false,
+        initializing:
+            false,
 
-        stateSubscription: null,
+        stateSubscription:
+            null,
 
-        authSubscription: null,
+        authSubscription:
+            null,
 
-        accountSubscription: null,
+        accountSubscription:
+            null,
 
-        responsiveInitialized: false,
+        responsiveInitialized:
+            false,
 
-        keyboardInitialized: false,
+        keyboardInitialized:
+            false,
 
         contactForms:
             new WeakSet(),
@@ -104,7 +126,8 @@
         boundExternalLinks:
             new WeakSet(),
 
-        resizeFrame: null
+        resizeFrame:
+            null
     };
 
     /* =========================================================
@@ -112,33 +135,25 @@
        ========================================================= */
 
     function validateDependencies() {
-        if (
-            !State
-        ) {
+        if (!State) {
             console.warn(
                 "CyberNexus.State is not available."
             );
         }
 
-        if (
-            !Auth
-        ) {
+        if (!Auth) {
             console.warn(
                 "CyberNexus.Auth is not available."
             );
         }
 
-        if (
-            !Account
-        ) {
+        if (!Account) {
             console.warn(
                 "CyberNexus.Account is not available."
             );
         }
 
-        if (
-            !Api
-        ) {
+        if (!Api) {
             console.warn(
                 "CyberNexus.Api is not available."
             );
@@ -262,11 +277,6 @@
             );
         }
 
-        /*
-         * Normalized http-user.js error:
-         *
-         * error.data
-         */
         if (
             error.data &&
             typeof error.data ===
@@ -295,11 +305,6 @@
             }
         }
 
-        /*
-         * Some HTTP wrappers expose:
-         *
-         * error.response.data
-         */
         if (
             error.response &&
             typeof error.response ===
@@ -446,7 +451,7 @@
                 .pop()
                 .toLowerCase();
 
-        const pages = Object.freeze({
+        const pages = {
             "":
                 "portfolio",
 
@@ -473,7 +478,7 @@
 
             "terms.html":
                 "terms"
-        });
+        };
 
         return (
             pages[filename] ||
@@ -623,11 +628,6 @@
                             const currentPage =
                                 getCurrentPage();
 
-                            /*
-                             * Same-page links
-                             * may still contain
-                             * a hash.
-                             */
                             if (
                                 page ===
                                     currentPage &&
@@ -845,7 +845,7 @@
         }
 
         return window.matchMedia(
-            "(max-width: 767px)"
+            `(max-width: ${CONFIG.mobileBreakpoint}px)`
         ).matches;
     }
 
@@ -1436,15 +1436,9 @@
             return null;
         }
 
-        return (
-            query(
-                "[data-contact-status]",
-                form
-            ) ||
-            query(
-                "[data-form-status]",
-                form
-            )
+        return query(
+            CONFIG.contactStatusSelector,
+            form
         );
     }
 
@@ -1769,13 +1763,10 @@
 
         if (
             typeof response.ok ===
-            "boolean"
+            "boolean" &&
+            !response.ok
         ) {
-            if (
-                !response.ok
-            ) {
-                return false;
-            }
+            return false;
         }
 
         const data =
@@ -1811,15 +1802,6 @@
             );
         }
 
-        /*
-         * Canonical API:
-         *
-         * Api.submitContact()
-         *
-         * api-user.js owns:
-         *
-         * POST /api/contact
-         */
         return Api.submitContact(
             data
         );
@@ -2030,10 +2012,6 @@
                 form.addEventListener(
                     "submit",
                     function (event) {
-                        /*
-                         * Native forms retain
-                         * normal browser behavior.
-                         */
                         if (
                             type ===
                             "native"
@@ -2071,40 +2049,241 @@
        RESUME
        ========================================================= */
 
+    function getResumePath(
+        control
+    ) {
+        if (!control) {
+            return CONFIG.defaultResumePath;
+        }
+
+        const configured =
+            normalizeString(
+                control.dataset
+                    .resumeUrl
+            );
+
+        if (configured) {
+            return configured;
+        }
+
+        const href =
+            normalizeString(
+                control.getAttribute(
+                    "href"
+                )
+            );
+
+        if (
+            href &&
+            !href.startsWith(
+                "#"
+            ) &&
+            !href.startsWith(
+                "javascript:"
+            )
+        ) {
+            return href;
+        }
+
+        return CONFIG.defaultResumePath;
+    }
+
+    function getFreshResumeUrl(
+        path
+    ) {
+        const normalized =
+            normalizeString(
+                path
+            );
+
+        if (!normalized) {
+            return "";
+        }
+
+        try {
+            const url =
+                new URL(
+                    normalized,
+                    window.location.href
+                );
+
+            /*
+             * Cache-busting is intentionally
+             * generated at runtime.
+             *
+             * This prevents an old browser/PDF
+             * viewer cache from displaying an
+             * outdated resume.
+             */
+            url.searchParams.set(
+                "v",
+                String(
+                    Date.now()
+                )
+            );
+
+            return url.href;
+        } catch (
+            error
+        ) {
+            return normalized;
+        }
+    }
+
+    function openResume(
+        control
+    ) {
+        const path =
+            getResumePath(
+                control
+            );
+
+        const url =
+            getFreshResumeUrl(
+                path
+            );
+
+        if (!url) {
+            return;
+        }
+
+        emit(
+            "cybernexus:resume-request",
+            {
+                action:
+                    "resume-view",
+
+                url
+            }
+        );
+
+        const opened =
+            window.open(
+                url,
+                "_blank",
+                "noopener,noreferrer"
+            );
+
+        if (
+            opened &&
+            typeof opened.focus ===
+                "function"
+        ) {
+            opened.focus();
+        }
+    }
+
+    function downloadResume(
+        control
+    ) {
+        const path =
+            getResumePath(
+                control
+            );
+
+        if (!path) {
+            return;
+        }
+
+        emit(
+            "cybernexus:resume-request",
+            {
+                action:
+                    "resume-download",
+
+                url:
+                    path
+            }
+        );
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+        link.href =
+            path;
+
+        link.download =
+            "Mark_Pangilinan_Resume.pdf";
+
+        link.rel =
+            "noopener";
+
+        link.style.display =
+            "none";
+
+        document.body.appendChild(
+            link
+        );
+
+        link.click();
+
+        link.remove();
+    }
+
     function initializeResumeButtons() {
         queryAll(
             '[data-action="resume-view"], [data-action="resume-download"]'
         ).forEach(
-            function (button) {
+            function (control) {
                 if (
                     APP.boundResumeControls.has(
-                        button
+                        control
                     )
                 ) {
                     return;
                 }
 
                 APP.boundResumeControls.add(
-                    button
+                    control
                 );
 
-                button.type =
-                    "button";
+                const action =
+                    normalizeString(
+                        control.dataset
+                            .action
+                    ).toLowerCase();
 
-                button.addEventListener(
+                /*
+                 * Only force button type when
+                 * the element is actually a
+                 * button.
+                 */
+                if (
+                    control instanceof
+                    HTMLButtonElement
+                ) {
+                    control.type =
+                        "button";
+                }
+
+                control.addEventListener(
                     "click",
                     function (event) {
-                        event.preventDefault();
+                        if (
+                            action ===
+                            "resume-view"
+                        ) {
+                            event.preventDefault();
 
-                        emit(
-                            "cybernexus:resume-request",
-                            {
-                                action:
-                                    button
-                                        .dataset
-                                        .action
-                            }
-                        );
+                            openResume(
+                                control
+                            );
+
+                            return;
+                        }
+
+                        if (
+                            action ===
+                            "resume-download"
+                        ) {
+                            event.preventDefault();
+
+                            downloadResume(
+                                control
+                            );
+                        }
                     }
                 );
             }
@@ -2320,9 +2499,8 @@
             /*
              * verifySession() is the authority.
              *
-             * Auth.initialize() only restores
-             * the UI cache and must not be used
-             * as proof of authentication.
+             * Auth.initialize() restores
+             * local/UI state only.
              */
             if (
                 typeof Auth.verifySession ===
@@ -2511,16 +2689,14 @@
                 }
             );
 
-            /*
-             * Do not leave the document
-             * permanently marked as ready
-             * after a failed initialization.
-             */
             document.documentElement.classList.remove(
                 "cn-app-ready"
             );
 
-            throw error;
+            console.error(
+                "CyberNexus frontend initialization failed:",
+                error
+            );
         }
     }
 
@@ -2547,30 +2723,46 @@
                 },
 
             on,
+
             emit,
 
             getPageName,
+
             getCurrentPage,
+
             getCurrentSection,
 
             updateNavigation,
+
             updateSectionNavigation,
 
             getSidePanelState,
+
             syncSidePanel,
 
             openSidePanel,
+
             closeSidePanel,
+
             toggleSidePanel,
 
             collapseSidePanel,
+
             restoreSidePanel,
 
             validateContactForm,
 
             submitContactRequest,
 
-            handleContactFormSubmit
+            handleContactFormSubmit,
+
+            getResumePath,
+
+            getFreshResumeUrl,
+
+            openResume,
+
+            downloadResume
         });
 
     /* =========================================================
@@ -2597,7 +2789,8 @@
                 void initialize();
             },
             {
-                once: true
+                once:
+                    true
             }
         );
     } else {
