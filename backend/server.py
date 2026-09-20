@@ -152,19 +152,18 @@ RESEND_FROM_EMAIL = os.getenv(
 # CORS CONFIGURATION
 # =========================================================
 
-DEFAULT_ALLOWED_ORIGIN = (
-    "https://cybernexus-it-portfolio.onrender.com"
-)
+DEFAULT_ALLOWED_ORIGIN = ""
 
 
 def get_allowed_origin() -> str:
     """
     Return the configured frontend origin.
 
-    For production, set:
+    For a separate frontend origin, set:
 
-        CYBERNEXUS_ALLOWED_ORIGIN=
-        https://cybernexus-it-portfolio.onrender.com
+        CYBERNEXUS_ALLOWED_ORIGIN=https://your-domain.example
+
+    For a same-origin Ubuntu + Caddy deployment, leave it unset.
 
     For local development, use:
 
